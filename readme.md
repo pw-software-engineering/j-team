@@ -13,7 +13,7 @@ i nadac mu uprawnienia do tworzenia baz danych (mozna to zrobic przez pgadmin)
 3. migracje
 Wszystkie operacje na migracjach wykonujemy z wiersza polecen z poziomu projektu Infrastructure:
 dodawanie migracji:
-dotnet ef migrations add "IntialMigration" --startup-project ../../WebUI
+dotnet ef migrations add "SampleMigration" --startup-project ../WebUI
 usuwanie ostatniej migracji:
 dotnet ef migrations remove --startup-project ../WebUI
 
