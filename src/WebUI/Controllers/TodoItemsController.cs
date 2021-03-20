@@ -1,10 +1,9 @@
-﻿using HotelReservationSystem.Application.Common.Models;
-using HotelReservationSystem.Application.TodoItems.Commands.CreateTodoItem;
-using HotelReservationSystem.Application.TodoItems.Commands.DeleteTodoItem;
-using HotelReservationSystem.Application.TodoItems.Commands.UpdateTodoItem;
-using HotelReservationSystem.Application.TodoItems.Commands.UpdateTodoItemDetail;
-using HotelReservationSystem.Application.TodoItems.Queries.GetTodoItemsWithPagination;
-using HotelReservationSystem.Application.TodoLists.Queries.GetTodos;
+﻿using Application.Hotels;
+using HotelReservationSystem.Application.Common.Models;
+using HotelReservationSystem.Application.Hotels.Commands.CreateTodoItem;
+using HotelReservationSystem.Application.Hotels.Commands.DeleteTodoItem;
+using HotelReservationSystem.Application.Hotels.Commands.UpdateTodoItem;
+using HotelReservationSystem.Application.Hotels.Queries.GetHotelsWithPagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -15,32 +14,19 @@ namespace HotelReservationSystem.WebUI.Controllers
     public class TodoItemsController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<TodoItemDto>>> GetTodoItemsWithPagination([FromQuery] GetTodoItemsWithPaginationQuery query)
+        public async Task<ActionResult<PaginatedList<HotelDto>>> GetTodoItemsWithPagination([FromQuery] GetHotelsWithPaginationQuery query)
         {
             return await Mediator.Send(query);
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Create(CreateTodoItemCommand command)
+        public async Task<ActionResult<int>> Create(CreateHotelCmd command)
         {
             return await Mediator.Send(command);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateTodoItemCommand command)
-        {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
-
-            await Mediator.Send(command);
-
-            return NoContent();
-        }
-
-        [HttpPut("[action]")]
-        public async Task<ActionResult> UpdateItemDetails(int id, UpdateTodoItemDetailCommand command)
+        public async Task<ActionResult> Update(int id, UpdateHotelCmd command)
         {
             if (id != command.Id)
             {
@@ -55,7 +41,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteTodoItemCommand { Id = id });
+            await Mediator.Send(new DeleteHotelCmd { Id = id });
 
             return NoContent();
         }

@@ -23,30 +23,18 @@ namespace HotelReservationSystem.Infrastructure.Persistence
             if (userManager.Users.All(u => u.UserName != administrator.UserName))
             {
                 await userManager.CreateAsync(administrator, "Administrator1!");
-                await userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
+                await userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
             }
         }
 
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
             // Seed, if necessary
-            if (!context.TodoLists.Any())
+            if (!context.Hotels.Any())
             {
-                context.TodoLists.Add(new TodoList
+                context.Hotels.Add(new Hotel
                 {
-                    Title = "Shopping",
-                    Colour = Colour.Blue,
-                    Items =
-                    {
-                        new TodoItem { Title = "Apples", Done = true },
-                        new TodoItem { Title = "Milk", Done = true },
-                        new TodoItem { Title = "Bread", Done = true },
-                        new TodoItem { Title = "Toilet paper" },
-                        new TodoItem { Title = "Pasta" },
-                        new TodoItem { Title = "Tissues" },
-                        new TodoItem { Title = "Tuna" },
-                        new TodoItem { Title = "Water" }
-                    }
+                    Title = "Hotel1",
                 });
 
                 await context.SaveChangesAsync();

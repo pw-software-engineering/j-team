@@ -11,12 +11,12 @@ i nadac mu uprawnienia do tworzenia baz danych (mozna to zrobic przez pgadmin)
     2. wykonujemy dotnet tool restore
 
 3. migracje
-Wszystkie operacje na migracjach wykonujemy z wiersza polecen z poziomu projektu Infrastructure
+Wszystkie operacje na migracjach wykonujemy z wiersza polecen z poziomu projektu Infrastructure:
 dodawanie migracji:
-dotnet ef migrations add "SampleMigration" --startup-project ../WebUI
+dotnet ef migrations add "IntialMigration" --startup-project ../../WebUI
 usuwanie ostatniej migracji:
 dotnet ef migrations remove --startup-project ../WebUI
 
 4. uruchomienie projektu (zmieni się po dodaniu 2 aplikacji frontendowych)
     1. w WebUI/ClientApp npm install i npm start (uruchomienie frontendu)
-    2.w WebUI dotnet run (uruchomienie serwera)
+    2. w WebUI dotnet run (uruchomienie serwera)

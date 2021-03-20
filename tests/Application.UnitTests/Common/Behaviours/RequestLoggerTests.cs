@@ -1,6 +1,6 @@
 ﻿using HotelReservationSystem.Application.Common.Behaviours;
 using HotelReservationSystem.Application.Common.Interfaces;
-using HotelReservationSystem.Application.TodoItems.Commands.CreateTodoItem;
+using HotelReservationSystem.Application.Hotels.Commands.CreateTodoItem;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -11,14 +11,14 @@ namespace HotelReservationSystem.Application.UnitTests.Common.Behaviours
 {
     public class RequestLoggerTests
     {
-        private readonly Mock<ILogger<CreateTodoItemCommand>> _logger;
+        private readonly Mock<ILogger<CreateHotelCmd>> _logger;
         private readonly Mock<ICurrentUserService> _currentUserService;
         private readonly Mock<IIdentityService> _identityService;
 
 
         public RequestLoggerTests()
         {
-            _logger = new Mock<ILogger<CreateTodoItemCommand>>();
+            _logger = new Mock<ILogger<CreateHotelCmd>>();
 
             _currentUserService = new Mock<ICurrentUserService>();
 
@@ -30,9 +30,9 @@ namespace HotelReservationSystem.Application.UnitTests.Common.Behaviours
         {
             _currentUserService.Setup(x => x.UserId).Returns("Administrator");
 
-            var requestLogger = new LoggingBehaviour<CreateTodoItemCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
+            var requestLogger = new LoggingBehaviour<CreateHotelCmd>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
-            await requestLogger.Process(new CreateTodoItemCommand { ListId = 1, Title = "title" }, new CancellationToken());
+            await requestLogger.Process(new CreateHotelCmd { ListId = 1, Title = "title" }, new CancellationToken());
 
             _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Once);
         }
@@ -40,9 +40,9 @@ namespace HotelReservationSystem.Application.UnitTests.Common.Behaviours
         [Test]
         public async Task ShouldNotCallGetUserNameAsyncOnceIfUnauthenticated()
         {
-            var requestLogger = new LoggingBehaviour<CreateTodoItemCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
+            var requestLogger = new LoggingBehaviour<CreateHotelCmd>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
-            await requestLogger.Process(new CreateTodoItemCommand { ListId = 1, Title = "title" }, new CancellationToken());
+            await requestLogger.Process(new CreateHotelCmd { ListId = 1, Title = "title" }, new CancellationToken());
 
             _identityService.Verify(i => i.GetUserNameAsync(null), Times.Never);
         }

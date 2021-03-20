@@ -1,5 +1,4 @@
 ﻿using HotelReservationSystem.Application.Common.Interfaces;
-using HotelReservationSystem.Infrastructure.Files;
 using HotelReservationSystem.Infrastructure.Identity;
 using HotelReservationSystem.Infrastructure.Persistence;
 using HotelReservationSystem.Infrastructure.Services;
@@ -42,7 +41,6 @@ namespace HotelReservationSystem.Infrastructure
 
             services.AddTransient<IDateTime, DateTimeService>();
             services.AddTransient<IIdentityService, IdentityService>();
-            services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();

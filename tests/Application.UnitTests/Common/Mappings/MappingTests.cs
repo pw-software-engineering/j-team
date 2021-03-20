@@ -1,6 +1,6 @@
-﻿using AutoMapper;
+﻿using Application.Hotels;
+using AutoMapper;
 using HotelReservationSystem.Application.Common.Mappings;
-using HotelReservationSystem.Application.TodoLists.Queries.GetTodos;
 using HotelReservationSystem.Domain.Entities;
 using NUnit.Framework;
 using System;
@@ -28,10 +28,9 @@ namespace HotelReservationSystem.Application.UnitTests.Common.Mappings
         {
             _configuration.AssertConfigurationIsValid();
         }
-        
+
         [Test]
-        [TestCase(typeof(TodoList), typeof(TodoListDto))]
-        [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
+        [TestCase(typeof(Hotel), typeof(HotelDto))]
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             var instance = GetInstanceOf(source);
