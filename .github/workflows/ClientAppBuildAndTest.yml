@@ -19,10 +19,10 @@ jobs:
           dotnet-version: 3.1.x
       - name: Restore dependencies
         run: dotnet restore
-        working-directory: ClientApp/
+        working-directory: ClientApp/ClientApp/
       - name: Build
         run: dotnet build --no-restore
-        working-directory: ClientApp/
+        working-directory: ClientApp/ClientApp/
       - name: Test
         run: dotnet test --no-build --verbosity normal
-        working-directory: ClientApp/
+        working-directory: ClientApp/ClientApp/
