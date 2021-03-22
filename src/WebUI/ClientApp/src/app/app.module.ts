@@ -1,49 +1,39 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HttpClientModule } from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { TranslateModule } from '@ngx-translate/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { environment } from '@env/environment';
+import { CoreModule } from '@core';
+import { SharedModule } from '@shared';
+import { AuthModule } from '@app/auth';
+import { HomeModule } from './home/home.module';
+import { ShellModule } from './shell/shell.module';
+import { AboutModule } from './about/about.module';
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { TodoComponent } from './todo/todo.component';
-import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
-import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
-import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
-    TodoComponent
-  ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    FontAwesomeModule,
-    HttpClientModule,
+    BrowserModule,
+    ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production }),
     FormsModule,
-    ApiAuthorizationModule,
-    RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'todo', component: TodoComponent, canActivate: [AuthorizeGuard] },
-    ]),
-    BrowserAnimationsModule,
-    ModalModule.forRoot()
+    HttpClientModule,
+    TranslateModule.forRoot(),
+    NgbModule,
+    CoreModule,
+    SharedModule,
+    ShellModule,
+    HomeModule,
+    AboutModule,
+    AuthModule,
+    AppRoutingModule, // must be imported as the last module as it contains the fallback route
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
-  ],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent],
+  providers: [],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
