@@ -20,6 +20,10 @@ jobs:
       - name: Build and run Server
         run: dotnet run
         working-directory: src/WebUI/
-      - name: Test
+      - name: UnitTests
         run: dotnet test --no-build --verbosity normal
         working-directory: tests/Application.UnitTests/
+      - name: IntegrationTests
+        run: dotnet test --no-build --verbosity normal
+        working-directory: tests/Application.IntegrationTests/ 
+    
