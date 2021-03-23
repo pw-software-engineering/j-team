@@ -20,5 +20,5 @@ jobs:
         run: npm install
         working-directory: src/WebUI/ClientApp/
       - name: Run Tests
-        run: npm test --forceExit
+        run: npm test --forceExit --detectOpenHandles
         working-directory: src/WebUI/ClientApp/
