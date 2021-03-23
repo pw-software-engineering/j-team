@@ -17,10 +17,8 @@ jobs:
         with:
            node-version: '12.x'
       - name: Install dependencies
-        run: npm install
+        run: npm install --save-dev start-server-and-test
         working-directory: src/WebUI/HotelApp/
-      - name: Run app
-        run: npm start
-        working-directory: src/WebUI/HotelApp/
-/ 
+
+
     
