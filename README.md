@@ -3,6 +3,10 @@
 Projekt utworzony na podstawie https://github.com/jasontaylordev/CleanArchitecture
 informacje o wzorcu: https://www.youtube.com/watch?v=dK4Yb6-LxAk
 setup:
+0.  
+    1. instalacja .NET 5 https://dotnet.microsoft.com/download/dotnet/5.0
+    2. instalacja nodejs https://nodejs.org/en/
+
 1. baza danych
 instalacja postgresql 13: https://www.postgresql.org/download
 nalezy utworzyc uzytkownika test_user, haslo: test (albo dowolnego innego, wazne zeby byl taki sam jak w connection stringu)
