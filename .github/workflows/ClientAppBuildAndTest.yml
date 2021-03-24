@@ -1,6 +1,8 @@
 name: BuildTestClientApp
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [Deleting-offer-]
 
 jobs:
   build:
