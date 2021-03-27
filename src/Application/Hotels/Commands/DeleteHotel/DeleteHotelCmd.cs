@@ -5,7 +5,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HotelReservationSystem.Application.Hotels.Commands.DeleteTodoItem
+namespace HotelReservationSystem.Application.Hotels.Commands.DeleteHotel
 {
     public class DeleteHotelCmd : IRequest
     {

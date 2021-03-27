@@ -34,7 +34,7 @@ namespace HotelReservationSystem.Infrastructure.Persistence
             {
                 context.Hotels.Add(new Hotel
                 {
-                    Title = "Hotel1",
+                    Name = "Hotel1",
                 });
 
                 await context.SaveChangesAsync();

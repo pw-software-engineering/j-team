@@ -1,4 +1,4 @@
-﻿namespace HotelReservationSystem.Application.Common.Interfaces
+namespace HotelReservationSystem.Application.Common.Interfaces
 {
     public interface ICurrentUserService
     {
