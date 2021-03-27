@@ -15,10 +15,14 @@ import { ShellModule } from './shell/shell.module';
 import { AboutModule } from './about/about.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { OffersListComponent } from './offers/offers-list/offers-list.component';
+import { DemoMaterialModule } from './material-module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     ServiceWorkerModule.register('./ngsw-worker.js', { enabled: environment.production }),
     FormsModule,
     HttpClientModule,
@@ -31,8 +35,9 @@ import { AppRoutingModule } from './app-routing.module';
     AboutModule,
     AuthModule,
     AppRoutingModule, // must be imported as the last module as it contains the fallback route
+    DemoMaterialModule,
   ],
-  declarations: [AppComponent],
+  declarations: [AppComponent, OffersListComponent],
   providers: [],
   bootstrap: [AppComponent],
 })
