@@ -1124,7 +1124,6 @@ export interface IOfferDto {
 }
 
 export class CreateOfferCmd implements ICreateOfferCmd {
-    offerId?: number;
     title?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
@@ -1145,7 +1144,6 @@ export class CreateOfferCmd implements ICreateOfferCmd {
 
     init(_data?: any) {
         if (_data) {
-            this.offerId = _data["offerId"];
             this.title = _data["title"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
@@ -1170,7 +1168,6 @@ export class CreateOfferCmd implements ICreateOfferCmd {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["offerId"] = this.offerId;
         data["title"] = this.title;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
@@ -1188,7 +1185,6 @@ export class CreateOfferCmd implements ICreateOfferCmd {
 }
 
 export interface ICreateOfferCmd {
-    offerId?: number;
     title?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
@@ -1384,7 +1380,6 @@ export interface IRoomDto {
 }
 
 export class CreateRoomCmd implements ICreateRoomCmd {
-    roomId?: number;
     hotelRoomNumber?: string | undefined;
     offerId?: number;
 
@@ -1399,7 +1394,6 @@ export class CreateRoomCmd implements ICreateRoomCmd {
 
     init(_data?: any) {
         if (_data) {
-            this.roomId = _data["roomId"];
             this.hotelRoomNumber = _data["hotelRoomNumber"];
             this.offerId = _data["offerId"];
         }
@@ -1414,7 +1408,6 @@ export class CreateRoomCmd implements ICreateRoomCmd {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["roomId"] = this.roomId;
         data["hotelRoomNumber"] = this.hotelRoomNumber;
         data["offerId"] = this.offerId;
         return data; 
@@ -1422,7 +1415,6 @@ export class CreateRoomCmd implements ICreateRoomCmd {
 }
 
 export interface ICreateRoomCmd {
-    roomId?: number;
     hotelRoomNumber?: string | undefined;
     offerId?: number;
 }

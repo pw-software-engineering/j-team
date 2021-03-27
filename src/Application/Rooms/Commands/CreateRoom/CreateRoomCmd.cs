@@ -10,7 +10,6 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 {
     public class CreateRoomCmd : IRequest<int>
     {
-        public int RoomId { get; set; }
         public string HotelRoomNumber { get; set; }
         public int OfferId { get; set; }
     }
@@ -28,7 +27,6 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
         {
             var entity = new Room
             {
-                RoomId = request.RoomId,
                 HotelRoomNumber = request.HotelRoomNumber,
                 OfferId = request.OfferId
             };

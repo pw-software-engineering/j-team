@@ -10,7 +10,6 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
 {
     public class CreateOfferCmd : IRequest<int>
     {
-        public int OfferId { get; set; }
         public string Title { get; set; }
         public byte[] OfferPreviewPicture { get; set; }
         public List<byte[]> Pictures { get; set; }
@@ -34,7 +33,6 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
         {
             var entity = new Offer
             {
-                OfferId = request.OfferId,
                 Title = request.Title,
                 OfferPreviewPicture = request.OfferPreviewPicture,
                 Pictures = request.Pictures,

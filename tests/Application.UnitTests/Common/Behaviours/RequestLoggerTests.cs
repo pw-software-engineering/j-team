@@ -1,6 +1,6 @@
 ﻿using HotelReservationSystem.Application.Common.Behaviours;
 using HotelReservationSystem.Application.Common.Interfaces;
-using HotelReservationSystem.Application.Hotels.Commands.CreateTodoItem;
+using HotelReservationSystem.Application.Hotels.Commands.CreateHotel;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -32,7 +32,7 @@ namespace HotelReservationSystem.Application.UnitTests.Common.Behaviours
 
             var requestLogger = new LoggingBehaviour<CreateHotelCmd>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
-            await requestLogger.Process(new CreateHotelCmd { ListId = 1, Title = "title" }, new CancellationToken());
+            await requestLogger.Process(new CreateHotelCmd { Name = "hotel1", City = "Warsaw", Country = "Poland", Description = "opis", HotelPreviewPicture = null, Pictures = new System.Collections.Generic.List<byte[]>()  }, new CancellationToken());
 
             _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Once);
         }
@@ -42,7 +42,7 @@ namespace HotelReservationSystem.Application.UnitTests.Common.Behaviours
         {
             var requestLogger = new LoggingBehaviour<CreateHotelCmd>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
-            await requestLogger.Process(new CreateHotelCmd { ListId = 1, Title = "title" }, new CancellationToken());
+            await requestLogger.Process(new CreateHotelCmd { Name = "hotel1", City = "Warsaw", Country = "Poland", Description = "opis", HotelPreviewPicture = null, Pictures = new System.Collections.Generic.List<byte[]>() }, new CancellationToken());
 
             _identityService.Verify(i => i.GetUserNameAsync(null), Times.Never);
         }

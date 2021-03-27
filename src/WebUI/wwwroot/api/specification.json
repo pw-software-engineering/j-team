@@ -760,10 +760,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "offerId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "title": {
             "type": "string",
             "nullable": true
@@ -902,10 +898,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "roomId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "hotelRoomNumber": {
             "type": "string",
             "nullable": true
