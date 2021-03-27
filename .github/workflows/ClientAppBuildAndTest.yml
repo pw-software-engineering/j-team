@@ -2,7 +2,9 @@ name: BuildTestClientApp
 
 on:
   push:
-    branches: [Deleting-offer-]
+    branches:
+      - master
+      - develop
 
 jobs:
   build:

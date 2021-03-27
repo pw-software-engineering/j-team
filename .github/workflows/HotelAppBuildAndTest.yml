@@ -1,6 +1,10 @@
 name: BuildTestHotelApp
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - master
+      - develop
 
 jobs:
   build:

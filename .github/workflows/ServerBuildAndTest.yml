@@ -2,7 +2,9 @@ name: BuildTestServer
 
 on:
   push:
-    branches: [Deleting-offer-]
+    branches:
+      - master
+      - develop
 
 env:
   registry: my_registry_name
