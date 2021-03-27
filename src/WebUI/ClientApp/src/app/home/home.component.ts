@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { finalize } from 'rxjs/operators';
-import { HotelClient } from '../../../../web-api-client';
+import { HotelClient } from 'src/app/web-api-client';
 
 import { QuoteService } from './quote.service';
 
@@ -17,8 +17,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    //const response = this.hotelClient.getHotelsWithPagination(0, 1, 10);
-    //console.log(response);
+    const response = this.hotelClient.getHotelsWithPagination(0, 1, 10);
+    console.log(response);
     this.quoteService
       .getRandomQuote({ category: 'dev' })
       .pipe(
