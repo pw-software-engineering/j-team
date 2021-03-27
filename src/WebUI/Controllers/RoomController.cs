@@ -28,10 +28,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateRoomCmd command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            command.Id = id;
 
             await Mediator.Send(command);
 

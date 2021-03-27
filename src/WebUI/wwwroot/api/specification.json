@@ -14,7 +14,7 @@
         "operationId": "Hotel_GetHotelsWithPagination",
         "parameters": [
           {
-            "name": "ListId",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -23,22 +23,13 @@
             "x-position": 1
           },
           {
-            "name": "PageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
             "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 3
+            "x-position": 2
           }
         ],
         "responses": {
@@ -170,7 +161,7 @@
         "operationId": "Offer_GetOffersWithPagination",
         "parameters": [
           {
-            "name": "ListId",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -179,22 +170,13 @@
             "x-position": 1
           },
           {
-            "name": "PageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
             "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 3
+            "x-position": 2
           }
         ],
         "responses": {
@@ -326,7 +308,7 @@
         "operationId": "Room_GetRoomsWithPagination",
         "parameters": [
           {
-            "name": "ListId",
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -335,22 +317,13 @@
             "x-position": 1
           },
           {
-            "name": "PageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
             "name": "PageSize",
             "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 3
+            "x-position": 2
           }
         ],
         "responses": {

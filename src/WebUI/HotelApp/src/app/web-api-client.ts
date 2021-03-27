@@ -15,7 +15,7 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IHotelClient {
-    getHotelsWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfHotelDto>;
+    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfHotelDto>;
     create(command: CreateHotelCmd): Observable<number>;
     update(id: number, command: UpdateHotelCmd): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
@@ -34,12 +34,8 @@ export class HotelClient implements IHotelClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getHotelsWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfHotelDto> {
+    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfHotelDto> {
         let url_ = this.baseUrl + "/api/Hotel?";
-        if (listId === null)
-            throw new Error("The parameter 'listId' cannot be null.");
-        else if (listId !== undefined)
-            url_ += "ListId=" + encodeURIComponent("" + listId) + "&";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -250,7 +246,7 @@ export class HotelClient implements IHotelClient {
 }
 
 export interface IOfferClient {
-    getOffersWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfOfferDto>;
+    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfOfferDto>;
     create(command: CreateOfferCmd): Observable<number>;
     update(id: number, command: UpdateOfferCmd): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
@@ -269,12 +265,8 @@ export class OfferClient implements IOfferClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOffersWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfOfferDto> {
+    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfOfferDto> {
         let url_ = this.baseUrl + "/api/Offer?";
-        if (listId === null)
-            throw new Error("The parameter 'listId' cannot be null.");
-        else if (listId !== undefined)
-            url_ += "ListId=" + encodeURIComponent("" + listId) + "&";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -485,7 +477,7 @@ export class OfferClient implements IOfferClient {
 }
 
 export interface IRoomClient {
-    getRoomsWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto>;
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto>;
     create(command: CreateRoomCmd): Observable<number>;
     update(id: number, command: UpdateRoomCmd): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
@@ -504,12 +496,8 @@ export class RoomClient implements IRoomClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getRoomsWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto> {
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto> {
         let url_ = this.baseUrl + "/api/Room?";
-        if (listId === null)
-            throw new Error("The parameter 'listId' cannot be null.");
-        else if (listId !== undefined)
-            url_ += "ListId=" + encodeURIComponent("" + listId) + "&";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)

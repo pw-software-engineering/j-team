@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
-    const response = this.hotelClient.getHotelsWithPagination(0, 1, 10);
+    const response = this.hotelClient.getHotelsWithPagination(1, 10);
     console.log(response);
     this.quoteService
       .getRandomQuote({ category: 'dev' })
