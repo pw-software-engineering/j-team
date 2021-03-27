@@ -35,8 +35,8 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
-      - name: Build and run Server
-        run: dotnet run
+      - name: Build  Server
+        run: dotnet build
         working-directory: src/WebUI/
       - name: UnitTests
         run: dotnet test --no-build --verbosity normal
