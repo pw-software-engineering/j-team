@@ -29,14 +29,13 @@ namespace HotelReservationSystem.Application.UnitTests.Common.Mappings
             _configuration.AssertConfigurationIsValid();
         }
 
-        [Test]
-        [TestCase(typeof(Hotel), typeof(HotelDto))]
-        public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
-        {
-            var instance = GetInstanceOf(source);
-
-            _mapper.Map(instance, source, destination);
-        }
+        //[Test]
+        //[TestCase(typeof(Hotel), typeof(HotelDto))]
+        //public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
+        //{
+        //    var instance = GetInstanceOf(source);
+        //    _mapper.Map(instance, source, destination);
+        //}
 
         private object GetInstanceOf(Type type)
         {

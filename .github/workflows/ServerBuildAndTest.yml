@@ -2,28 +2,45 @@ name: BuildTestServer
 
 on:
   push:
-    branches: [develop]
-  pull_request:
-    branches: [develop]
-  workflow_dispatch:
+    branches:
+      - main
+      - develop
+
+env:
+  registry: my_registry_name
+  DB_HOST: localhost
+  DB_USERNAME: test_user
+  DB_PASSWORD: test
 
 jobs:
-  build:
+  test:
+    name: Test
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
-      - name: Build and run Server
-        run: dotnet run
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
         working-directory: src/WebUI/
       - name: UnitTests
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.UnitTests/
-      - name: IntegrationTests
-        run: dotnet test --no-build --verbosity normal
-        working-directory: tests/Application.IntegrationTests/ 
-    
