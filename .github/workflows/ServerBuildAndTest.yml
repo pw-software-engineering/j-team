@@ -6,7 +6,6 @@ on:
 
 env:
   registry: my_registry_name
-  # Not sure these are actually being passed down to rails, set them as the default in database.yml
   DB_HOST: localhost
   DB_USERNAME: test_user
   DB_PASSWORD: test
@@ -35,9 +34,11 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.x
-      - name: Build  Server
-        run: dotnet build
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
         working-directory: src/WebUI/
       - name: UnitTests
-        run: dotnet test
+        run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.UnitTests/
