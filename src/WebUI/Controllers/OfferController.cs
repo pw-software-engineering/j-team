@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [Authorize]
-    public class OffersController : ApiControllerBase
+    // [Authorize]
+    public class OfferController : ApiControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<PaginatedList<OfferDto>>> GetOffersWithPagination([FromQuery] GetOffersWithPaginationQuery query)

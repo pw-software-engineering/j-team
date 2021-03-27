@@ -5,6 +5,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using HotelReservationSystem.Application.Common.Exceptions;
 
 namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 {
@@ -25,10 +26,17 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 
         public async Task<int> Handle(CreateRoomCmd request, CancellationToken cancellationToken)
         {
+            var offer = await _context.Offers.FindAsync(request.OfferId);
+
+            if (offer == null)
+            {
+                throw new NotFoundException(nameof(Offer), request.OfferId);
+            }
             var entity = new Room
             {
                 HotelRoomNumber = request.HotelRoomNumber,
-                OfferId = request.OfferId
+                OfferId = request.OfferId,
+                Offer = offer
             };
 
             _context.Rooms.Add(entity);

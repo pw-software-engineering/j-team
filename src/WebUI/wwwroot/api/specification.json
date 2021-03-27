@@ -6,12 +6,12 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/Hotels": {
+    "/api/Hotel": {
       "get": {
         "tags": [
-          "Hotels"
+          "Hotel"
         ],
-        "operationId": "Hotels_GetHotelsWithPagination",
+        "operationId": "Hotel_GetHotelsWithPagination",
         "parameters": [
           {
             "name": "ListId",
@@ -52,18 +52,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
-          "Hotels"
+          "Hotel"
         ],
-        "operationId": "Hotels_Create",
+        "operationId": "Hotel_Create",
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -88,20 +83,15 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
-    "/api/Hotels/{id}": {
+    "/api/Hotel/{id}": {
       "put": {
         "tags": [
-          "Hotels"
+          "Hotel"
         ],
-        "operationId": "Hotels_Update",
+        "operationId": "Hotel_Update",
         "parameters": [
           {
             "name": "id",
@@ -138,18 +128,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
-          "Hotels"
+          "Hotel"
         ],
-        "operationId": "Hotels_Delete",
+        "operationId": "Hotel_Delete",
         "parameters": [
           {
             "name": "id",
@@ -174,20 +159,15 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
-    "/api/Offers": {
+    "/api/Offer": {
       "get": {
         "tags": [
-          "Offers"
+          "Offer"
         ],
-        "operationId": "Offers_GetOffersWithPagination",
+        "operationId": "Offer_GetOffersWithPagination",
         "parameters": [
           {
             "name": "ListId",
@@ -228,18 +208,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
-          "Offers"
+          "Offer"
         ],
-        "operationId": "Offers_Create",
+        "operationId": "Offer_Create",
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -264,20 +239,15 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
-    "/api/Offers/{id}": {
+    "/api/Offer/{id}": {
       "put": {
         "tags": [
-          "Offers"
+          "Offer"
         ],
-        "operationId": "Offers_Update",
+        "operationId": "Offer_Update",
         "parameters": [
           {
             "name": "id",
@@ -314,18 +284,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
-          "Offers"
+          "Offer"
         ],
-        "operationId": "Offers_Delete",
+        "operationId": "Offer_Delete",
         "parameters": [
           {
             "name": "id",
@@ -350,20 +315,15 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
-    "/api/Rooms": {
+    "/api/Room": {
       "get": {
         "tags": [
-          "Rooms"
+          "Room"
         ],
-        "operationId": "Rooms_GetRoomsWithPagination",
+        "operationId": "Room_GetRoomsWithPagination",
         "parameters": [
           {
             "name": "ListId",
@@ -404,18 +364,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
-          "Rooms"
+          "Room"
         ],
-        "operationId": "Rooms_Create",
+        "operationId": "Room_Create",
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -440,20 +395,15 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
-    "/api/Rooms/{id}": {
+    "/api/Room/{id}": {
       "put": {
         "tags": [
-          "Rooms"
+          "Room"
         ],
-        "operationId": "Rooms_Update",
+        "operationId": "Room_Update",
         "parameters": [
           {
             "name": "id",
@@ -490,18 +440,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
-          "Rooms"
+          "Room"
         ],
-        "operationId": "Rooms_Delete",
+        "operationId": "Room_Delete",
         "parameters": [
           {
             "name": "id",
@@ -526,12 +471,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     }
   },
@@ -760,6 +700,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "hotelId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "title": {
             "type": "string",
             "nullable": true

@@ -14,8 +14,8 @@ using System.Threading.Tasks;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [Authorize]
-    public class HotelsController : ApiControllerBase
+    // [Authorize]
+    public class HotelController : ApiControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<PaginatedList<HotelDto>>> GetHotelsWithPagination([FromQuery] GetHotelsWithPaginationQuery query)

@@ -5,11 +5,13 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using HotelReservationSystem.Application.Common.Exceptions;
 
 namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
 {
     public class CreateOfferCmd : IRequest<int>
     {
+        public int HotelId { get; set; }
         public string Title { get; set; }
         public byte[] OfferPreviewPicture { get; set; }
         public List<byte[]> Pictures { get; set; }
@@ -31,8 +33,16 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
 
         public async Task<int> Handle(CreateOfferCmd request, CancellationToken cancellationToken)
         {
+            var hotel = await _context.Hotels.FindAsync(request.HotelId);
+
+            if (hotel == null)
+            {
+                throw new NotFoundException(nameof(Hotel), request.HotelId);
+            }
             var entity = new Offer
             {
+                HotelId = request.HotelId,
+                Hotel = hotel,
                 Title = request.Title,
                 OfferPreviewPicture = request.OfferPreviewPicture,
                 Pictures = request.Pictures,
