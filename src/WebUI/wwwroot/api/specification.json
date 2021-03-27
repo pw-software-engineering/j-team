@@ -6,12 +6,12 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/TodoItems": {
+    "/api/Hotel": {
       "get": {
         "tags": [
-          "TodoItems"
+          "Hotel"
         ],
-        "operationId": "TodoItems_GetTodoItemsWithPagination",
+        "operationId": "Hotel_GetHotelsWithPagination",
         "parameters": [
           {
             "name": "ListId",
@@ -61,9 +61,9 @@
       },
       "post": {
         "tags": [
-          "TodoItems"
+          "Hotel"
         ],
-        "operationId": "TodoItems_Create",
+        "operationId": "Hotel_Create",
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -96,12 +96,12 @@
         ]
       }
     },
-    "/api/TodoItems/{id}": {
+    "/api/Hotel/{id}": {
       "put": {
         "tags": [
-          "TodoItems"
+          "Hotel"
         ],
-        "operationId": "TodoItems_Update",
+        "operationId": "Hotel_Update",
         "parameters": [
           {
             "name": "id",
@@ -147,9 +147,9 @@
       },
       "delete": {
         "tags": [
-          "TodoItems"
+          "Hotel"
         ],
-        "operationId": "TodoItems_Delete",
+        "operationId": "Hotel_Delete",
         "parameters": [
           {
             "name": "id",
