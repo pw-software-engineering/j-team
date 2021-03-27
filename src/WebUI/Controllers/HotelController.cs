@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [Authorize]
-    public class TodoItemsController : ApiControllerBase
+    public class HotelController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<HotelDto>>> GetTodoItemsWithPagination([FromQuery] GetHotelsWithPaginationQuery query)
+        public async Task<ActionResult<PaginatedList<HotelDto>>> GetHotelsWithPagination([FromQuery] GetHotelsWithPaginationQuery query)
         {
             return await Mediator.Send(query);
         }
