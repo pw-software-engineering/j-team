@@ -9,7 +9,7 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Hotel> builder)
         {
 
-            builder.Property(t => t.Title)
+            builder.Property(t => t.Name)
                 .HasMaxLength(200)
                 .IsRequired();
         }

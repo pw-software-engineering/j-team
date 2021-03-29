@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace HotelReservationSystem.Application.Common.Interfaces
 {

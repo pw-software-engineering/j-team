@@ -1,4 +1,4 @@
-﻿using HotelReservationSystem.Domain.Common;
+using HotelReservationSystem.Domain.Common;
 using System.Threading.Tasks;
 
 namespace HotelReservationSystem.Application.Common.Interfaces

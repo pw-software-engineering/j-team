@@ -14,7 +14,6 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetHotelsWithPaginat
 {
     public class GetHotelsWithPaginationQuery : IRequest<PaginatedList<HotelDto>>
     {
-        public int ListId { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
     }
@@ -33,9 +32,9 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetHotelsWithPaginat
         public async Task<PaginatedList<HotelDto>> Handle(GetHotelsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             return await _context.Hotels
-                .OrderBy(x => x.Title)
+                .OrderBy(x => x.Name)
                 .ProjectTo<HotelDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize); ;
+                .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
     }
 }

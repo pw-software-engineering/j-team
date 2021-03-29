@@ -8,6 +8,8 @@ namespace HotelReservationSystem.Application.Common.Interfaces
     public interface IApplicationDbContext
     {
         DbSet<Hotel> Hotels { get; set; }
+        DbSet<Offer> Offers { get; set; }
+        DbSet<Room> Rooms { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
