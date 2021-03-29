@@ -18,12 +18,12 @@ namespace HotelReservationSystem.Application.Offers.Queries.GetOffersWithPaginat
         public int PageSize { get; set; } = 10;
     }
 
-    public class GetHotelsWithPaginationQueryHandler : IRequestHandler<GetOffersWithPaginationQuery, PaginatedList<OfferDto>>
+    public class GetOffersWithPaginationQueryHandler : IRequestHandler<GetOffersWithPaginationQuery, PaginatedList<OfferDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetHotelsWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetOffersWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

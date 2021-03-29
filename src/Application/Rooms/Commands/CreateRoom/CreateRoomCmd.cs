@@ -15,11 +15,11 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
         public int OfferId { get; set; }
     }
 
-    public class CreateOfferCmdHandler : IRequestHandler<CreateRoomCmd, int>
+    public class CreateRoomCmdHandler : IRequestHandler<CreateRoomCmd, int>
     {
         private readonly IApplicationDbContext _context;
 
-        public CreateOfferCmdHandler(IApplicationDbContext context)
+        public CreateRoomCmdHandler(IApplicationDbContext context)
         {
             _context = context;
         }

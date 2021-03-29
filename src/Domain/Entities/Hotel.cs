@@ -16,6 +16,6 @@ namespace HotelReservationSystem.Domain.Entities
         public string City { get; set; }
         public string Country { get; set; }
         // relation
-        public List<Offer> Offers { get; set; }
+        public virtual List<Offer> Offers { get; set; }
     }
 }

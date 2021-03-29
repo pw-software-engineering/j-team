@@ -39,19 +39,19 @@ namespace HotelReservationSystem.Application.Offers.Commands.UpdateOffer
                 throw new NotFoundException(nameof(Offer), request.Id);
             }
 
-            entity.Title = request.Title == null ? entity.Title : request.Title;
-            entity.OfferPreviewPicture = request.OfferPreviewPicture == null ? entity.OfferPreviewPicture : request.OfferPreviewPicture;
+            entity.Title = request.Title ?? entity.Title;
+            entity.OfferPreviewPicture = request.OfferPreviewPicture ?? entity.OfferPreviewPicture;
             entity.Pictures = request.Pictures == null ? entity.Pictures : request.Pictures;
             if (request.IsActive != null)
-                entity.IsActive = (bool)request.IsActive;
+                entity.IsActive = request.IsActive.Value;
             if (request.IsDeleted != null)
-                entity.IsDeleted = (bool)request.IsDeleted;
+                entity.IsDeleted = request.IsDeleted.Value;
             if (request.CostPerChild != null)
-                entity.CostPerChild = (double)request.CostPerChild;
+                entity.CostPerChild = request.CostPerChild.Value;
             if (request.CostPerAdult != null)
-                entity.CostPerAdult = (double)request.CostPerAdult;
+                entity.CostPerAdult = request.CostPerAdult.Value;
             if (request.MaxGuests != null)
-                entity.MaxGuests = (uint)request.MaxGuests;
+                entity.MaxGuests = request.MaxGuests.Value;
 
             await _context.SaveChangesAsync(cancellationToken);
 
