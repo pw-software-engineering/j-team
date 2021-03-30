@@ -35,6 +35,9 @@ namespace HotelReservationSystem.Infrastructure.Persistence
                 context.Hotels.Add(new Hotel
                 {
                     Name = "Hotel1",
+                    Description = "Description of the Hotel1",
+                    City = "City of the Hotel1",
+                    Country = "Country of the Hotel1"
                 });
 
                 await context.SaveChangesAsync();

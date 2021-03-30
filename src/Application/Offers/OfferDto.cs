@@ -6,6 +6,7 @@ namespace Application.Offers
     {
         public int OfferId { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
         public byte[] OfferPreviewPicture { get; set; }
         public List<byte[]> Pictures { get; set; }
         public bool IsActive { get; set; }

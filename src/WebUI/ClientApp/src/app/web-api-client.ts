@@ -1038,6 +1038,7 @@ export interface IPaginatedListOfOfferDto {
 export class OfferDto implements IOfferDto {
     offerId?: number;
     title?: string | undefined;
+    description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
     isActive?: boolean;
@@ -1059,6 +1060,7 @@ export class OfferDto implements IOfferDto {
         if (_data) {
             this.offerId = _data["offerId"];
             this.title = _data["title"];
+            this.description = _data["description"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
                 this.pictures = [] as any;
@@ -1084,6 +1086,7 @@ export class OfferDto implements IOfferDto {
         data = typeof data === 'object' ? data : {};
         data["offerId"] = this.offerId;
         data["title"] = this.title;
+        data["description"] = this.description;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
             data["pictures"] = [];
@@ -1102,6 +1105,7 @@ export class OfferDto implements IOfferDto {
 export interface IOfferDto {
     offerId?: number;
     title?: string | undefined;
+    description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
     isActive?: boolean;
@@ -1113,7 +1117,8 @@ export interface IOfferDto {
 
 export class CreateOfferCmd implements ICreateOfferCmd {
     hotelId?: number;
-    title?: string | undefined;
+    offerTitle?: string | undefined;
+    description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
     isActive?: boolean;
@@ -1121,6 +1126,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     costPerChild?: number;
     costPerAdult?: number;
     maxGuests?: number;
+    rooms?: Room[] | undefined;
 
     constructor(data?: ICreateOfferCmd) {
         if (data) {
@@ -1134,7 +1140,8 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     init(_data?: any) {
         if (_data) {
             this.hotelId = _data["hotelId"];
-            this.title = _data["title"];
+            this.offerTitle = _data["offerTitle"];
+            this.description = _data["description"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
                 this.pictures = [] as any;
@@ -1146,6 +1153,11 @@ export class CreateOfferCmd implements ICreateOfferCmd {
             this.costPerChild = _data["costPerChild"];
             this.costPerAdult = _data["costPerAdult"];
             this.maxGuests = _data["maxGuests"];
+            if (Array.isArray(_data["rooms"])) {
+                this.rooms = [] as any;
+                for (let item of _data["rooms"])
+                    this.rooms!.push(Room.fromJS(item));
+            }
         }
     }
 
@@ -1159,7 +1171,8 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hotelId"] = this.hotelId;
-        data["title"] = this.title;
+        data["offerTitle"] = this.offerTitle;
+        data["description"] = this.description;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
             data["pictures"] = [];
@@ -1171,13 +1184,19 @@ export class CreateOfferCmd implements ICreateOfferCmd {
         data["costPerChild"] = this.costPerChild;
         data["costPerAdult"] = this.costPerAdult;
         data["maxGuests"] = this.maxGuests;
+        if (Array.isArray(this.rooms)) {
+            data["rooms"] = [];
+            for (let item of this.rooms)
+                data["rooms"].push(item.toJSON());
+        }
         return data; 
     }
 }
 
 export interface ICreateOfferCmd {
     hotelId?: number;
-    title?: string | undefined;
+    offerTitle?: string | undefined;
+    description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
     isActive?: boolean;
@@ -1185,11 +1204,427 @@ export interface ICreateOfferCmd {
     costPerChild?: number;
     costPerAdult?: number;
     maxGuests?: number;
+    rooms?: Room[] | undefined;
+}
+
+export class Room implements IRoom {
+    roomId?: number;
+    hotelRoomNumber?: string | undefined;
+    offers?: Offer[] | undefined;
+
+    constructor(data?: IRoom) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roomId = _data["roomId"];
+            this.hotelRoomNumber = _data["hotelRoomNumber"];
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Room {
+        data = typeof data === 'object' ? data : {};
+        let result = new Room();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roomId"] = this.roomId;
+        data["hotelRoomNumber"] = this.hotelRoomNumber;
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IRoom {
+    roomId?: number;
+    hotelRoomNumber?: string | undefined;
+    offers?: Offer[] | undefined;
+}
+
+export abstract class AuditableEntity implements IAuditableEntity {
+    created?: Date;
+    createdBy?: string | undefined;
+    lastModified?: Date | undefined;
+    lastModifiedBy?: string | undefined;
+
+    constructor(data?: IAuditableEntity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
+            this.lastModifiedBy = _data["lastModifiedBy"];
+        }
+    }
+
+    static fromJS(data: any): AuditableEntity {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'AuditableEntity' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
+        data["lastModifiedBy"] = this.lastModifiedBy;
+        return data; 
+    }
+}
+
+export interface IAuditableEntity {
+    created?: Date;
+    createdBy?: string | undefined;
+    lastModified?: Date | undefined;
+    lastModifiedBy?: string | undefined;
+}
+
+export class Offer extends AuditableEntity implements IOffer {
+    offerId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
+    offerPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
+    isActive?: boolean;
+    isDeleted?: boolean;
+    costPerChild?: number;
+    costPerAdult?: number;
+    maxGuests?: number;
+    hotelId?: number;
+    hotel?: Hotel | undefined;
+    rooms?: Room[] | undefined;
+    reservations?: Reservation[] | undefined;
+
+    constructor(data?: IOffer) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.offerId = _data["offerId"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+            this.offerPreviewPicture = _data["offerPreviewPicture"];
+            if (Array.isArray(_data["pictures"])) {
+                this.pictures = [] as any;
+                for (let item of _data["pictures"])
+                    this.pictures!.push(item);
+            }
+            this.isActive = _data["isActive"];
+            this.isDeleted = _data["isDeleted"];
+            this.costPerChild = _data["costPerChild"];
+            this.costPerAdult = _data["costPerAdult"];
+            this.maxGuests = _data["maxGuests"];
+            this.hotelId = _data["hotelId"];
+            this.hotel = _data["hotel"] ? Hotel.fromJS(_data["hotel"]) : <any>undefined;
+            if (Array.isArray(_data["rooms"])) {
+                this.rooms = [] as any;
+                for (let item of _data["rooms"])
+                    this.rooms!.push(Room.fromJS(item));
+            }
+            if (Array.isArray(_data["reservations"])) {
+                this.reservations = [] as any;
+                for (let item of _data["reservations"])
+                    this.reservations!.push(Reservation.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Offer {
+        data = typeof data === 'object' ? data : {};
+        let result = new Offer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["offerId"] = this.offerId;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        data["offerPreviewPicture"] = this.offerPreviewPicture;
+        if (Array.isArray(this.pictures)) {
+            data["pictures"] = [];
+            for (let item of this.pictures)
+                data["pictures"].push(item);
+        }
+        data["isActive"] = this.isActive;
+        data["isDeleted"] = this.isDeleted;
+        data["costPerChild"] = this.costPerChild;
+        data["costPerAdult"] = this.costPerAdult;
+        data["maxGuests"] = this.maxGuests;
+        data["hotelId"] = this.hotelId;
+        data["hotel"] = this.hotel ? this.hotel.toJSON() : <any>undefined;
+        if (Array.isArray(this.rooms)) {
+            data["rooms"] = [];
+            for (let item of this.rooms)
+                data["rooms"].push(item.toJSON());
+        }
+        if (Array.isArray(this.reservations)) {
+            data["reservations"] = [];
+            for (let item of this.reservations)
+                data["reservations"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IOffer extends IAuditableEntity {
+    offerId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
+    offerPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
+    isActive?: boolean;
+    isDeleted?: boolean;
+    costPerChild?: number;
+    costPerAdult?: number;
+    maxGuests?: number;
+    hotelId?: number;
+    hotel?: Hotel | undefined;
+    rooms?: Room[] | undefined;
+    reservations?: Reservation[] | undefined;
+}
+
+export class Hotel extends AuditableEntity implements IHotel {
+    hotelId?: number;
+    name?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
+    description?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    offers?: Offer[] | undefined;
+
+    constructor(data?: IHotel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.hotelId = _data["hotelId"];
+            this.name = _data["name"];
+            this.hotelPreviewPicture = _data["hotelPreviewPicture"];
+            if (Array.isArray(_data["pictures"])) {
+                this.pictures = [] as any;
+                for (let item of _data["pictures"])
+                    this.pictures!.push(item);
+            }
+            this.description = _data["description"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Hotel {
+        data = typeof data === 'object' ? data : {};
+        let result = new Hotel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotelId"] = this.hotelId;
+        data["name"] = this.name;
+        data["hotelPreviewPicture"] = this.hotelPreviewPicture;
+        if (Array.isArray(this.pictures)) {
+            data["pictures"] = [];
+            for (let item of this.pictures)
+                data["pictures"].push(item);
+        }
+        data["description"] = this.description;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IHotel extends IAuditableEntity {
+    hotelId?: number;
+    name?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
+    description?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    offers?: Offer[] | undefined;
+}
+
+export class Reservation extends AuditableEntity implements IReservation {
+    reservationId?: number;
+    fromTime?: Date;
+    toTime?: Date;
+    childrenCount?: number;
+    adultsCount?: number;
+    roomId?: number | undefined;
+    clientId?: number;
+    client?: Client | undefined;
+    offerId?: number;
+    offer?: Offer | undefined;
+
+    constructor(data?: IReservation) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.reservationId = _data["reservationId"];
+            this.fromTime = _data["fromTime"] ? new Date(_data["fromTime"].toString()) : <any>undefined;
+            this.toTime = _data["toTime"] ? new Date(_data["toTime"].toString()) : <any>undefined;
+            this.childrenCount = _data["childrenCount"];
+            this.adultsCount = _data["adultsCount"];
+            this.roomId = _data["roomId"];
+            this.clientId = _data["clientId"];
+            this.client = _data["client"] ? Client.fromJS(_data["client"]) : <any>undefined;
+            this.offerId = _data["offerId"];
+            this.offer = _data["offer"] ? Offer.fromJS(_data["offer"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Reservation {
+        data = typeof data === 'object' ? data : {};
+        let result = new Reservation();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["reservationId"] = this.reservationId;
+        data["fromTime"] = this.fromTime ? this.fromTime.toISOString() : <any>undefined;
+        data["toTime"] = this.toTime ? this.toTime.toISOString() : <any>undefined;
+        data["childrenCount"] = this.childrenCount;
+        data["adultsCount"] = this.adultsCount;
+        data["roomId"] = this.roomId;
+        data["clientId"] = this.clientId;
+        data["client"] = this.client ? this.client.toJSON() : <any>undefined;
+        data["offerId"] = this.offerId;
+        data["offer"] = this.offer ? this.offer.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IReservation extends IAuditableEntity {
+    reservationId?: number;
+    fromTime?: Date;
+    toTime?: Date;
+    childrenCount?: number;
+    adultsCount?: number;
+    roomId?: number | undefined;
+    clientId?: number;
+    client?: Client | undefined;
+    offerId?: number;
+    offer?: Offer | undefined;
+}
+
+export class Client extends AuditableEntity implements IClient {
+    clientId?: number;
+    name?: string | undefined;
+    surname?: string | undefined;
+    username?: string | undefined;
+    email?: string | undefined;
+    reservations?: Reservation[] | undefined;
+
+    constructor(data?: IClient) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.clientId = _data["clientId"];
+            this.name = _data["name"];
+            this.surname = _data["surname"];
+            this.username = _data["username"];
+            this.email = _data["email"];
+            if (Array.isArray(_data["reservations"])) {
+                this.reservations = [] as any;
+                for (let item of _data["reservations"])
+                    this.reservations!.push(Reservation.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Client {
+        data = typeof data === 'object' ? data : {};
+        let result = new Client();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["clientId"] = this.clientId;
+        data["name"] = this.name;
+        data["surname"] = this.surname;
+        data["username"] = this.username;
+        data["email"] = this.email;
+        if (Array.isArray(this.reservations)) {
+            data["reservations"] = [];
+            for (let item of this.reservations)
+                data["reservations"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IClient extends IAuditableEntity {
+    clientId?: number;
+    name?: string | undefined;
+    surname?: string | undefined;
+    username?: string | undefined;
+    email?: string | undefined;
+    reservations?: Reservation[] | undefined;
 }
 
 export class UpdateOfferCmd implements IUpdateOfferCmd {
     id?: number;
     title?: string | undefined;
+    description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
     isActive?: boolean | undefined;
@@ -1211,6 +1646,7 @@ export class UpdateOfferCmd implements IUpdateOfferCmd {
         if (_data) {
             this.id = _data["id"];
             this.title = _data["title"];
+            this.description = _data["description"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
                 this.pictures = [] as any;
@@ -1236,6 +1672,7 @@ export class UpdateOfferCmd implements IUpdateOfferCmd {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["title"] = this.title;
+        data["description"] = this.description;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
             data["pictures"] = [];
@@ -1254,6 +1691,7 @@ export class UpdateOfferCmd implements IUpdateOfferCmd {
 export interface IUpdateOfferCmd {
     id?: number;
     title?: string | undefined;
+    description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
     isActive?: boolean | undefined;
@@ -1373,7 +1811,7 @@ export interface IRoomDto {
 
 export class CreateRoomCmd implements ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerId?: number;
+    offerID?: number;
 
     constructor(data?: ICreateRoomCmd) {
         if (data) {
@@ -1387,7 +1825,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
     init(_data?: any) {
         if (_data) {
             this.hotelRoomNumber = _data["hotelRoomNumber"];
-            this.offerId = _data["offerId"];
+            this.offerID = _data["offerID"];
         }
     }
 
@@ -1401,14 +1839,14 @@ export class CreateRoomCmd implements ICreateRoomCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hotelRoomNumber"] = this.hotelRoomNumber;
-        data["offerId"] = this.offerId;
+        data["offerID"] = this.offerID;
         return data; 
     }
 }
 
 export interface ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerId?: number;
+    offerID?: number;
 }
 
 export class UpdateRoomCmd implements IUpdateRoomCmd {
