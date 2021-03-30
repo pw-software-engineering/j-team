@@ -12,6 +12,8 @@ namespace HotelReservationSystem.Application.Common.Interfaces
         DbSet<Room> Rooms { get; set; }
         DbSet<Reservation> Reservations { get; set; }
         DbSet<Client> Clients { get; set; }
+        DbSet<File> Files { get; set; }
+        DbSet<PreviewFile> PreviewFiles { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

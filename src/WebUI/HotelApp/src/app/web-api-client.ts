@@ -1309,10 +1309,11 @@ export class Offer extends AuditableEntity implements IOffer {
     offerId?: number;
     title?: string | undefined;
     description?: string | undefined;
-    offerPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
-    isActive?: boolean;
-    isDeleted?: boolean;
+    offerPreviewPictureId?: number;
+    offerPreviewPicture?: PreviewFile | undefined;
+    pictures?: File[] | undefined;
+    isActive?: boolean | undefined;
+    isDeleted?: boolean | undefined;
     costPerChild?: number;
     costPerAdult?: number;
     maxGuests?: number;
@@ -1331,11 +1332,12 @@ export class Offer extends AuditableEntity implements IOffer {
             this.offerId = _data["offerId"];
             this.title = _data["title"];
             this.description = _data["description"];
-            this.offerPreviewPicture = _data["offerPreviewPicture"];
+            this.offerPreviewPictureId = _data["offerPreviewPictureId"];
+            this.offerPreviewPicture = _data["offerPreviewPicture"] ? PreviewFile.fromJS(_data["offerPreviewPicture"]) : <any>undefined;
             if (Array.isArray(_data["pictures"])) {
                 this.pictures = [] as any;
                 for (let item of _data["pictures"])
-                    this.pictures!.push(item);
+                    this.pictures!.push(File.fromJS(item));
             }
             this.isActive = _data["isActive"];
             this.isDeleted = _data["isDeleted"];
@@ -1369,11 +1371,12 @@ export class Offer extends AuditableEntity implements IOffer {
         data["offerId"] = this.offerId;
         data["title"] = this.title;
         data["description"] = this.description;
-        data["offerPreviewPicture"] = this.offerPreviewPicture;
+        data["offerPreviewPictureId"] = this.offerPreviewPictureId;
+        data["offerPreviewPicture"] = this.offerPreviewPicture ? this.offerPreviewPicture.toJSON() : <any>undefined;
         if (Array.isArray(this.pictures)) {
             data["pictures"] = [];
             for (let item of this.pictures)
-                data["pictures"].push(item);
+                data["pictures"].push(item.toJSON());
         }
         data["isActive"] = this.isActive;
         data["isDeleted"] = this.isDeleted;
@@ -1401,10 +1404,11 @@ export interface IOffer extends IAuditableEntity {
     offerId?: number;
     title?: string | undefined;
     description?: string | undefined;
-    offerPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
-    isActive?: boolean;
-    isDeleted?: boolean;
+    offerPreviewPictureId?: number;
+    offerPreviewPicture?: PreviewFile | undefined;
+    pictures?: File[] | undefined;
+    isActive?: boolean | undefined;
+    isDeleted?: boolean | undefined;
     costPerChild?: number;
     costPerAdult?: number;
     maxGuests?: number;
@@ -1414,11 +1418,76 @@ export interface IOffer extends IAuditableEntity {
     reservations?: Reservation[] | undefined;
 }
 
+export class PreviewFile extends AuditableEntity implements IPreviewFile {
+    hotel?: Hotel | undefined;
+    fileId?: number;
+    name?: string | undefined;
+    data?: string | undefined;
+    description?: string | undefined;
+    hotelId?: number;
+    offers?: Offer[] | undefined;
+
+    constructor(data?: IPreviewFile) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.hotel = _data["hotel"] ? Hotel.fromJS(_data["hotel"]) : <any>undefined;
+            this.fileId = _data["fileId"];
+            this.name = _data["name"];
+            this.data = _data["data"];
+            this.description = _data["description"];
+            this.hotelId = _data["hotelId"];
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PreviewFile {
+        data = typeof data === 'object' ? data : {};
+        let result = new PreviewFile();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotel"] = this.hotel ? this.hotel.toJSON() : <any>undefined;
+        data["fileId"] = this.fileId;
+        data["name"] = this.name;
+        data["data"] = this.data;
+        data["description"] = this.description;
+        data["hotelId"] = this.hotelId;
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IPreviewFile extends IAuditableEntity {
+    hotel?: Hotel | undefined;
+    fileId?: number;
+    name?: string | undefined;
+    data?: string | undefined;
+    description?: string | undefined;
+    hotelId?: number;
+    offers?: Offer[] | undefined;
+}
+
 export class Hotel extends AuditableEntity implements IHotel {
     hotelId?: number;
     name?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
+    hotelPreviewPicture?: PreviewFile | undefined;
+    pictures?: File[] | undefined;
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
@@ -1433,11 +1502,11 @@ export class Hotel extends AuditableEntity implements IHotel {
         if (_data) {
             this.hotelId = _data["hotelId"];
             this.name = _data["name"];
-            this.hotelPreviewPicture = _data["hotelPreviewPicture"];
+            this.hotelPreviewPicture = _data["hotelPreviewPicture"] ? PreviewFile.fromJS(_data["hotelPreviewPicture"]) : <any>undefined;
             if (Array.isArray(_data["pictures"])) {
                 this.pictures = [] as any;
                 for (let item of _data["pictures"])
-                    this.pictures!.push(item);
+                    this.pictures!.push(File.fromJS(item));
             }
             this.description = _data["description"];
             this.city = _data["city"];
@@ -1461,11 +1530,11 @@ export class Hotel extends AuditableEntity implements IHotel {
         data = typeof data === 'object' ? data : {};
         data["hotelId"] = this.hotelId;
         data["name"] = this.name;
-        data["hotelPreviewPicture"] = this.hotelPreviewPicture;
+        data["hotelPreviewPicture"] = this.hotelPreviewPicture ? this.hotelPreviewPicture.toJSON() : <any>undefined;
         if (Array.isArray(this.pictures)) {
             data["pictures"] = [];
             for (let item of this.pictures)
-                data["pictures"].push(item);
+                data["pictures"].push(item.toJSON());
         }
         data["description"] = this.description;
         data["city"] = this.city;
@@ -1483,11 +1552,76 @@ export class Hotel extends AuditableEntity implements IHotel {
 export interface IHotel extends IAuditableEntity {
     hotelId?: number;
     name?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
+    hotelPreviewPicture?: PreviewFile | undefined;
+    pictures?: File[] | undefined;
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
+    offers?: Offer[] | undefined;
+}
+
+export class File extends AuditableEntity implements IFile {
+    hotel?: Hotel | undefined;
+    fileId?: number;
+    name?: string | undefined;
+    data?: string | undefined;
+    description?: string | undefined;
+    hotelId?: number;
+    offers?: Offer[] | undefined;
+
+    constructor(data?: IFile) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.hotel = _data["hotel"] ? Hotel.fromJS(_data["hotel"]) : <any>undefined;
+            this.fileId = _data["fileId"];
+            this.name = _data["name"];
+            this.data = _data["data"];
+            this.description = _data["description"];
+            this.hotelId = _data["hotelId"];
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): File {
+        data = typeof data === 'object' ? data : {};
+        let result = new File();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotel"] = this.hotel ? this.hotel.toJSON() : <any>undefined;
+        data["fileId"] = this.fileId;
+        data["name"] = this.name;
+        data["data"] = this.data;
+        data["description"] = this.description;
+        data["hotelId"] = this.hotelId;
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IFile extends IAuditableEntity {
+    hotel?: Hotel | undefined;
+    fileId?: number;
+    name?: string | undefined;
+    data?: string | undefined;
+    description?: string | undefined;
+    hotelId?: number;
     offers?: Offer[] | undefined;
 }
 

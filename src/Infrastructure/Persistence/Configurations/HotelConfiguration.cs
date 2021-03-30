@@ -12,10 +12,6 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
             builder.Property(t => t.Name)
                 .HasMaxLength(200)
                 .IsRequired();
-            builder.Property(t => t.HotelPreviewPicture)
-                .IsRequired(false);
-            builder.Property(t => t.Pictures)
-                .IsRequired(false);
             builder.Property(t => t.Description)
                 .HasMaxLength(2000)
                 .IsRequired(false);
@@ -26,6 +22,8 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200)
                 .IsRequired();
             builder.HasMany(t => t.Offers).WithOne(t => t.Hotel);
+            builder.HasOne(t => t.HotelPreviewPicture).WithOne(t => t.Hotel);
+            builder.HasMany(t => t.Pictures).WithOne(t => t.Hotel);
         }
     }
 }

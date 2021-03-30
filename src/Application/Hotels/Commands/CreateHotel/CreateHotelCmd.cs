@@ -29,11 +29,37 @@ namespace HotelReservationSystem.Application.Hotels.Commands.CreateHotel
 
         public async Task<int> Handle(CreateHotelCmd request, CancellationToken cancellationToken)
         {
+            PreviewFile previewPicture = null;
+            if (request.HotelPreviewPicture != null)
+            {
+                previewPicture = new PreviewFile
+                {
+                    Data = request.HotelPreviewPicture
+                };
+                _context.PreviewFiles.Add(previewPicture);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+
+            List<File> pictures = null;
+            if (request.Pictures.Count > 0)
+            {
+                pictures = new List<File>();
+                foreach (var picture in request.Pictures)
+                {
+                    File tmpPicture = new File
+                    {
+                        Data = picture
+                    };
+                    _context.Files.Add(tmpPicture);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    pictures.Add(tmpPicture);
+                }
+            }
             var entity = new Hotel
             {
                 Name = request.Name,
-                HotelPreviewPicture = request.HotelPreviewPicture,
-                Pictures = request.Pictures,
+                HotelPreviewPicture = previewPicture,
+                Pictures = pictures,
                 Description = request.Description,
                 City = request.City,
                 Country = request.Country

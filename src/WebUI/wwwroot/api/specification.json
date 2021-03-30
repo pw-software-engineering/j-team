@@ -770,24 +770,32 @@
                 "type": "string",
                 "nullable": true
               },
+              "offerPreviewPictureId": {
+                "type": "integer",
+                "format": "int32"
+              },
               "offerPreviewPicture": {
-                "type": "string",
-                "format": "byte",
-                "nullable": true
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PreviewFile"
+                  }
+                ]
               },
               "pictures": {
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "type": "string",
-                  "format": "byte"
+                  "$ref": "#/components/schemas/File"
                 }
               },
               "isActive": {
-                "type": "boolean"
+                "type": "boolean",
+                "nullable": true
               },
               "isDeleted": {
-                "type": "boolean"
+                "type": "boolean",
+                "nullable": true
               },
               "costPerChild": {
                 "type": "number",
@@ -830,6 +838,55 @@
           }
         ]
       },
+      "PreviewFile": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditableEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "hotel": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Hotel"
+                  }
+                ]
+              },
+              "fileId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "data": {
+                "type": "string",
+                "format": "byte",
+                "nullable": true
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "hotelId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "offers": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Offer"
+                }
+              }
+            }
+          }
+        ]
+      },
       "Hotel": {
         "allOf": [
           {
@@ -848,16 +905,18 @@
                 "nullable": true
               },
               "hotelPreviewPicture": {
-                "type": "string",
-                "format": "byte",
-                "nullable": true
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PreviewFile"
+                  }
+                ]
               },
               "pictures": {
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "type": "string",
-                  "format": "byte"
+                  "$ref": "#/components/schemas/File"
                 }
               },
               "description": {
@@ -871,6 +930,55 @@
               "country": {
                 "type": "string",
                 "nullable": true
+              },
+              "offers": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/Offer"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "File": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AuditableEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "hotel": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Hotel"
+                  }
+                ]
+              },
+              "fileId": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "data": {
+                "type": "string",
+                "format": "byte",
+                "nullable": true
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "hotelId": {
+                "type": "integer",
+                "format": "int32"
               },
               "offers": {
                 "type": "array",

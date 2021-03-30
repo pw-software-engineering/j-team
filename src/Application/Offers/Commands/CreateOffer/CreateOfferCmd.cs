@@ -41,14 +41,34 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
             {
                 throw new NotFoundException(nameof(Hotel), request.HotelId);
             }
+            PreviewFile previewPicture = new PreviewFile
+            {
+                Data = request.OfferPreviewPicture
+            };
+            _context.PreviewFiles.Add(previewPicture);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            List<File> pictures = new List<File>();
+            foreach (var picture in request.Pictures)
+            {
+                File tmpPicture = new File
+                {
+                    Data = picture
+                };
+                _context.Files.Add(tmpPicture);
+                await _context.SaveChangesAsync(cancellationToken);
+                pictures.Add(tmpPicture);
+            }
+
             var entity = new Offer
             {
                 HotelId = request.HotelId,
                 Hotel = hotel,
                 Title = request.OfferTitle,
                 Description = request.Description,
-                OfferPreviewPicture = request.OfferPreviewPicture,
-                Pictures = request.Pictures,
+                OfferPreviewPictureId = previewPicture.FileId,
+                OfferPreviewPicture = previewPicture,
+                Pictures = pictures,
                 IsActive = request.IsActive,
                 IsDeleted = request.IsDeleted,
                 CostPerChild = request.CostPerChild,

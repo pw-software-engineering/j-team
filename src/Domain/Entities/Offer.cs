@@ -9,10 +9,13 @@ namespace HotelReservationSystem.Domain.Entities
         public int OfferId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public byte[] OfferPreviewPicture { get; set; }
-        public List<byte[]> Pictures { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
+        // relation
+        public int OfferPreviewPictureId { get; set; }
+        public PreviewFile OfferPreviewPicture { get; set; }
+        // relation
+        public List<File> Pictures { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsDeleted { get; set; }
         public double CostPerChild { get; set; }
         public double CostPerAdult { get; set; }
         public uint MaxGuests { get; set; }
