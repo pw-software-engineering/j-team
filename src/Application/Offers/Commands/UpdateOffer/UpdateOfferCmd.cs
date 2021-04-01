@@ -13,8 +13,6 @@ namespace HotelReservationSystem.Application.Offers.Commands.UpdateOffer
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public byte[] OfferPreviewPicture { get; set; }
-        public List<byte[]> Pictures { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
         public double? CostPerChild { get; set; }
@@ -39,37 +37,10 @@ namespace HotelReservationSystem.Application.Offers.Commands.UpdateOffer
             {
                 throw new NotFoundException(nameof(Offer), request.Id);
             }
-            PreviewFile previewPicture = null;
-            if (request.OfferPreviewPicture != null)
-            {
-                previewPicture = new PreviewFile
-                {
-                    Data = request.OfferPreviewPicture
-                };
-                _context.PreviewFiles.Add(previewPicture);
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-
-            List<File> pictures = new List<File>();
-            foreach (var picture in request.Pictures)
-            {
-                File tmpPicture = new File
-                {
-                    Data = picture
-                };
-                _context.Files.Add(tmpPicture);
-                await _context.SaveChangesAsync(cancellationToken);
-                pictures.Add(tmpPicture);
-            }
 
             entity.Title = request.Title ?? entity.Title;
             entity.Description = request.Description ?? entity.Description;
-            if (request.OfferPreviewPicture != null)
-            {
-                entity.OfferPreviewPictureId = previewPicture.FileId;
-                entity.OfferPreviewPicture = previewPicture;
-            }
-            entity.Pictures = request.Pictures == null ? entity.Pictures : pictures;
+
             if (request.IsActive != null)
                 entity.IsActive = request.IsActive.Value;
             if (request.IsDeleted != null)

@@ -3,21 +3,38 @@ using System;
 using HotelReservationSystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HotelReservationSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210330203133_AddReview")]
+    partial class AddReview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityByDefaultColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.2");
+
+            modelBuilder.Entity("FileOffer", b =>
+                {
+                    b.Property<int>("OffersOfferId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PicturesFileId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("OffersOfferId", "PicturesFileId");
+
+                    b.HasIndex("PicturesFileId");
+
+                    b.ToTable("FileOffer");
+                });
 
             modelBuilder.Entity("HotelReservationSystem.Domain.Entities.Client", b =>
                 {
@@ -63,6 +80,48 @@ namespace HotelReservationSystem.Infrastructure.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.File", b =>
+                {
+                    b.Property<int>("FileId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasMaxLength(20000)
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int>("HotelId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("FileId");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("HotelReservationSystem.Domain.Entities.Hotel", b =>
                 {
                     b.Property<int>("HotelId")
@@ -104,48 +163,6 @@ namespace HotelReservationSystem.Infrastructure.Migrations
                     b.HasKey("HotelId");
 
                     b.ToTable("Hotels");
-                });
-
-            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.HotelFile", b =>
-                {
-                    b.Property<int>("FileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasMaxLength(20000)
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<int>("HotelId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.HasKey("FileId");
-
-                    b.HasIndex("HotelId");
-
-                    b.ToTable("HotelFiles");
                 });
 
             modelBuilder.Entity("HotelReservationSystem.Domain.Entities.Offer", b =>
@@ -196,6 +213,9 @@ namespace HotelReservationSystem.Infrastructure.Migrations
                     b.Property<long>("MaxGuests")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("OfferPreviewPictureFileId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -205,52 +225,12 @@ namespace HotelReservationSystem.Infrastructure.Migrations
 
                     b.HasIndex("HotelId");
 
+                    b.HasIndex("OfferPreviewPictureFileId");
+
                     b.ToTable("Offers");
                 });
 
-            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.OfferFile", b =>
-                {
-                    b.Property<int>("FileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasMaxLength(20000)
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("FileId");
-
-                    b.HasIndex("OfferId");
-
-                    b.ToTable("OfferFiles");
-                });
-
-            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.PreviewHotelFile", b =>
+            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.PreviewFile", b =>
                 {
                     b.Property<int>("FileId")
                         .ValueGeneratedOnAdd()
@@ -290,50 +270,7 @@ namespace HotelReservationSystem.Infrastructure.Migrations
                     b.HasIndex("HotelId")
                         .IsUnique();
 
-                    b.ToTable("PreviewHotelFiles");
-                });
-
-            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.PreviewOfferFile", b =>
-                {
-                    b.Property<int>("FileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasMaxLength(20000)
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("FileId");
-
-                    b.HasIndex("OfferId")
-                        .IsUnique();
-
-                    b.ToTable("PreviewOfferFiles");
+                    b.ToTable("PreviewFiles");
                 });
 
             modelBuilder.Entity("HotelReservationSystem.Domain.Entities.Reservation", b =>
@@ -747,7 +684,22 @@ namespace HotelReservationSystem.Infrastructure.Migrations
                     b.ToTable("OfferRoom");
                 });
 
-            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.HotelFile", b =>
+            modelBuilder.Entity("FileOffer", b =>
+                {
+                    b.HasOne("HotelReservationSystem.Domain.Entities.Offer", null)
+                        .WithMany()
+                        .HasForeignKey("OffersOfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HotelReservationSystem.Domain.Entities.File", null)
+                        .WithMany()
+                        .HasForeignKey("PicturesFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.File", b =>
                 {
                     b.HasOne("HotelReservationSystem.Domain.Entities.Hotel", "Hotel")
                         .WithMany("Pictures")
@@ -766,40 +718,24 @@ namespace HotelReservationSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HotelReservationSystem.Domain.Entities.PreviewFile", "OfferPreviewPicture")
+                        .WithMany("Offers")
+                        .HasForeignKey("OfferPreviewPictureFileId");
+
                     b.Navigation("Hotel");
+
+                    b.Navigation("OfferPreviewPicture");
                 });
 
-            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.OfferFile", b =>
-                {
-                    b.HasOne("HotelReservationSystem.Domain.Entities.Offer", "Offer")
-                        .WithMany("Pictures")
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Offer");
-                });
-
-            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.PreviewHotelFile", b =>
+            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.PreviewFile", b =>
                 {
                     b.HasOne("HotelReservationSystem.Domain.Entities.Hotel", "Hotel")
                         .WithOne("HotelPreviewPicture")
-                        .HasForeignKey("HotelReservationSystem.Domain.Entities.PreviewHotelFile", "HotelId")
+                        .HasForeignKey("HotelReservationSystem.Domain.Entities.PreviewFile", "HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Hotel");
-                });
-
-            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.PreviewOfferFile", b =>
-                {
-                    b.HasOne("HotelReservationSystem.Domain.Entities.Offer", "Offer")
-                        .WithOne("OfferPreviewPicture")
-                        .HasForeignKey("HotelReservationSystem.Domain.Entities.PreviewOfferFile", "OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Offer");
                 });
 
             modelBuilder.Entity("HotelReservationSystem.Domain.Entities.Reservation", b =>
@@ -924,13 +860,14 @@ namespace HotelReservationSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("HotelReservationSystem.Domain.Entities.Offer", b =>
                 {
-                    b.Navigation("OfferPreviewPicture");
-
-                    b.Navigation("Pictures");
-
                     b.Navigation("Reservations");
 
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("HotelReservationSystem.Domain.Entities.PreviewFile", b =>
+                {
+                    b.Navigation("Offers");
                 });
 #pragma warning restore 612, 618
         }

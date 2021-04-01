@@ -9,7 +9,11 @@ namespace HotelReservationSystem.Domain.Entities
         public int ReviewId { get; set; }
         public string content { get; set; }
         public int rating { get; set; }
-        public DateTime creationDate { get; set; }
-        public string reviewerUsername { get; set; }
+        // relation
+        public int ClientId { get; set; }
+        public Client Client { get; set; }
+        // relation
+        public int OfferId { get; set; }
+        public Offer Offer { get; set; }
     }
 }

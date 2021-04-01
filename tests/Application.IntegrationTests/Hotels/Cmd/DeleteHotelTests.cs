@@ -1,12 +1,12 @@
 ﻿using HotelReservationSystem.Application.Common.Exceptions;
-using HotelReservationSystem.Application.Hotels.Commands.CreateTodoItem;
-using HotelReservationSystem.Application.Hotels.Commands.DeleteTodoItem;
+using HotelReservationSystem.Application.Hotels.Commands.CreateHotel;
+using HotelReservationSystem.Application.Hotels.Commands.DeleteHotel;
 using HotelReservationSystem.Domain.Entities;
 using FluentAssertions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
+namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
 {
     using static Testing;
 
@@ -26,7 +26,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
         {
             var itemId = await SendAsync(new CreateHotelCmd
             {
-                Title = "New Item"
+                Name = "New Item"
             });
 
             await SendAsync(new DeleteHotelCmd

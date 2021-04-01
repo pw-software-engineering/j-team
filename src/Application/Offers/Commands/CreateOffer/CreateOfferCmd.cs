@@ -21,7 +21,6 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
         public double CostPerChild { get; set; }
         public double CostPerAdult { get; set; }
         public uint MaxGuests { get; set; }
-        public List<Room> Rooms { get; set; }
     }
 
     public class CreateOfferCmdHandler : IRequestHandler<CreateOfferCmd, int>
@@ -41,24 +40,6 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
             {
                 throw new NotFoundException(nameof(Hotel), request.HotelId);
             }
-            PreviewFile previewPicture = new PreviewFile
-            {
-                Data = request.OfferPreviewPicture
-            };
-            _context.PreviewFiles.Add(previewPicture);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            List<File> pictures = new List<File>();
-            foreach (var picture in request.Pictures)
-            {
-                File tmpPicture = new File
-                {
-                    Data = picture
-                };
-                _context.Files.Add(tmpPicture);
-                await _context.SaveChangesAsync(cancellationToken);
-                pictures.Add(tmpPicture);
-            }
 
             var entity = new Offer
             {
@@ -66,20 +47,41 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
                 Hotel = hotel,
                 Title = request.OfferTitle,
                 Description = request.Description,
-                OfferPreviewPictureId = previewPicture.FileId,
-                OfferPreviewPicture = previewPicture,
-                Pictures = pictures,
                 IsActive = request.IsActive,
                 IsDeleted = request.IsDeleted,
                 CostPerChild = request.CostPerChild,
                 CostPerAdult = request.CostPerAdult,
-                MaxGuests = request.MaxGuests,
-                Rooms = request.Rooms
+                MaxGuests = request.MaxGuests
             };
 
             _context.Offers.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
+
+            if (request.OfferPreviewPicture != null)
+            {
+                PreviewOfferFile previewPicture = new PreviewOfferFile
+                {
+                    Data = request.OfferPreviewPicture,
+                    OfferId = entity.OfferId,
+                    Offer = entity
+                };
+                _context.PreviewOfferFiles.Add(previewPicture);
+            }
+
+            if (request.Pictures != null)
+                foreach (var file in request.Pictures)
+                {
+                    OfferFile picture = new OfferFile
+                    {
+                        Data = file,
+                        OfferId = entity.HotelId,
+                        Offer = entity
+                    };
+                    _context.OfferFiles.Add(picture);
+                }
+            if (request.OfferPreviewPicture != null || request.Pictures != null)
+                await _context.SaveChangesAsync(cancellationToken);
 
             return entity.OfferId;
         }

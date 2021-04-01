@@ -36,8 +36,11 @@ namespace HotelReservationSystem.Infrastructure.Persistence
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Client> Clients { get; set; }
-        public DbSet<File> Files { get; set; }
-        public DbSet<PreviewFile> PreviewFiles { get; set; }
+        public DbSet<OfferFile> OfferFiles { get; set; }
+        public DbSet<PreviewOfferFile> PreviewOfferFiles { get; set; }
+        public DbSet<HotelFile> HotelFiles { get; set; }
+        public DbSet<PreviewHotelFile> PreviewHotelFiles { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

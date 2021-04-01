@@ -10,6 +10,10 @@ namespace HotelReservationSystem.Domain.Entities
         public string Surname { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
+        // relation
         public List<Reservation> Reservations { get; set; }
+        // relation
+        public virtual List<Review> Reviews { get; set; }
+
     }
 }

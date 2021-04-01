@@ -30,6 +30,8 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
                 throw new NotFoundException(nameof(Offer), request.Id);
             }
 
+
+
             _context.Offers.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);

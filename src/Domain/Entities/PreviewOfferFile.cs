@@ -3,16 +3,14 @@ using System.Collections.Generic;
 
 namespace HotelReservationSystem.Domain.Entities
 {
-    public class PreviewFile : AuditableEntity
+    public class PreviewOfferFile : AuditableEntity
     {
         public int FileId { get; set; }
         public string Name { get; set; }
         public byte[] Data { get; set; }
         public string Description { get; set; }
         // relation
-        public int HotelId { get; set; }
-        public Hotel Hotel;
-        // relation
-        public List<Offer> Offers { get; set; }
+        public int OfferId { get; set; }
+        public Offer Offer { get; set; }
     }
 }

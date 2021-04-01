@@ -1,10 +1,9 @@
 ﻿using HotelReservationSystem.Domain.Common;
 using System.Collections.Generic;
 
-
 namespace HotelReservationSystem.Domain.Entities
 {
-    public class File : AuditableEntity
+    public class PreviewHotelFile : AuditableEntity
     {
         public int FileId { get; set; }
         public string Name { get; set; }
@@ -12,8 +11,6 @@ namespace HotelReservationSystem.Domain.Entities
         public string Description { get; set; }
         // relation
         public int HotelId { get; set; }
-        public Hotel Hotel;
-        // relation
-        public List<Offer> Offers { get; set; }
+        public Hotel Hotel { get; set; }
     }
 }

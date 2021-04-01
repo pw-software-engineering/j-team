@@ -12,8 +12,6 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public byte[] HotelPreviewPicture { get; set; }
-        public List<byte[]> Pictures { get; set; }
         public string Description { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
@@ -37,43 +35,10 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
                 throw new NotFoundException(nameof(Hotel), request.Id);
             }
 
-            PreviewFile previewPicture = null;
-            if (request.HotelPreviewPicture != null)
-            {
-                previewPicture = new PreviewFile
-                {
-                    Data = request.HotelPreviewPicture
-                };
-                _context.PreviewFiles.Add(previewPicture);
-                await _context.SaveChangesAsync(cancellationToken);
-            }
-
-            List<File> pictures = null;
-            if (request.Pictures.Count > 0)
-            {
-                pictures = new List<File>();
-                foreach (var picture in request.Pictures)
-                {
-                    File tmpPicture = new File
-                    {
-                        Data = picture
-                    };
-                    _context.Files.Add(tmpPicture);
-                    await _context.SaveChangesAsync(cancellationToken);
-                    pictures.Add(tmpPicture);
-                }
-            }
-
-            if (request.Name != null)
-                entity.Name = request.Name;
-            if (request.HotelPreviewPicture != null)
-            {
-                entity.HotelPreviewPicture = previewPicture;
-            }
-            entity.Pictures = request.Pictures == null ? entity.Pictures : pictures;
+            entity.Name = request.Name ?? entity.Name;
             entity.Description = request.Description ?? entity.Description;
-            request.City = entity.City ?? request.City;
-            request.Country = entity.Country ?? request.Country;
+            entity.City = request.City ?? entity.City;
+            entity.Country = request.Country ?? entity.Country;
 
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -15,8 +15,15 @@ namespace HotelReservationSystem.Application.Common.Mappings
         {
             ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
             CreateMap<Hotel, HotelDto>();
+            CreateMap<PreviewHotelFile, byte[]>()
+                .ConstructUsing(src => src.Data);
             CreateMap<Offer, OfferDto>();
+            CreateMap<PreviewOfferFile, byte[]>()
+                .ConstructUsing(src => src.Data);
             CreateMap<Room, RoomDto>();
+            //    .ForMember(dest => dest.OfferId, opt => opt.MapFrom(src => src.Offers));
+            //CreateMap<Offer, int>()
+            //    .ConstructUsing(src => src.OfferId);
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {
