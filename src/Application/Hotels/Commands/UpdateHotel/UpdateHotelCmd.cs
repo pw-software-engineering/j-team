@@ -2,25 +2,28 @@
 using HotelReservationSystem.Application.Common.Interfaces;
 using HotelReservationSystem.Domain.Entities;
 using MediatR;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HotelReservationSystem.Application.Hotels.Commands.UpdateTodoItem
+namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
 {
     public class UpdateHotelCmd : IRequest
     {
         public int Id { get; set; }
-
-        public string Title { get; set; }
-
-        public bool Done { get; set; }
+        public string Name { get; set; }
+        public byte[] HotelPreviewPicture { get; set; }
+        public List<byte[]> Pictures { get; set; }
+        public string Description { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
     }
 
-    public class UpdateTodoItemCommandHandler : IRequestHandler<UpdateHotelCmd>
+    public class UpdateHotelCommandHandler : IRequestHandler<UpdateHotelCmd>
     {
         private readonly IApplicationDbContext _context;
 
-        public UpdateTodoItemCommandHandler(IApplicationDbContext context)
+        public UpdateHotelCommandHandler(IApplicationDbContext context)
         {
             _context = context;
         }
@@ -33,8 +36,18 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateTodoItem
             {
                 throw new NotFoundException(nameof(Hotel), request.Id);
             }
-
-            entity.Title = request.Title;
+            if (request.Name != null)
+                entity.Name = request.Name;
+            if (request.HotelPreviewPicture != null)
+                entity.HotelPreviewPicture = request.HotelPreviewPicture;
+            if (request.Pictures != null)
+                entity.Pictures = request.Pictures;
+            if (request.Description != null)
+                entity.Description = request.Description;
+            if (request.City != null)
+                entity.City = request.City;
+            if (request.Country != null)
+                entity.Country = request.Country;
 
             await _context.SaveChangesAsync(cancellationToken);
 

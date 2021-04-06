@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using Application.Hotels;
+using Application.Offers;
+using Application.Rooms;
+using AutoMapper;
+using HotelReservationSystem.Domain.Entities;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -10,8 +14,10 @@ namespace HotelReservationSystem.Application.Common.Mappings
         public MappingProfile()
         {
             ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
+            CreateMap<Hotel, HotelDto>();
+            CreateMap<Offer, OfferDto>();
+            CreateMap<Room, RoomDto>();
         }
-
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {
             var types = assembly.GetExportedTypes()

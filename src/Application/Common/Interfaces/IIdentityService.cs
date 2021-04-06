@@ -1,4 +1,4 @@
-﻿using HotelReservationSystem.Application.Common.Models;
+using HotelReservationSystem.Application.Common.Models;
 using System.Threading.Tasks;
 
 namespace HotelReservationSystem.Application.Common.Interfaces
