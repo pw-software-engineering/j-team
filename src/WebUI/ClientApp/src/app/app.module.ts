@@ -15,6 +15,7 @@ import { ShellModule } from './shell/shell.module';
 import { AboutModule } from './about/about.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { API_BASE_URL } from './web-api-client';
 
 @NgModule({
   imports: [
@@ -33,7 +34,7 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule, // must be imported as the last module as it contains the fallback route
   ],
   declarations: [AppComponent],
-  providers: [],
+  providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

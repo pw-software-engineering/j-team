@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { OfferClient, OfferDto } from '@app/web-api-client';
 
 @Component({
   selector: 'app-offers-list',
@@ -8,20 +9,30 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./offers-list.component.scss'],
 })
 export class OffersListComponent implements AfterViewInit {
-  columnsToDisplay = ['id', 'name'];
-  dataSource = new MatTableDataSource<IOffer>(offers);
+  columnsToDisplay = ['offerId', 'title'];
+  dataSource = new MatTableDataSource<OfferDto>();
+  displayedPage: number = 1;
+  pageSize: number = 5;
+  isActive: boolean | null = null;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor() {}
+  constructor(private offerClient: OfferClient) {}
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+  ngAfterViewInit(): void {}
+
+  ngOnInit(): void {
+    const offersRequest = this.offerClient.getOffersWithPagination(this.displayedPage, this.pageSize);
+    offersRequest.subscribe({
+      next: (value) => {
+        console.log(value);
+        this.dataSource = new MatTableDataSource<OfferDto>(value.items);
+        this.dataSource.paginator = this.paginator;
+      },
+    });
   }
-
-  ngOnInit(): void {}
 }
-const offers: IOffer[] = [
+const offers: IOfferr[] = [
   { id: 11, name: 'Dr Nice' },
   { id: 12, name: 'Narco' },
   { id: 13, name: 'Bombasto' },
@@ -34,7 +45,7 @@ const offers: IOffer[] = [
   { id: 20, name: 'Tornado' },
 ];
 
-interface IOffer {
+interface IOfferr {
   id: number;
   name: string;
 }

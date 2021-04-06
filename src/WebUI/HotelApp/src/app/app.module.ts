@@ -18,6 +18,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { OffersListComponent } from './offers/offers-list/offers-list.component';
 import { DemoMaterialModule } from './material-module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { API_BASE_URL } from './web-api-client';
 
 @NgModule({
   imports: [
@@ -38,7 +39,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     DemoMaterialModule,
   ],
   declarations: [AppComponent, OffersListComponent],
-  providers: [],
+  providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
