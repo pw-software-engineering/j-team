@@ -23,5 +23,7 @@ jobs:
         run: npm install
         working-directory: src/WebUI/ClientApp/
       - name: Run Tests
-        run: CI=true npm test
+        run: npm test
+        env:
+            CI: true
         working-directory: src/WebUI/ClientApp/
