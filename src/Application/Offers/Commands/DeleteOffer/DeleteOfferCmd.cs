@@ -2,6 +2,8 @@
 using HotelReservationSystem.Application.Common.Interfaces;
 using HotelReservationSystem.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,13 +25,25 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
 
         public async Task<Unit> Handle(DeleteOfferCmd request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Offers.FindAsync(request.Id);
+            var entity = _context.Offers
+                .Include(x => x.OfferPreviewPicture)
+                .Include(x => x.Pictures)
+                .FirstOrDefault(r => r.OfferId == request.Id);
 
             if (entity == null)
             {
                 throw new NotFoundException(nameof(Offer), request.Id);
             }
 
+            if (entity.OfferPreviewPicture != null)
+            {
+                _context.Files.Remove(entity.OfferPreviewPicture);
+                entity.OfferPreviewPictureId = null;
+            }
+
+            foreach (File file in entity.Pictures)
+                _context.Files.Remove(file);
+            
             _context.Offers.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);

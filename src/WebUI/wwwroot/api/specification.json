@@ -493,6 +493,18 @@
             "type": "string",
             "nullable": true
           },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
           "hotelPreviewPicture": {
             "type": "string",
             "format": "byte",
@@ -505,18 +517,6 @@
               "type": "string",
               "format": "byte"
             }
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "country": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -566,19 +566,6 @@
           "name": {
             "type": "string",
             "nullable": true
-          },
-          "hotelPreviewPicture": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "pictures": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
           },
           "description": {
             "type": "string",
@@ -637,18 +624,9 @@
             "type": "string",
             "nullable": true
           },
-          "offerPreviewPicture": {
+          "description": {
             "type": "string",
-            "format": "byte",
             "nullable": true
-          },
-          "pictures": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
           },
           "isActive": {
             "type": "boolean"
@@ -666,6 +644,19 @@
           },
           "maxGuests": {
             "type": "integer"
+          },
+          "offerPreviewPicture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "pictures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
           }
         }
       },
@@ -677,7 +668,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "title": {
+          "offerTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
             "type": "string",
             "nullable": true
           },
@@ -725,18 +720,9 @@
             "type": "string",
             "nullable": true
           },
-          "offerPreviewPicture": {
+          "description": {
             "type": "string",
-            "format": "byte",
             "nullable": true
-          },
-          "pictures": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
           },
           "isActive": {
             "type": "boolean",
@@ -805,9 +791,13 @@
             "type": "string",
             "nullable": true
           },
-          "offerId": {
-            "type": "integer",
-            "format": "int32"
+          "offerID": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         }
       },
@@ -819,7 +809,7 @@
             "type": "string",
             "nullable": true
           },
-          "offerId": {
+          "offerID": {
             "type": "integer",
             "format": "int32"
           }

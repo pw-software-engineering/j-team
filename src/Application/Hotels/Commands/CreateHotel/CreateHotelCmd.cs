@@ -32,8 +32,6 @@ namespace HotelReservationSystem.Application.Hotels.Commands.CreateHotel
             var entity = new Hotel
             {
                 Name = request.Name,
-                HotelPreviewPicture = request.HotelPreviewPicture,
-                Pictures = request.Pictures,
                 Description = request.Description,
                 City = request.City,
                 Country = request.Country
@@ -42,6 +40,44 @@ namespace HotelReservationSystem.Application.Hotels.Commands.CreateHotel
             _context.Hotels.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
+
+            File previewPicture = null;
+            if (request.HotelPreviewPicture != null)
+            {
+                previewPicture = new File
+                {
+                    Data = request.HotelPreviewPicture,
+                    HotelId = entity.HotelId,
+                    Hotel = entity
+                };
+                _context.Files.Add(previewPicture);
+            }
+            List<File> files = new List<File>();
+            if (request.Pictures != null)
+                foreach (var file in request.Pictures)
+                {
+                    File picture = new File
+                    {
+                        Data = file,
+                        HotelId = entity.HotelId,
+                        Hotel = entity
+                    };
+                    files.Add(picture);
+                    _context.Files.Add(picture);
+                }
+            if (previewPicture != null || request.Pictures != null)
+                await _context.SaveChangesAsync(cancellationToken);
+            if (previewPicture != null)
+            {
+                entity.HotelPreviewPictureId = previewPicture.FileId;
+                entity.HotelPreviewPicture = previewPicture;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            if (request.Pictures != null)
+            {
+                entity.Pictures = files;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
 
             return entity.HotelId;
         }

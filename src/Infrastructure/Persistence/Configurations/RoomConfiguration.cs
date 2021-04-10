@@ -8,10 +8,11 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Room> builder)
         {
-
+            builder.HasKey(t => t.RoomId);
             builder.Property(t => t.HotelRoomNumber)
-                .HasMaxLength(200)
+                .HasMaxLength(50)
                 .IsRequired();
+            builder.HasMany(t => t.Offers).WithMany(t => t.Rooms);
         }
     }
 }

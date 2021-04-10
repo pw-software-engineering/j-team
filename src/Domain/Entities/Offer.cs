@@ -8,17 +8,25 @@ namespace HotelReservationSystem.Domain.Entities
     {
         public int OfferId { get; set; }
         public string Title { get; set; }
-        public byte[] OfferPreviewPicture { get; set; }
-        public List<byte[]> Pictures { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
+        public string Description { get; set; }
+        public bool? IsActive { get; set; }
+        public bool? IsDeleted { get; set; }
         public double CostPerChild { get; set; }
         public double CostPerAdult { get; set; }
         public uint MaxGuests { get; set; }
         // relation
+        public int? OfferPreviewPictureId { get; set; }
+        public File OfferPreviewPicture { get; set; }
+        // relation
+        public List<File> Pictures { get; set; }
+        // relation
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; }
         // relation
-        public virtual List<Room> Rooms { get; set;}
+        public virtual List<Room> Rooms { get; set; }
+        // relation
+        public virtual List<Reservation> Reservations { get; set; }
+        // relation
+        public virtual List<Review> Reviews { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using HotelReservationSystem.Application.Common.Exceptions;
-using HotelReservationSystem.Application.Hotels.Commands.CreateTodoItem;
+using HotelReservationSystem.Application.Hotels.Commands.CreateHotel;
 using HotelReservationSystem.Domain.Entities;
 using FluentAssertions;
 using NUnit.Framework;
@@ -28,7 +28,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
 
             var command = new CreateHotelCmd
             {
-                Title = "Tasks"
+                Name = "Tasks"
             };
 
             var itemId = await SendAsync(command);
@@ -36,7 +36,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
             var item = await FindAsync<Hotel>(itemId);
 
             item.Should().NotBeNull();
-            item.Title.Should().Be(command.Title);
+            item.Name.Should().Be(command.Name);
             item.CreatedBy.Should().Be(userId);
             item.Created.Should().BeCloseTo(DateTime.Now, 10000);
             item.LastModifiedBy.Should().BeNull();

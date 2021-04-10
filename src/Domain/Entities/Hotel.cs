@@ -10,11 +10,14 @@ namespace HotelReservationSystem.Domain.Entities
     {
         public int HotelId { get; set; }
         public string Name { get; set; }
-        public byte[] HotelPreviewPicture { get; set; }
-        public List<byte[]> Pictures { get; set; }
         public string Description { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+        public int? HotelPreviewPictureId { get; set; }
+        // relation
+        public File HotelPreviewPicture { get; set; }
+        // relation
+        public List<File> Pictures { get; set; }
         // relation
         public virtual List<Offer> Offers { get; set; }
     }

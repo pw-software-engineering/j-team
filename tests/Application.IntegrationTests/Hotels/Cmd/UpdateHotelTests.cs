@@ -1,6 +1,6 @@
 ﻿using HotelReservationSystem.Application.Common.Exceptions;
-using HotelReservationSystem.Application.Hotels.Commands.CreateTodoItem;
-using HotelReservationSystem.Application.Hotels.Commands.UpdateTodoItem;
+using HotelReservationSystem.Application.Hotels.Commands.CreateHotel;
+using HotelReservationSystem.Application.Hotels.Commands.UpdateHotel;
 using HotelReservationSystem.Domain.Entities;
 using HotelReservationSystem.Domain.Enums;
 using FluentAssertions;
@@ -20,7 +20,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
             var command = new UpdateHotelCmd
             {
                 Id = 99,
-                Title = "New Title"
+                Name = "New Title"
             };
 
             FluentActions.Invoking(() =>
@@ -34,7 +34,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
 
             var itemId = await SendAsync(new CreateHotelCmd
             {
-                Title = "New Item"
+                Name = "New Item"
             });
 
             var item = await FindAsync<Hotel>(itemId);

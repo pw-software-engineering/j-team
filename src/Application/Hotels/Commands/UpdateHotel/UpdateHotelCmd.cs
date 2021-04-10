@@ -12,8 +12,6 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public byte[] HotelPreviewPicture { get; set; }
-        public List<byte[]> Pictures { get; set; }
         public string Description { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
@@ -36,18 +34,11 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
             {
                 throw new NotFoundException(nameof(Hotel), request.Id);
             }
-            if (request.Name != null)
-                entity.Name = request.Name;
-            if (request.HotelPreviewPicture != null)
-                entity.HotelPreviewPicture = request.HotelPreviewPicture;
-            if (request.Pictures != null)
-                entity.Pictures = request.Pictures;
-            if (request.Description != null)
-                entity.Description = request.Description;
-            if (request.City != null)
-                entity.City = request.City;
-            if (request.Country != null)
-                entity.Country = request.Country;
+
+            entity.Name = request.Name ?? entity.Name;
+            entity.Description = request.Description ?? entity.Description;
+            entity.City = request.City ?? entity.City;
+            entity.Country = request.Country ?? entity.Country;
 
             await _context.SaveChangesAsync(cancellationToken);
 

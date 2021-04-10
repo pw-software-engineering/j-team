@@ -774,11 +774,11 @@ export interface IPaginatedListOfHotelDto {
 export class HotelDto implements IHotelDto {
     hotelId?: number;
     name?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
 
     constructor(data?: IHotelDto) {
         if (data) {
@@ -793,15 +793,15 @@ export class HotelDto implements IHotelDto {
         if (_data) {
             this.hotelId = _data["hotelId"];
             this.name = _data["name"];
+            this.description = _data["description"];
+            this.city = _data["city"];
+            this.country = _data["country"];
             this.hotelPreviewPicture = _data["hotelPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
                 this.pictures = [] as any;
                 for (let item of _data["pictures"])
                     this.pictures!.push(item);
             }
-            this.description = _data["description"];
-            this.city = _data["city"];
-            this.country = _data["country"];
         }
     }
 
@@ -816,15 +816,15 @@ export class HotelDto implements IHotelDto {
         data = typeof data === 'object' ? data : {};
         data["hotelId"] = this.hotelId;
         data["name"] = this.name;
+        data["description"] = this.description;
+        data["city"] = this.city;
+        data["country"] = this.country;
         data["hotelPreviewPicture"] = this.hotelPreviewPicture;
         if (Array.isArray(this.pictures)) {
             data["pictures"] = [];
             for (let item of this.pictures)
                 data["pictures"].push(item);
         }
-        data["description"] = this.description;
-        data["city"] = this.city;
-        data["country"] = this.country;
         return data; 
     }
 }
@@ -832,11 +832,11 @@ export class HotelDto implements IHotelDto {
 export interface IHotelDto {
     hotelId?: number;
     name?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
 }
 
 export class CreateHotelCmd implements ICreateHotelCmd {
@@ -906,8 +906,6 @@ export interface ICreateHotelCmd {
 export class UpdateHotelCmd implements IUpdateHotelCmd {
     id?: number;
     name?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
@@ -925,12 +923,6 @@ export class UpdateHotelCmd implements IUpdateHotelCmd {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.hotelPreviewPicture = _data["hotelPreviewPicture"];
-            if (Array.isArray(_data["pictures"])) {
-                this.pictures = [] as any;
-                for (let item of _data["pictures"])
-                    this.pictures!.push(item);
-            }
             this.description = _data["description"];
             this.city = _data["city"];
             this.country = _data["country"];
@@ -948,12 +940,6 @@ export class UpdateHotelCmd implements IUpdateHotelCmd {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["hotelPreviewPicture"] = this.hotelPreviewPicture;
-        if (Array.isArray(this.pictures)) {
-            data["pictures"] = [];
-            for (let item of this.pictures)
-                data["pictures"].push(item);
-        }
         data["description"] = this.description;
         data["city"] = this.city;
         data["country"] = this.country;
@@ -964,8 +950,6 @@ export class UpdateHotelCmd implements IUpdateHotelCmd {
 export interface IUpdateHotelCmd {
     id?: number;
     name?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
@@ -1038,13 +1022,14 @@ export interface IPaginatedListOfOfferDto {
 export class OfferDto implements IOfferDto {
     offerId?: number;
     title?: string | undefined;
-    offerPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
+    description?: string | undefined;
     isActive?: boolean;
     isDeleted?: boolean;
     costPerChild?: number;
     costPerAdult?: number;
     maxGuests?: number;
+    offerPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
 
     constructor(data?: IOfferDto) {
         if (data) {
@@ -1059,17 +1044,18 @@ export class OfferDto implements IOfferDto {
         if (_data) {
             this.offerId = _data["offerId"];
             this.title = _data["title"];
+            this.description = _data["description"];
+            this.isActive = _data["isActive"];
+            this.isDeleted = _data["isDeleted"];
+            this.costPerChild = _data["costPerChild"];
+            this.costPerAdult = _data["costPerAdult"];
+            this.maxGuests = _data["maxGuests"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
                 this.pictures = [] as any;
                 for (let item of _data["pictures"])
                     this.pictures!.push(item);
             }
-            this.isActive = _data["isActive"];
-            this.isDeleted = _data["isDeleted"];
-            this.costPerChild = _data["costPerChild"];
-            this.costPerAdult = _data["costPerAdult"];
-            this.maxGuests = _data["maxGuests"];
         }
     }
 
@@ -1084,17 +1070,18 @@ export class OfferDto implements IOfferDto {
         data = typeof data === 'object' ? data : {};
         data["offerId"] = this.offerId;
         data["title"] = this.title;
+        data["description"] = this.description;
+        data["isActive"] = this.isActive;
+        data["isDeleted"] = this.isDeleted;
+        data["costPerChild"] = this.costPerChild;
+        data["costPerAdult"] = this.costPerAdult;
+        data["maxGuests"] = this.maxGuests;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
             data["pictures"] = [];
             for (let item of this.pictures)
                 data["pictures"].push(item);
         }
-        data["isActive"] = this.isActive;
-        data["isDeleted"] = this.isDeleted;
-        data["costPerChild"] = this.costPerChild;
-        data["costPerAdult"] = this.costPerAdult;
-        data["maxGuests"] = this.maxGuests;
         return data; 
     }
 }
@@ -1102,18 +1089,20 @@ export class OfferDto implements IOfferDto {
 export interface IOfferDto {
     offerId?: number;
     title?: string | undefined;
-    offerPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
+    description?: string | undefined;
     isActive?: boolean;
     isDeleted?: boolean;
     costPerChild?: number;
     costPerAdult?: number;
     maxGuests?: number;
+    offerPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
 }
 
 export class CreateOfferCmd implements ICreateOfferCmd {
     hotelId?: number;
-    title?: string | undefined;
+    offerTitle?: string | undefined;
+    description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
     isActive?: boolean;
@@ -1134,7 +1123,8 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     init(_data?: any) {
         if (_data) {
             this.hotelId = _data["hotelId"];
-            this.title = _data["title"];
+            this.offerTitle = _data["offerTitle"];
+            this.description = _data["description"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
                 this.pictures = [] as any;
@@ -1159,7 +1149,8 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hotelId"] = this.hotelId;
-        data["title"] = this.title;
+        data["offerTitle"] = this.offerTitle;
+        data["description"] = this.description;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
             data["pictures"] = [];
@@ -1177,7 +1168,8 @@ export class CreateOfferCmd implements ICreateOfferCmd {
 
 export interface ICreateOfferCmd {
     hotelId?: number;
-    title?: string | undefined;
+    offerTitle?: string | undefined;
+    description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
     isActive?: boolean;
@@ -1190,8 +1182,7 @@ export interface ICreateOfferCmd {
 export class UpdateOfferCmd implements IUpdateOfferCmd {
     id?: number;
     title?: string | undefined;
-    offerPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
+    description?: string | undefined;
     isActive?: boolean | undefined;
     isDeleted?: boolean | undefined;
     costPerChild?: number | undefined;
@@ -1211,12 +1202,7 @@ export class UpdateOfferCmd implements IUpdateOfferCmd {
         if (_data) {
             this.id = _data["id"];
             this.title = _data["title"];
-            this.offerPreviewPicture = _data["offerPreviewPicture"];
-            if (Array.isArray(_data["pictures"])) {
-                this.pictures = [] as any;
-                for (let item of _data["pictures"])
-                    this.pictures!.push(item);
-            }
+            this.description = _data["description"];
             this.isActive = _data["isActive"];
             this.isDeleted = _data["isDeleted"];
             this.costPerChild = _data["costPerChild"];
@@ -1236,12 +1222,7 @@ export class UpdateOfferCmd implements IUpdateOfferCmd {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["title"] = this.title;
-        data["offerPreviewPicture"] = this.offerPreviewPicture;
-        if (Array.isArray(this.pictures)) {
-            data["pictures"] = [];
-            for (let item of this.pictures)
-                data["pictures"].push(item);
-        }
+        data["description"] = this.description;
         data["isActive"] = this.isActive;
         data["isDeleted"] = this.isDeleted;
         data["costPerChild"] = this.costPerChild;
@@ -1254,8 +1235,7 @@ export class UpdateOfferCmd implements IUpdateOfferCmd {
 export interface IUpdateOfferCmd {
     id?: number;
     title?: string | undefined;
-    offerPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
+    description?: string | undefined;
     isActive?: boolean | undefined;
     isDeleted?: boolean | undefined;
     costPerChild?: number | undefined;
@@ -1330,7 +1310,7 @@ export interface IPaginatedListOfRoomDto {
 export class RoomDto implements IRoomDto {
     roomId?: number;
     hotelRoomNumber?: string | undefined;
-    offerId?: number;
+    offerID?: number[] | undefined;
 
     constructor(data?: IRoomDto) {
         if (data) {
@@ -1345,7 +1325,11 @@ export class RoomDto implements IRoomDto {
         if (_data) {
             this.roomId = _data["roomId"];
             this.hotelRoomNumber = _data["hotelRoomNumber"];
-            this.offerId = _data["offerId"];
+            if (Array.isArray(_data["offerID"])) {
+                this.offerID = [] as any;
+                for (let item of _data["offerID"])
+                    this.offerID!.push(item);
+            }
         }
     }
 
@@ -1360,7 +1344,11 @@ export class RoomDto implements IRoomDto {
         data = typeof data === 'object' ? data : {};
         data["roomId"] = this.roomId;
         data["hotelRoomNumber"] = this.hotelRoomNumber;
-        data["offerId"] = this.offerId;
+        if (Array.isArray(this.offerID)) {
+            data["offerID"] = [];
+            for (let item of this.offerID)
+                data["offerID"].push(item);
+        }
         return data; 
     }
 }
@@ -1368,12 +1356,12 @@ export class RoomDto implements IRoomDto {
 export interface IRoomDto {
     roomId?: number;
     hotelRoomNumber?: string | undefined;
-    offerId?: number;
+    offerID?: number[] | undefined;
 }
 
 export class CreateRoomCmd implements ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerId?: number;
+    offerID?: number;
 
     constructor(data?: ICreateRoomCmd) {
         if (data) {
@@ -1387,7 +1375,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
     init(_data?: any) {
         if (_data) {
             this.hotelRoomNumber = _data["hotelRoomNumber"];
-            this.offerId = _data["offerId"];
+            this.offerID = _data["offerID"];
         }
     }
 
@@ -1401,14 +1389,14 @@ export class CreateRoomCmd implements ICreateRoomCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hotelRoomNumber"] = this.hotelRoomNumber;
-        data["offerId"] = this.offerId;
+        data["offerID"] = this.offerID;
         return data; 
     }
 }
 
 export interface ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerId?: number;
+    offerID?: number;
 }
 
 export class UpdateRoomCmd implements IUpdateRoomCmd {

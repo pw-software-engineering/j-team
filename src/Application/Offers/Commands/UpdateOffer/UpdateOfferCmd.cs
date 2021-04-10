@@ -12,8 +12,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.UpdateOffer
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public byte[] OfferPreviewPicture { get; set; }
-        public List<byte[]> Pictures { get; set; }
+        public string Description { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
         public double? CostPerChild { get; set; }
@@ -40,8 +39,8 @@ namespace HotelReservationSystem.Application.Offers.Commands.UpdateOffer
             }
 
             entity.Title = request.Title ?? entity.Title;
-            entity.OfferPreviewPicture = request.OfferPreviewPicture ?? entity.OfferPreviewPicture;
-            entity.Pictures = request.Pictures == null ? entity.Pictures : request.Pictures;
+            entity.Description = request.Description ?? entity.Description;
+
             if (request.IsActive != null)
                 entity.IsActive = request.IsActive.Value;
             if (request.IsDeleted != null)

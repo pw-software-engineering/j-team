@@ -12,7 +12,8 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
     public class CreateOfferCmd : IRequest<int>
     {
         public int HotelId { get; set; }
-        public string Title { get; set; }
+        public string OfferTitle { get; set; }
+        public string Description { get; set; }
         public byte[] OfferPreviewPicture { get; set; }
         public List<byte[]> Pictures { get; set; }
         public bool IsActive { get; set; }
@@ -39,13 +40,13 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
             {
                 throw new NotFoundException(nameof(Hotel), request.HotelId);
             }
+
             var entity = new Offer
             {
                 HotelId = request.HotelId,
                 Hotel = hotel,
-                Title = request.Title,
-                OfferPreviewPicture = request.OfferPreviewPicture,
-                Pictures = request.Pictures,
+                Title = request.OfferTitle,
+                Description = request.Description,
                 IsActive = request.IsActive,
                 IsDeleted = request.IsDeleted,
                 CostPerChild = request.CostPerChild,
@@ -57,6 +58,44 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
 
             await _context.SaveChangesAsync(cancellationToken);
 
+            File previewPicture = null;
+            if (request.OfferPreviewPicture != null)
+            {
+                previewPicture = new File
+                {
+                    Data = request.OfferPreviewPicture,
+                    OfferId = entity.OfferId,
+                    Offer = entity
+                };
+                _context.Files.Add(previewPicture);
+            }
+
+            List<File> files = new List<File>();
+            if (request.Pictures != null)
+                foreach (var file in request.Pictures)
+                {
+                    File picture = new File
+                    {
+                        Data = file,
+                        OfferId = entity.OfferId,
+                        Offer = entity
+                    };
+                    files.Add(picture);
+                    _context.Files.Add(picture);
+                }
+            if (previewPicture != null || request.Pictures != null)
+                await _context.SaveChangesAsync(cancellationToken);
+            if (previewPicture != null)
+            {
+                entity.OfferPreviewPictureId = previewPicture.FileId;
+                entity.OfferPreviewPicture = previewPicture;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            if (request.Pictures != null)
+            {
+                entity.Pictures = files;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
             return entity.OfferId;
         }
     }
