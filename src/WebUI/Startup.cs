@@ -20,6 +20,7 @@ namespace HotelReservationSystem.WebUI
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,7 +37,14 @@ namespace HotelReservationSystem.WebUI
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins, builder =>
+                {
+                    builder.AllowAnyOrigin()
+                    .AllowAnyMethod();
+                });
+            });
             services.AddHttpContextAccessor();
 
             services.AddHealthChecks()
@@ -78,6 +86,7 @@ namespace HotelReservationSystem.WebUI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(MyAllowSpecificOrigins);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -100,7 +109,6 @@ namespace HotelReservationSystem.WebUI
 
             app.UseSwaggerUi3(settings =>
             {
-                settings.Path = "/api";
                 settings.DocumentPath = "/api/specification.json";
             });
 
