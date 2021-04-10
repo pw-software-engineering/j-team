@@ -9,7 +9,7 @@ import { OfferClient, OfferDto } from '@app/web-api-client';
   styleUrls: ['./offers-list.component.scss'],
 })
 export class OffersListComponent implements AfterViewInit {
-  columnsToDisplay = ['offerId', 'title'];
+  columnsToDisplay = ['title', 'isActive', 'costPerChild', 'costPerAdult', 'maxGuests'];
   dataSource = new MatTableDataSource<OfferDto>();
   displayedPage: number = 1;
   pageSize: number = 5;
@@ -31,21 +31,4 @@ export class OffersListComponent implements AfterViewInit {
       },
     });
   }
-}
-const offers: IOfferr[] = [
-  { id: 11, name: 'Dr Nice' },
-  { id: 12, name: 'Narco' },
-  { id: 13, name: 'Bombasto' },
-  { id: 14, name: 'Celeritas' },
-  { id: 15, name: 'Magneta' },
-  { id: 16, name: 'RubberMan' },
-  { id: 17, name: 'Dynama' },
-  { id: 18, name: 'Dr IQ' },
-  { id: 19, name: 'Magma' },
-  { id: 20, name: 'Tornado' },
-];
-
-interface IOfferr {
-  id: number;
-  name: string;
 }

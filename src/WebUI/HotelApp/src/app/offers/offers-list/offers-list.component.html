@@ -5,9 +5,25 @@
       <th mat-header-cell *matHeaderCellDef>Name</th>
       <td mat-cell *matCellDef="let offer">{{ offer.title }}</td>
     </ng-container>
-    <ng-container matColumnDef="offerId">
-      <th mat-header-cell *matHeaderCellDef>Id</th>
-      <td mat-cell *matCellDef="let offer">{{ offer.offerId }}</td>
+
+    <ng-container matColumnDef="isActive">
+      <th mat-header-cell *matHeaderCellDef>Active</th>
+      <td mat-cell *matCellDef="let offer">{{ offer.isActive }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="costPerChild">
+      <th mat-header-cell *matHeaderCellDef>Cost per child</th>
+      <td mat-cell *matCellDef="let offer">{{ offer.costPerChild }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="costPerAdult">
+      <th mat-header-cell *matHeaderCellDef>Cost per adult</th>
+      <td mat-cell *matCellDef="let offer">{{ offer.costPerAdult }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="maxGuests">
+      <th mat-header-cell *matHeaderCellDef>Max guests</th>
+      <td mat-cell *matCellDef="let offer">{{ offer.maxGuests }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
