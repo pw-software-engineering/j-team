@@ -778,6 +778,7 @@ export class HotelDto implements IHotelDto {
     city?: string | undefined;
     country?: string | undefined;
     hotelPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
 
     constructor(data?: IHotelDto) {
         if (data) {
@@ -796,6 +797,11 @@ export class HotelDto implements IHotelDto {
             this.city = _data["city"];
             this.country = _data["country"];
             this.hotelPreviewPicture = _data["hotelPreviewPicture"];
+            if (Array.isArray(_data["pictures"])) {
+                this.pictures = [] as any;
+                for (let item of _data["pictures"])
+                    this.pictures!.push(item);
+            }
         }
     }
 
@@ -814,6 +820,11 @@ export class HotelDto implements IHotelDto {
         data["city"] = this.city;
         data["country"] = this.country;
         data["hotelPreviewPicture"] = this.hotelPreviewPicture;
+        if (Array.isArray(this.pictures)) {
+            data["pictures"] = [];
+            for (let item of this.pictures)
+                data["pictures"].push(item);
+        }
         return data; 
     }
 }
@@ -825,6 +836,7 @@ export interface IHotelDto {
     city?: string | undefined;
     country?: string | undefined;
     hotelPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
 }
 
 export class CreateHotelCmd implements ICreateHotelCmd {
@@ -1017,6 +1029,7 @@ export class OfferDto implements IOfferDto {
     costPerAdult?: number;
     maxGuests?: number;
     offerPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
 
     constructor(data?: IOfferDto) {
         if (data) {
@@ -1038,6 +1051,11 @@ export class OfferDto implements IOfferDto {
             this.costPerAdult = _data["costPerAdult"];
             this.maxGuests = _data["maxGuests"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
+            if (Array.isArray(_data["pictures"])) {
+                this.pictures = [] as any;
+                for (let item of _data["pictures"])
+                    this.pictures!.push(item);
+            }
         }
     }
 
@@ -1059,6 +1077,11 @@ export class OfferDto implements IOfferDto {
         data["costPerAdult"] = this.costPerAdult;
         data["maxGuests"] = this.maxGuests;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
+        if (Array.isArray(this.pictures)) {
+            data["pictures"] = [];
+            for (let item of this.pictures)
+                data["pictures"].push(item);
+        }
         return data; 
     }
 }
@@ -1073,6 +1096,7 @@ export interface IOfferDto {
     costPerAdult?: number;
     maxGuests?: number;
     offerPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
 }
 
 export class CreateOfferCmd implements ICreateOfferCmd {

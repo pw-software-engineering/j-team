@@ -509,6 +509,14 @@
             "type": "string",
             "format": "byte",
             "nullable": true
+          },
+          "pictures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
           }
         }
       },
@@ -641,6 +649,14 @@
             "type": "string",
             "format": "byte",
             "nullable": true
+          },
+          "pictures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
           }
         }
       },

@@ -19,5 +19,12 @@ namespace Application.Offers
         public byte[] OfferPreviewPicture => OfferPreviewPictureData?.Data;
         [JsonIgnore]
         public File OfferPreviewPictureData { get; set; }
+        public static byte[] FileToBytes(File file)
+        {
+            return file.Data;
+        }
+        public List<byte[]> Pictures => PicturesData?.ConvertAll(new System.Converter<File, byte[]>(FileToBytes));
+        [JsonIgnore]
+        public List<File> PicturesData { get; set; }
     }
 }
