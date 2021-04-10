@@ -9,9 +9,9 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Review> builder)
         {
             builder.HasKey(t => t.ReviewId);
-            builder.Property(t => t.content)
+            builder.Property(t => t.Content)
                 .HasMaxLength(2000);
-            builder.Property(t => t.rating)
+            builder.Property(t => t.Rating)
                 .IsRequired();
             builder.HasOne(t => t.Client).WithMany(t => t.Reviews);
             builder.HasOne(t => t.Offer).WithMany(t => t.Reviews);

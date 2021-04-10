@@ -10,7 +10,10 @@ namespace HotelReservationSystem.Domain.Entities
     {
         public int HotelId { get; set; }
         public string Name { get; set; }
+<<<<<<< HEAD
 
+=======
+>>>>>>> dcd930dda33e06e1cf4eb88be734ab41c5f5608e
         public string Description { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
