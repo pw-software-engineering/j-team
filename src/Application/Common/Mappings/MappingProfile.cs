@@ -14,11 +14,12 @@ namespace HotelReservationSystem.Application.Common.Mappings
         public MappingProfile()
         {
             ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
-            CreateMap<Hotel, HotelDto>();
+            CreateMap<Hotel, HotelDto>()
+                .ForMember(dest => dest.HotelPreviewPictureData, opt => opt.MapFrom(src => src.HotelPreviewPicture));
             CreateMap<File, byte[]>()
                 .ConstructUsing(src => src.Data);
             CreateMap<Offer, OfferDto>()
-            .ForMember(dest => dest.OfferPreviewPictureData, opt => opt.MapFrom(src => src.OfferPreviewPicture));
+                .ForMember(dest => dest.OfferPreviewPictureData, opt => opt.MapFrom(src => src.OfferPreviewPicture));
             CreateMap<Room, RoomDto>();
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)

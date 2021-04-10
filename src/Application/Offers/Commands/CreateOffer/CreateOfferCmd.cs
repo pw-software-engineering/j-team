@@ -58,9 +58,10 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
 
             await _context.SaveChangesAsync(cancellationToken);
 
+            File previewPicture = null;
             if (request.OfferPreviewPicture != null)
             {
-                File previewPicture = new File
+                previewPicture = new File
                 {
                     Data = request.OfferPreviewPicture,
                     OfferId = entity.OfferId,
@@ -82,6 +83,13 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
                 }
             if (request.OfferPreviewPicture != null || request.Pictures != null)
                 await _context.SaveChangesAsync(cancellationToken);
+
+            if (previewPicture != null)
+            {
+                entity.OfferPreviewPictureId = previewPicture.FileId;
+                _context.Offers.Update(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
 
             return entity.OfferId;
         }
