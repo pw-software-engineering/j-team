@@ -15,14 +15,15 @@ namespace HotelReservationSystem.Domain.Entities
         public double CostPerAdult { get; set; }
         public uint MaxGuests { get; set; }
         // relation
-        public PreviewOfferFile OfferPreviewPicture { get; set; }
+        public int? OfferPreviewPictureId { get; set; }
+        public File OfferPreviewPicture { get; set; }
         // relation
-        public List<OfferFile> Pictures { get; set; }
+        public List<File> Pictures { get; set; }
         // relation
         public int HotelId { get; set; }
         public Hotel Hotel { get; set; }
         // relation
-        public virtual List<Room> Rooms { get; set;}
+        public virtual List<Room> Rooms { get; set; }
         // relation
         public virtual List<Reservation> Reservations { get; set; }
         // relation

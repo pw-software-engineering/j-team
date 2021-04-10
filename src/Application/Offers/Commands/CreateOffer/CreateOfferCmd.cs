@@ -60,25 +60,25 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
 
             if (request.OfferPreviewPicture != null)
             {
-                PreviewOfferFile previewPicture = new PreviewOfferFile
+                File previewPicture = new File
                 {
                     Data = request.OfferPreviewPicture,
                     OfferId = entity.OfferId,
                     Offer = entity
                 };
-                _context.PreviewOfferFiles.Add(previewPicture);
+                _context.Files.Add(previewPicture);
             }
 
             if (request.Pictures != null)
                 foreach (var file in request.Pictures)
                 {
-                    OfferFile picture = new OfferFile
+                    File picture = new File
                     {
                         Data = file,
                         OfferId = entity.HotelId,
                         Offer = entity
                     };
-                    _context.OfferFiles.Add(picture);
+                    _context.Files.Add(picture);
                 }
             if (request.OfferPreviewPicture != null || request.Pictures != null)
                 await _context.SaveChangesAsync(cancellationToken);

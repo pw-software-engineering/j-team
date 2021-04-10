@@ -30,7 +30,7 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
             builder.HasOne(t => t.Hotel).WithMany(t => t.Offers);
             builder.HasMany(t => t.Rooms).WithMany(t => t.Offers);
             builder.HasMany(t => t.Reservations).WithOne(t => t.Offer);
-            builder.HasOne(t => t.OfferPreviewPicture).WithOne(t => t.Offer);
+            builder.HasOne(t => t.OfferPreviewPicture).WithOne().HasForeignKey<Offer>(x => x.OfferPreviewPictureId);
             builder.HasMany(t => t.Pictures).WithOne(t => t.Offer);
             builder.HasMany(t => t.Reviews).WithOne(t => t.Offer);
         }

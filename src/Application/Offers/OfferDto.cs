@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using HotelReservationSystem.Domain.Entities;
 
 namespace Application.Offers
 {
@@ -14,5 +16,8 @@ namespace Application.Offers
         public double CostPerChild { get; set; }
         public double CostPerAdult { get; set; }
         public uint MaxGuests { get; set; }
+        public byte[] OfferPreviewPicture => OfferPreviewPictureData?.Data;
+        [JsonIgnore]
+        public File OfferPreviewPictureData { get; set; }
     }
 }

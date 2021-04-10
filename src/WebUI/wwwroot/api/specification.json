@@ -8,9 +8,7 @@
   "paths": {
     "/api/Hotel": {
       "get": {
-        "tags": [
-          "Hotel"
-        ],
+        "tags": ["Hotel"],
         "operationId": "Hotel_GetHotelsWithPagination",
         "parameters": [
           {
@@ -46,9 +44,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Hotel"
-        ],
+        "tags": ["Hotel"],
         "operationId": "Hotel_Create",
         "requestBody": {
           "x-name": "command",
@@ -79,9 +75,7 @@
     },
     "/api/Hotel/{id}": {
       "put": {
-        "tags": [
-          "Hotel"
-        ],
+        "tags": ["Hotel"],
         "operationId": "Hotel_Update",
         "parameters": [
           {
@@ -122,9 +116,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Hotel"
-        ],
+        "tags": ["Hotel"],
         "operationId": "Hotel_Delete",
         "parameters": [
           {
@@ -155,9 +147,7 @@
     },
     "/api/Offer": {
       "get": {
-        "tags": [
-          "Offer"
-        ],
+        "tags": ["Offer"],
         "operationId": "Offer_GetOffersWithPagination",
         "parameters": [
           {
@@ -193,9 +183,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Offer"
-        ],
+        "tags": ["Offer"],
         "operationId": "Offer_Create",
         "requestBody": {
           "x-name": "command",
@@ -226,9 +214,7 @@
     },
     "/api/Offer/{id}": {
       "put": {
-        "tags": [
-          "Offer"
-        ],
+        "tags": ["Offer"],
         "operationId": "Offer_Update",
         "parameters": [
           {
@@ -269,9 +255,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Offer"
-        ],
+        "tags": ["Offer"],
         "operationId": "Offer_Delete",
         "parameters": [
           {
@@ -302,9 +286,7 @@
     },
     "/api/Room": {
       "get": {
-        "tags": [
-          "Room"
-        ],
+        "tags": ["Room"],
         "operationId": "Room_GetRoomsWithPagination",
         "parameters": [
           {
@@ -340,9 +322,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Room"
-        ],
+        "tags": ["Room"],
         "operationId": "Room_Create",
         "requestBody": {
           "x-name": "command",
@@ -373,9 +353,7 @@
     },
     "/api/Room/{id}": {
       "put": {
-        "tags": [
-          "Room"
-        ],
+        "tags": ["Room"],
         "operationId": "Room_Update",
         "parameters": [
           {
@@ -416,9 +394,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Room"
-        ],
+        "tags": ["Room"],
         "operationId": "Room_Delete",
         "parameters": [
           {
@@ -631,6 +607,11 @@
           },
           "maxGuests": {
             "type": "integer"
+          },
+          "offerPreviewPicture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
           }
         }
       },

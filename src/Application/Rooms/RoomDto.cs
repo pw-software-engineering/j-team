@@ -7,6 +7,7 @@ namespace Application.Rooms
     {
         public int RoomId { get; set; }
         public string HotelRoomNumber { get; set; }
+
         // public List<int> OfferId { get; set; }
     }
 }

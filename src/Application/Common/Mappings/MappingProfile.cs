@@ -15,20 +15,16 @@ namespace HotelReservationSystem.Application.Common.Mappings
         {
             ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
             CreateMap<Hotel, HotelDto>();
-            CreateMap<PreviewHotelFile, byte[]>()
+            CreateMap<File, byte[]>()
                 .ConstructUsing(src => src.Data);
-            CreateMap<Offer, OfferDto>();
-            CreateMap<PreviewOfferFile, byte[]>()
-                .ConstructUsing(src => src.Data);
+            CreateMap<Offer, OfferDto>()
+            .ForMember(dest => dest.OfferPreviewPictureData, opt => opt.MapFrom(src => src.OfferPreviewPicture));
             CreateMap<Room, RoomDto>();
-            //    .ForMember(dest => dest.OfferId, opt => opt.MapFrom(src => src.Offers));
-            //CreateMap<Offer, int>()
-            //    .ConstructUsing(src => src.OfferId);
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {
             var types = assembly.GetExportedTypes()
-                .Where(t => t.GetInterfaces().Any(i => 
+                .Where(t => t.GetInterfaces().Any(i =>
                     i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapFrom<>)))
                 .ToList();
 
@@ -36,9 +32,9 @@ namespace HotelReservationSystem.Application.Common.Mappings
             {
                 var instance = Activator.CreateInstance(type);
 
-                var methodInfo = type.GetMethod("Mapping") 
+                var methodInfo = type.GetMethod("Mapping")
                     ?? type.GetInterface("IMapFrom`1").GetMethod("Mapping");
-                
+
                 methodInfo?.Invoke(instance, new object[] { this });
 
             }

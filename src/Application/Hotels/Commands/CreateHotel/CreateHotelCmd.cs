@@ -43,25 +43,25 @@ namespace HotelReservationSystem.Application.Hotels.Commands.CreateHotel
 
             if (request.HotelPreviewPicture != null)
             {
-                PreviewHotelFile previewPicture = new PreviewHotelFile
+                File previewPicture = new File
                 {
                     Data = request.HotelPreviewPicture,
                     HotelId = entity.HotelId,
                     Hotel = entity
                 };
-                _context.PreviewHotelFiles.Add(previewPicture);
+                _context.Files.Add(previewPicture);
             }
 
             if (request.Pictures != null)
                 foreach (var file in request.Pictures)
                 {
-                    HotelFile picture = new HotelFile
+                    File picture = new File
                     {
                         Data = file,
                         HotelId = entity.HotelId,
                         Hotel = entity
                     };
-                    _context.HotelFiles.Add(picture);
+                    _context.Files.Add(picture);
                 }
             if (request.HotelPreviewPicture != null || request.Pictures != null)
                 await _context.SaveChangesAsync(cancellationToken);
