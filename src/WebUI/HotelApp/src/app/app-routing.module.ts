@@ -1,16 +1,13 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { OffersListComponent } from './offers/offers-list/offers-list.component';
+import { RouterModule, Routes } from '@angular/router';
+import { OffersListComponent } from './offers/offers-list.component';
 
 const routes: Routes = [
-  // Fallback when no prior route is matched
-  { path: '**', redirectTo: '', pathMatch: 'full' },
+  { path: '', redirectTo: '/offers', pathMatch: 'full' },
   { path: 'offers', component: OffersListComponent },
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-  providers: [],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
