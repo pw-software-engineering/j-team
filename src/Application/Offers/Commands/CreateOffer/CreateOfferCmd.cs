@@ -70,6 +70,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
                 _context.Files.Add(previewPicture);
             }
 
+            List<File> files = new List<File>();
             if (request.Pictures != null)
                 foreach (var file in request.Pictures)
                 {
@@ -79,18 +80,22 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
                         OfferId = entity.HotelId,
                         Offer = entity
                     };
+                    files.Add(picture);
                     _context.Files.Add(picture);
                 }
-            if (request.OfferPreviewPicture != null || request.Pictures != null)
+            if (previewPicture != null || request.Pictures != null)
                 await _context.SaveChangesAsync(cancellationToken);
-
             if (previewPicture != null)
             {
                 entity.OfferPreviewPictureId = previewPicture.FileId;
-                _context.Offers.Update(entity);
+                entity.OfferPreviewPicture = previewPicture;
                 await _context.SaveChangesAsync(cancellationToken);
             }
-
+            if (request.Pictures != null)
+            {
+                entity.Pictures = files;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
             return entity.OfferId;
         }
     }
