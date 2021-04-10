@@ -77,7 +77,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
                     File picture = new File
                     {
                         Data = file,
-                        OfferId = entity.HotelId,
+                        OfferId = entity.OfferId,
                         Offer = entity
                     };
                     files.Add(picture);
