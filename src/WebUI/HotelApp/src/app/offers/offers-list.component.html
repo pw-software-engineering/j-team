@@ -1,4 +1,10 @@
 <h2>Offers</h2>
+<section class="example-section">
+  <mat-checkbox class="example-margin" [(ngModel)]="showActive" (change)="setShowActive($event.checked)">Aktywne
+  </mat-checkbox>
+  <mat-checkbox class="example-margin" [(ngModel)]="showInactive" (change)="setShowInactive($event.checked)">Nieaktywne
+  </mat-checkbox>
+</section>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="title">
@@ -29,5 +35,7 @@
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
   </table>
-  <mat-paginator [pageSizeOptions]="[2, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator (page)="handlePageEvent($event)" [length]="length" [pageIndex]="displayedPage" [pageSize]="pageSize"
+    [pageSizeOptions]="[2, 10, 20]" showFirstLastButtons>
+  </mat-paginator>
 </div>
