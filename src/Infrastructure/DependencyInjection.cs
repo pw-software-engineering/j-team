@@ -23,7 +23,6 @@ namespace HotelReservationSystem.Infrastructure
             else
             {
                 var a = configuration.GetConnectionString("DefaultConnection");
-                Console.WriteLine("AAAAAAa" + a);
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseNpgsql(
                         configuration.GetConnectionString("DefaultConnection"),
