@@ -22,7 +22,11 @@ namespace HotelReservationSystem.Application.Common.Mappings
             CreateMap<Offer, OfferDto>()
                 .ForMember(dest => dest.OfferPreviewPictureData, opt => opt.MapFrom(src => src.OfferPreviewPicture))
                 .ForMember(dest => dest.PicturesData, opt => opt.MapFrom(src => src.Pictures));
-            CreateMap<Room, RoomDto>();
+            CreateMap<Room, RoomDto>()
+                .ForMember(dest => dest.OffersData, opt => opt.MapFrom(src => src.Offers))
+                .ForMember(dest => dest.OfferID, opt => opt.MapFrom(src => src.Offers));
+            CreateMap<Offer, int>()
+                .ConstructUsing(src => src.OfferId);
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {
