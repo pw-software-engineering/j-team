@@ -23,7 +23,7 @@ namespace HotelReservationSystem.Application.Common.Mappings
                 .ForMember(dest => dest.OfferPreviewPictureData, opt => opt.MapFrom(src => src.OfferPreviewPicture))
                 .ForMember(dest => dest.PicturesData, opt => opt.MapFrom(src => src.Pictures));
             CreateMap<Room, RoomDto>()
-                .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers));
+                .ForMember(dest => dest.OffersData, opt => opt.MapFrom(src => src.Offers));
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {

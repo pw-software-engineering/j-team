@@ -12,8 +12,8 @@ namespace Application.Rooms
         {
             return offer.OfferId;
         }
-        public List<int> OfferID => Offers.ConvertAll(new System.Converter<Offer, int>(OfferToInt));
+        public List<int> OfferID => OffersData?.ConvertAll(new System.Converter<Offer, int>(OfferToInt));
         [JsonIgnore]
-        public List<Offer> Offers { get; set; }
+        public List<Offer> OffersData { get; set; }
     }
 }
