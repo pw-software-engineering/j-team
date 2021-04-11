@@ -20,13 +20,10 @@ jobs:
       - uses: actions/setup-node@v1 #this will install Node and npm on Ubuntu
         with:
           node-version: "12.x"
-      - uses: nanasess/setup-chromedriver@master
-        with:
-          # Optional: do not specify to match Chrome's version
-          chromedriver-version: '88.0.4324.96'
       - name: Install dependencies
         run: npm install
         working-directory: src/WebUI/ClientApp/
+      - run: sudo apt-get install xvfb
       - name: Run Tests
-        run: npm run test -- --no-watch --no-progress
+        run: xvfb-run --auto-servernum npm run test -- --no-watch --no-progress
         working-directory: src/WebUI/ClientApp/
