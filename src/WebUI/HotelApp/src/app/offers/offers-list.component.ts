@@ -9,7 +9,7 @@ import { OfferClient, OfferDto } from '../web-api-client';
   styleUrls: ['offers-list.component.scss'],
 })
 export class OffersListComponent implements AfterViewInit {
-  columnsToDisplay = ['title', 'isActive', 'costPerChild', 'costPerAdult', 'maxGuests'];
+  columnsToDisplay = ['title', 'isActive', 'costPerChild', 'costPerAdult', 'maxGuests','delButton'];
   dataSource = new MatTableDataSource<OfferDto>();
   displayedPage: number = 0;
   pageSize: number = 5;
@@ -25,6 +25,20 @@ export class OffersListComponent implements AfterViewInit {
 
   ngOnInit(): void {
     this.fetchData();
+  }
+  DeleteOffer(id: number, isActive: boolean) {
+    if (isActive) {
+      alert("Offer must be deactiveted before being deleted");
+      //return;
+    }
+    const delRequest = this.offerClient.delete(id);
+    delRequest.subscribe({
+      next: (value) => {
+        console.log(value.status);
+        this.fetchData();
+      },
+    });
+    location.reload();
   }
   setShowActive(value: boolean) {
     this.showActive = value;
