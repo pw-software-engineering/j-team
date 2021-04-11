@@ -1,4 +1,5 @@
-﻿using HotelReservationSystem.Application.Common.Interfaces;
+﻿using System;
+using HotelReservationSystem.Application.Common.Interfaces;
 using HotelReservationSystem.Infrastructure.Identity;
 using HotelReservationSystem.Infrastructure.Persistence;
 using HotelReservationSystem.Infrastructure.Services;
@@ -21,6 +22,7 @@ namespace HotelReservationSystem.Infrastructure
             }
             else
             {
+                var a = configuration.GetConnectionString("DefaultConnection");
                 services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseNpgsql(
                         configuration.GetConnectionString("DefaultConnection"),

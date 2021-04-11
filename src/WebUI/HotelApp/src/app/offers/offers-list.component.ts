@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { OfferClient, OfferDto } from '../web-api-client';
 
@@ -11,9 +11,11 @@ import { OfferClient, OfferDto } from '../web-api-client';
 export class OffersListComponent implements AfterViewInit {
   columnsToDisplay = ['title', 'isActive', 'costPerChild', 'costPerAdult', 'maxGuests'];
   dataSource = new MatTableDataSource<OfferDto>();
-  displayedPage: number = 1;
+  displayedPage: number = 0;
   pageSize: number = 5;
-  isActive: boolean | null = null;
+  length:number = 0;
+  showActive: boolean = true;
+  showInactive: boolean = true;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
@@ -22,12 +24,41 @@ export class OffersListComponent implements AfterViewInit {
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
-    const offersRequest = this.offerClient.getOffersWithPagination(this.displayedPage, this.pageSize);
+    this.fetchData();
+  }
+  setShowActive(value: boolean) {
+    this.showActive = value;
+    this.fetchData();
+  }
+  setShowInactive(value: boolean) {
+    this.showInactive = value;
+    this.fetchData();
+  }
+  setData = (items: Array<OfferDto> | undefined) => {
+    this.dataSource.data = items ? items: [];
+  }
+
+  handlePageEvent(event: PageEvent) {
+    this.pageSize = event.pageSize;
+    this.displayedPage = event.pageIndex;
+    this.fetchData();
+  }
+
+  fetchData = () => {
+
+    if(!this.showInactive && !this.showActive){
+      this.setData([]);
+      this.length = 0;
+      return;
+    }
+
+    const isActive = (this.showActive && this.showInactive) ? null: this.showActive;
+    const offersRequest = this.offerClient.getOffersWithPagination(this.displayedPage + 1, this.pageSize, isActive);
     offersRequest.subscribe({
       next: (value) => {
         console.log(value);
-        this.dataSource = new MatTableDataSource<OfferDto>(value.items);
-        this.dataSource.paginator = this.paginator;
+        this.length = value.totalCount!;
+        this.setData(value.items);
       },
     });
   }

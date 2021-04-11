@@ -16,6 +16,7 @@ namespace HotelReservationSystem.Application.Offers.Queries.GetOffersWithPaginat
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+        public bool? IsActive { get; set; } = null;
     }
 
     public class GetOffersWithPaginationQueryHandler : IRequestHandler<GetOffersWithPaginationQuery, PaginatedList<OfferDto>>
@@ -33,6 +34,7 @@ namespace HotelReservationSystem.Application.Offers.Queries.GetOffersWithPaginat
         {
             return await _context.Offers
                 .OrderBy(x => x.Title)
+                .Where(x => request.IsActive == null || request.IsActive == x.IsActive)
                 .ProjectTo<OfferDto>(_mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize); ;
         }

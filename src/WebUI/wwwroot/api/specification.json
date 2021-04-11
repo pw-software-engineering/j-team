@@ -177,6 +177,15 @@
               "format": "int32"
             },
             "x-position": 2
+          },
+          {
+            "name": "IsActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {

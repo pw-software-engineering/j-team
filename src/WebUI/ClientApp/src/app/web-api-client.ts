@@ -246,7 +246,7 @@ export class HotelClient implements IHotelClient {
 }
 
 export interface IOfferClient {
-    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfOfferDto>;
+    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined): Observable<PaginatedListOfOfferDto>;
     create(command: CreateOfferCmd): Observable<number>;
     update(id: number, command: UpdateOfferCmd): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
@@ -265,7 +265,7 @@ export class OfferClient implements IOfferClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfOfferDto> {
+    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined): Observable<PaginatedListOfOfferDto> {
         let url_ = this.baseUrl + "/api/Offer?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -275,6 +275,8 @@ export class OfferClient implements IOfferClient {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
