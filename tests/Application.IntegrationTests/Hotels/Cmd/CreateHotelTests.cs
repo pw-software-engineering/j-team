@@ -12,14 +12,14 @@ namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
 
     public class CreateTodoItemTests : TestBase
     {
-        // [Test]
-        // public void ShouldRequireMinimumFields()
-        // {
-        //     var command = new CreateHotelCmd();
+        //[Test]
+        //public void ShouldRequireMinimumFields()
+        //{
+        //    var command = new CreateHotelCmd();
 
-        //     FluentActions.Invoking(() =>
-        //         SendAsync(command)).Should().Throw<ValidationException>();
-        // }
+        //    FluentActions.Invoking(() =>
+        //        SendAsync(command)).Should().Throw<ValidationException>();
+        //}
 
         // [Test]
         // public async Task ShouldCreateHotel()
