@@ -54,6 +54,7 @@ jobs:
           project_path: tests/Application.UnitTests/
           report_name: my_project_tests
           report_title: My Project Tests
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: IntegrationTests
         run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.IntegrationTests/
