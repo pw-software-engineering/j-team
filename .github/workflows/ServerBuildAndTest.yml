@@ -48,3 +48,6 @@ jobs:
       - name: UnitTests
         run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.UnitTests/
+      - name: IntegrationTests
+        run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        working-directory: tests/Application.IntegrationTests/
