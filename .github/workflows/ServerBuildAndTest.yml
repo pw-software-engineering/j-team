@@ -48,11 +48,12 @@ jobs:
       - name: UnitTests
         run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.UnitTests/
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
+      - name: use this action, test solution dir
+        uses: zyborg/dotnet-tests-report@v1
         with:
-          files: tests/Application.UnitTests/coverage.opencover.xml
+          project_path: tests/Application.UnitTests/
+          report_name: my_project_tests
+          report_title: My Project Tests
       - name: IntegrationTests
         run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.IntegrationTests/
