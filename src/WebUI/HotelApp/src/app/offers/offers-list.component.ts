@@ -34,11 +34,10 @@ export class OffersListComponent implements AfterViewInit {
     const delRequest = this.offerClient.delete(id);
     delRequest.subscribe({
       next: (value) => {
-        console.log(value.status);
+        console.log(value?.status);
         this.fetchData();
       },
     });
-    location.reload();
   }
   setShowActive(value: boolean) {
     this.showActive = value;
