@@ -14,35 +14,35 @@ namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
 
     public class UpdateTodoItemDetailTests : TestBase
     {
-        [Test]
-        public void ShouldRequireValidHotelId()
-        {
-            var command = new UpdateHotelCmd
-            {
-                Id = 99,
-                Name = "New Title"
-            };
+        // [Test]
+        // public void ShouldRequireValidHotelId()
+        // {
+        //     var command = new UpdateHotelCmd
+        //     {
+        //         Id = 99,
+        //         Name = "New Title"
+        //     };
 
-            FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<NotFoundException>();
-        }
+        //     FluentActions.Invoking(() =>
+        //         SendAsync(command)).Should().Throw<NotFoundException>();
+        // }
 
-        [Test]
-        public async Task ShouldUpdateHotel()
-        {
-            var userId = await RunAsDefaultUserAsync();
+        // [Test]
+        // public async Task ShouldUpdateHotel()
+        // {
+        //     var userId = await RunAsDefaultUserAsync();
 
-            var itemId = await SendAsync(new CreateHotelCmd
-            {
-                Name = "New Item"
-            });
+        //     var itemId = await SendAsync(new CreateHotelCmd
+        //     {
+        //         Name = "New Item"
+        //     });
 
-            var item = await FindAsync<Hotel>(itemId);
+        //     var item = await FindAsync<Hotel>(itemId);
 
-            item.LastModifiedBy.Should().NotBeNull();
-            item.LastModifiedBy.Should().Be(userId);
-            item.LastModified.Should().NotBeNull();
-            item.LastModified.Should().BeCloseTo(DateTime.Now, 10000);
-        }
+        //     item.LastModifiedBy.Should().NotBeNull();
+        //     item.LastModifiedBy.Should().Be(userId);
+        //     item.LastModified.Should().NotBeNull();
+        //     item.LastModified.Should().BeCloseTo(DateTime.Now, 10000);
+        // }
     }
 }
