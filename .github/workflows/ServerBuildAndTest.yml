@@ -46,8 +46,13 @@ jobs:
         run: dotnet build --no-restore
         working-directory: src/WebUI/
       - name: UnitTests
-        run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.UnitTests/
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: test-results/**/*.xml
       - name: IntegrationTests
-        run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.IntegrationTests/
