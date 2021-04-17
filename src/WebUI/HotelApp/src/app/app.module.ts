@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { OffersAddComponent } from './offers/offers-add/offers-add.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     BrowserAnimationsModule,
     MaterialModule,
     MatFormFieldModule,
+    MatInputModule,
+    NgbModule,
     HttpClientModule
   ],
     providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' }],

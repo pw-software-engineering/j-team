@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CreateOfferCmd, OfferClient } from 'src/app/web-api-client';
 
 @Component({
   selector: 'app-offers-add',
@@ -10,53 +11,45 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class OffersAddComponent implements OnInit {
 
     form!: FormGroup;
-    loading = false;
     submitted = false;
 
     constructor(
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private offerClient: OfferClient,
+        private route: ActivatedRoute,
+        private router: Router
     ) {}
 
     ngOnInit() {
-
         this.form = this.formBuilder.group({
-            title: ['', Validators.required],
+            hotelId: [1],
+            offerTitle: ['', Validators.required],
             costPerChild: ['', Validators.required],
             costPerAdult: ['', Validators.required],
             maxGuests: ['', [Validators.required]],
+            description: [''],
+            offerPreviewPicture: [''],
+            pictures: [''],
+            isActive: [true],
+            isDeleted: [false]
         });
     }
 
-    // // convenience getter for easy access to form fields
-    // get f() { return this.form.controls; }
+    get f() { return this.form.controls; }
 
     onSubmit() {
         this.submitted = true;
 
-        // // reset alerts on submit
-        // this.alertService.clear();
-
-        // // stop here if form is invalid
         if (this.form.invalid) {
             return;
         }
 
-        this.loading = true;
-        // if (this.isAddMode) {
-        //     this.createUser();
-        // } else {
-        //     this.updateUser();
-        // }
+        const addRequest = this.offerClient.create(new CreateOfferCmd(this.form.value));
+        addRequest.subscribe({
+          next: (value) => {
+            console.log(value);
+            this.router.navigate(['../'], { relativeTo: this.route });
+          },
+        });
     }
-
-    // private createUser() {
-    //     this.userService.create(this.form.value)
-    //         .pipe(first())
-    //         .subscribe(() => {
-    //             this.alertService.success('User added', { keepAfterRouteChange: true });
-    //             this.router.navigate(['../'], { relativeTo: this.route });
-    //         })
-    //         .add(() => this.loading = false);
-    // }
-
 }

@@ -42,7 +42,8 @@ namespace HotelReservationSystem.WebUI
                 options.AddPolicy(MyAllowSpecificOrigins, builder =>
                 {
                     builder.AllowAnyOrigin()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
                 });
             });
             services.AddHttpContextAccessor();
@@ -65,7 +66,7 @@ namespace HotelReservationSystem.WebUI
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                configuration.RootPath = "HotelApp/dist";
             });
 
             services.AddOpenApiDocument(configure =>
@@ -100,7 +101,7 @@ namespace HotelReservationSystem.WebUI
             }
 
             app.UseHealthChecks("/health");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
@@ -130,7 +131,7 @@ namespace HotelReservationSystem.WebUI
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "HotelApp";
 
                 if (env.IsDevelopment())
                 {
