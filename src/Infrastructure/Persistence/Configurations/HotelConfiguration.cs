@@ -24,6 +24,7 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
 
             builder.HasOne(t => t.HotelPreviewPicture).WithOne().HasForeignKey<Hotel>(x => x.HotelPreviewPictureId);
             builder.HasMany(t => t.Pictures).WithOne(x => x.Hotel);
+            builder.HasMany(t => t.Rooms).WithOne(x => x.Hotel);
         }
     }
 }
