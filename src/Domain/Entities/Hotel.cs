@@ -20,5 +20,7 @@ namespace HotelReservationSystem.Domain.Entities
         public List<File> Pictures { get; set; }
         // relation
         public virtual List<Offer> Offers { get; set; }
+        // relation
+        public virtual List<Room> Rooms { get; set; }
     }
 }
