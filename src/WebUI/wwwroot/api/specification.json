@@ -333,6 +333,16 @@
               "format": "int32"
             },
             "x-position": 2
+          },
+          {
+            "name": "RoomId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
