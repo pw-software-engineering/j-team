@@ -12,7 +12,8 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
     public class CreateRoomCmd : IRequest<int>
     {
         public string HotelRoomNumber { get; set; }
-        public int OfferID { get; set; }
+        public int? OfferID { get; set; }
+        public int? HotelID { get; set; } // w finalnej wersji będzie token
     }
 
     public class CreateRoomCmdHandler : IRequestHandler<CreateRoomCmd, int>
@@ -26,25 +27,47 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 
         public async Task<int> Handle(CreateRoomCmd request, CancellationToken cancellationToken)
         {
-            var offer = await _context.Offers.FindAsync(request.OfferID);
-
-            if (offer == null)
+            if (request.OfferID != null)
             {
-                throw new NotFoundException(nameof(Offer), request.OfferID);
+                var offer = await _context.Offers.FindAsync(request.OfferID);
+
+                if (offer == null)
+                {
+                    throw new NotFoundException(nameof(Offer), request.OfferID);
+                }
+                var offers = new List<Offer>();
+                offers.Add(offer);
+                var entity = new Room
+                {
+                    HotelRoomNumber = request.HotelRoomNumber,
+                    HotelId = offer.HotelId,
+                    Hotel = await _context.Hotels.FindAsync(offer.HotelId),
+                    Offers = offers
+                };
+
+                _context.Rooms.Add(entity);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return entity.RoomId;
             }
-            var offers = new List<Offer>();
-            offers.Add(offer);
-            var entity = new Room
+            else
             {
-                HotelRoomNumber = request.HotelRoomNumber,
-                Offers = offers
-            };
-
-            _context.Rooms.Add(entity);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return entity.RoomId;
+                if (request.HotelID == null)
+                    throw new System.Exception();
+                var hotel = await _context.Hotels.FindAsync(request.HotelID);
+                if (hotel == null)
+                {
+                    throw new NotFoundException(nameof(Hotel), request.HotelID);
+                }
+                var entity = new Room
+                {
+                    HotelRoomNumber = request.HotelRoomNumber,
+                    HotelId = hotel.HotelId,
+                    Hotel = hotel
+                };
+                return entity.RoomId;
+            }
         }
     }
 }
