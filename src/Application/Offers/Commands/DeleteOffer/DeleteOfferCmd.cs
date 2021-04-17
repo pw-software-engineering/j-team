@@ -39,6 +39,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
             {
                 _context.Files.Remove(entity.OfferPreviewPicture);
                 entity.OfferPreviewPictureId = null;
+                await _context.SaveChangesAsync(cancellationToken);
             }
 
             foreach (File file in entity.Pictures)
