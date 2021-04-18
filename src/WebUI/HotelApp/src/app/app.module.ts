@@ -9,19 +9,29 @@ import { OffersListComponent } from './offers/offers-list.component';
 import { API_BASE_URL } from './web-api-client';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { OffersAddComponent } from './offers/offers-add/offers-add.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
-    OffersListComponent
+    OffersListComponent,
+    OffersAddComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     MaterialModule,
-    HttpClientModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgbModule,
+    HttpClientModule
   ],
     providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' }],
     bootstrap: [AppComponent]
