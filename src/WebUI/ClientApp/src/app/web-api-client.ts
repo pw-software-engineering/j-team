@@ -479,7 +479,7 @@ export class OfferClient implements IOfferClient {
 }
 
 export interface IRoomClient {
-    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto>;
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNumber: string | null | undefined): Observable<PaginatedListOfRoomDto>;
     create(command: CreateRoomCmd): Observable<number>;
     update(id: number, command: UpdateRoomCmd): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
@@ -498,8 +498,8 @@ export class RoomClient implements IRoomClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto> {
-        let url_ = this.baseUrl + "/api/Room?";
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNumber: string | null | undefined): Observable<PaginatedListOfRoomDto> {
+        let url_ = this.baseUrl + "/api/rooms?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -508,6 +508,8 @@ export class RoomClient implements IRoomClient {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (roomNumber !== undefined && roomNumber !== null)
+            url_ += "RoomNumber=" + encodeURIComponent("" + roomNumber) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -555,7 +557,7 @@ export class RoomClient implements IRoomClient {
     }
 
     create(command: CreateRoomCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api/Room";
+        let url_ = this.baseUrl + "/api/rooms";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -607,7 +609,7 @@ export class RoomClient implements IRoomClient {
     }
 
     update(id: number, command: UpdateRoomCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Room/{id}";
+        let url_ = this.baseUrl + "/api/rooms/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -660,7 +662,7 @@ export class RoomClient implements IRoomClient {
     }
 
     delete(id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Room/{id}";
+        let url_ = this.baseUrl + "/api/rooms/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -1363,7 +1365,7 @@ export interface IRoomDto {
 
 export class CreateRoomCmd implements ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    hotelId?: number;
 
     constructor(data?: ICreateRoomCmd) {
         if (data) {
@@ -1377,7 +1379,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
     init(_data?: any) {
         if (_data) {
             this.hotelRoomNumber = _data["hotelRoomNumber"];
-            this.offerID = _data["offerID"];
+            this.hotelId = _data["hotelId"];
         }
     }
 
@@ -1391,14 +1393,14 @@ export class CreateRoomCmd implements ICreateRoomCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hotelRoomNumber"] = this.hotelRoomNumber;
-        data["offerID"] = this.offerID;
+        data["hotelId"] = this.hotelId;
         return data; 
     }
 }
 
 export interface ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    hotelId?: number;
 }
 
 export class UpdateRoomCmd implements IUpdateRoomCmd {

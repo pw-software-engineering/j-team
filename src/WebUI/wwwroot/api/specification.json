@@ -309,7 +309,7 @@
         }
       }
     },
-    "/api/Room": {
+    "/api/rooms": {
       "get": {
         "tags": [
           "Room"
@@ -333,6 +333,15 @@
               "format": "int32"
             },
             "x-position": 2
+          },
+          {
+            "name": "RoomNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -380,7 +389,7 @@
         }
       }
     },
-    "/api/Room/{id}": {
+    "/api/rooms/{id}": {
       "put": {
         "tags": [
           "Room"
@@ -818,7 +827,7 @@
             "type": "string",
             "nullable": true
           },
-          "offerID": {
+          "hotelId": {
             "type": "integer",
             "format": "int32"
           }
