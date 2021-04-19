@@ -52,7 +52,7 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
          github-token: ${{ secrets.GITHUB_TOKEN }}
-         path-to-lcov: tests/Application.UnitTests/TestResults/coverege.info
+         path-to-lcov: tests/Application.UnitTests/TestResults/coverage.info
       - name: IntegrationTests
         run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.IntegrationTests/
