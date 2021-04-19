@@ -13,6 +13,7 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
                 .HasMaxLength(50)
                 .IsRequired();
             builder.HasMany(t => t.Offers).WithMany(t => t.Rooms);
+            builder.HasOne(t => t.Hotel).WithMany(t => t.Rooms);
         }
     }
 }

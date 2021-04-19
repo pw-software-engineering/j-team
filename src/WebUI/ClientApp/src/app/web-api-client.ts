@@ -1365,7 +1365,8 @@ export interface IRoomDto {
 
 export class CreateRoomCmd implements ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    offerID?: number | undefined;
+    hotelID?: number | undefined;
 
     constructor(data?: ICreateRoomCmd) {
         if (data) {
@@ -1380,6 +1381,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
         if (_data) {
             this.hotelRoomNumber = _data["hotelRoomNumber"];
             this.offerID = _data["offerID"];
+            this.hotelID = _data["hotelID"];
         }
     }
 
@@ -1394,13 +1396,15 @@ export class CreateRoomCmd implements ICreateRoomCmd {
         data = typeof data === 'object' ? data : {};
         data["hotelRoomNumber"] = this.hotelRoomNumber;
         data["offerID"] = this.offerID;
+        data["hotelID"] = this.hotelID;
         return data; 
     }
 }
 
 export interface ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    offerID?: number | undefined;
+    hotelID?: number | undefined;
 }
 
 export class UpdateRoomCmd implements IUpdateRoomCmd {
