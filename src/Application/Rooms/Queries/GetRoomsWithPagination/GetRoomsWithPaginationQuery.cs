@@ -33,7 +33,7 @@ namespace HotelReservationSystem.Application.Rooms.Queries.GetRoomsWithPaginatio
             return await _context.Rooms
                 .OrderBy(x => x.HotelRoomNumber)
                 .ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize); ;
+                .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
     }
 }
