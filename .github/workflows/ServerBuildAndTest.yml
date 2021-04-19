@@ -46,15 +46,13 @@ jobs:
         run: dotnet build --no-restore
         working-directory: src/WebUI/
       - name: UnitTests
-        run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
         working-directory: tests/Application.UnitTests/
-      - name: use this action, test solution dir
-        uses: zyborg/dotnet-tests-report@v1
+      - name: Publish coverage report to coveralls.io
+        uses: coverallsapp/github-action@master
         with:
-          project_path: tests/Application.UnitTests/
-          report_name: my_project_tests
-          report_title: My Project Tests
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+         github-token: ${{ secrets.GITHUB_TOKEN }}
+         path-to-lcov: tests/Application.UnitTests/TestResults/coverege.info
       - name: IntegrationTests
         run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.IntegrationTests/
