@@ -38,6 +38,7 @@ namespace HotelReservationSystem.Application.Hotels.Commands.DeleteHotel
             {
                 _context.Files.Remove(entity.HotelPreviewPicture);
                 entity.HotelPreviewPicture = null;
+                await _context.SaveChangesAsync(cancellationToken);
             }
             if (entity.Pictures != null)
                 foreach (File file in entity.Pictures)
