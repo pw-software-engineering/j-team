@@ -41,8 +41,8 @@ namespace HotelReservationSystem.Application.Rooms.Commands.DeleteRoom
                 throw new NotFoundException(nameof(Room), request.Id);
             }
             var currentTime = dateTime.Now;
-            var notDoneReservations = entity.Reservations.Where(x => x.ToTime > currentTime);
-            var doneReservations = entity.Reservations.Where(x => x.ToTime <= currentTime);
+            var notDoneReservations = entity.Reservations.Where(x => x.ToTime > currentTime).ToList();
+            var doneReservations = entity.Reservations.Where(x => x.ToTime <= currentTime).ToList();
             if (notDoneReservations.Any())
             {
                 foreach (var reservation in notDoneReservations)

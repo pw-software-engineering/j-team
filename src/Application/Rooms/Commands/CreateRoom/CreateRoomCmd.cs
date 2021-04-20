@@ -30,6 +30,7 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
             var entity = new Room
             {
                 HotelRoomNumber = request.HotelRoomNumber,
+                HotelId = request.HotelId
             };
 
             _context.Rooms.Add(entity);
