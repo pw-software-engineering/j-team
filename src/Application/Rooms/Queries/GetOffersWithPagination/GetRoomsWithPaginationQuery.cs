@@ -15,7 +15,7 @@ namespace HotelReservationSystem.Application.Rooms.Queries.GetRoomsWithPaginatio
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-        public int? RoomId { get; set; } = null;
+        public string? RoomNo { get; set; } = null;
     }
 
     public class GetRoomsWithPaginationQueryHandler : IRequestHandler<GetRoomsWithPaginationQuery, PaginatedList<RoomDto>>
@@ -33,7 +33,7 @@ namespace HotelReservationSystem.Application.Rooms.Queries.GetRoomsWithPaginatio
         {
             return await _context.Rooms
                 .OrderBy(x => x.HotelRoomNumber)
-                 .Where(x => request.RoomId == null || request.RoomId == x.RoomId)
+                 .Where(x => request.RoomNo == null || request.RoomNo == x.HotelRoomNumber)
                 .ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize); ;
         }

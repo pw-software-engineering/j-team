@@ -479,7 +479,7 @@ export class OfferClient implements IOfferClient {
 }
 
 export interface IRoomClient {
-    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomId: number | null | undefined): Observable<PaginatedListOfRoomDto>;
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNo: string | null | undefined): Observable<PaginatedListOfRoomDto>;
     create(command: CreateRoomCmd): Observable<number>;
     update(id: number, command: UpdateRoomCmd): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
@@ -498,7 +498,7 @@ export class RoomClient implements IRoomClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomId: number | null | undefined): Observable<PaginatedListOfRoomDto> {
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNo: string | null | undefined): Observable<PaginatedListOfRoomDto> {
         let url_ = this.baseUrl + "/api/Room?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -508,8 +508,8 @@ export class RoomClient implements IRoomClient {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (roomId !== undefined && roomId !== null)
-            url_ += "RoomId=" + encodeURIComponent("" + roomId) + "&";
+        if (roomNo !== undefined && roomNo !== null)
+            url_ += "RoomNo=" + encodeURIComponent("" + roomNo) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

@@ -14,7 +14,7 @@ export class RoomListComponent implements AfterViewInit {
   displayedPage: number = 0;
   pageSize: number = 5;
   length: number = 0;
-  roomfilter: number | null = null;
+  roomfilter: string | null = null;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
@@ -25,7 +25,10 @@ export class RoomListComponent implements AfterViewInit {
   ngOnInit(): void {
     this.fetchData();
   }
- 
+  updatefilter(roomNumFilter: string): void {
+    this.roomfilter = roomNumFilter;
+    this.fetchData();
+  }
  
   setData = (items: Array<RoomDto> | undefined) => {
     this.dataSource.data = items ? items: [];
@@ -38,10 +41,6 @@ export class RoomListComponent implements AfterViewInit {
   }
 
   fetchData = () => {
-
-   
-
-
     const roomsRequest = this.roomClient.getRoomsWithPagination(this.displayedPage + 1, this.pageSize, this.roomfilter);
     roomsRequest.subscribe({
       next: (value) => {

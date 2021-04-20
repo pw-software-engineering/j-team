@@ -1,12 +1,14 @@
 <h2>Rooms</h2>
 <section class="example-section">
-  
+  <label>Filter only specific room number</label>
+  <input type="number" name="theValue" step="1" min="1" max="10000" (change)="updatefilter(roomNumFilter.value)"
+         ng-pattern="integerval" class="w3-input w3-animate-input" style="width:15%" #roomNumFilter>
 </section>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="Id">
       <th mat-header-cell *matHeaderCellDef>Rooom identificator</th>
-      <td mat-cell *matCellDef="let room">{{ room.Id }}</td>
+      <td mat-cell *matCellDef="let room">{{ room.roomId }}</td>
     </ng-container>
 
     <ng-container matColumnDef="RoomNo">
