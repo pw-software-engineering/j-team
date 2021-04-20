@@ -15,7 +15,9 @@ namespace HotelReservationSystem.Application.Rooms.Queries.GetRoomsWithPaginatio
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+#nullable enable
         public string? RoomNo { get; set; } = null;
+#nullable disable
     }
 
     public class GetRoomsWithPaginationQueryHandler : IRequestHandler<GetRoomsWithPaginationQuery, PaginatedList<RoomDto>>

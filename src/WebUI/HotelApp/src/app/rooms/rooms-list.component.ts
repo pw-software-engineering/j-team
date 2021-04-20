@@ -4,11 +4,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { RoomClient, RoomDto } from '../web-api-client';
 
 @Component({
-  selector: 'app-room-list',
-  templateUrl: 'room-list.component.html',
-  styleUrls: ['room-list.component.scss'],
+  selector: 'app-rooms-list',
+  templateUrl: 'rooms-list.component.html',
+  styleUrls: ['rooms-list.component.scss'],
 })
-export class RoomListComponent implements AfterViewInit {
+export class RoomsListComponent implements AfterViewInit {
   columnsToDisplay = ['Id', 'RoomNo'];
   dataSource = new MatTableDataSource<RoomDto>();
   displayedPage: number = 0;
