@@ -3,6 +3,7 @@ using HotelReservationSystem.Application.Common.Models;
 using HotelReservationSystem.Application.Offers.Commands.CreateOffer;
 using HotelReservationSystem.Application.Offers.Commands.DeleteOffer;
 using HotelReservationSystem.Application.Offers.Commands.UpdateOffer;
+using HotelReservationSystem.Application.Offers.Queries;
 using HotelReservationSystem.Application.Offers.Queries.GetOffersWithPagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,12 @@ namespace HotelReservationSystem.WebUI.Controllers
         public async Task<ActionResult<PaginatedList<OfferDto>>> GetOffersWithPagination([FromQuery] GetOffersWithPaginationQuery query)
         {
             return await Mediator.Send(query);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<OfferDto>> GetOffer(int id)
+        {
+            return await Mediator.Send(new GetOfferQuery { Id = id });
         }
 
         [HttpPost]

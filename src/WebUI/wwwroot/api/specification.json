@@ -234,6 +234,36 @@
       }
     },
     "/api/Offer/{id}": {
+      "get": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "Offer_GetOffer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfferDto"
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "tags": [
           "Offer"

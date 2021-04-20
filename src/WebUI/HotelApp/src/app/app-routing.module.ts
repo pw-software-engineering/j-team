@@ -6,7 +6,8 @@ import { OffersListComponent } from './offers/offers-list.component';
 const routes: Routes = [
   { path: '', redirectTo: '/offers', pathMatch: 'full' },
   { path: 'offers', component: OffersListComponent },
-  { path: 'offers/add', component: OffersAddComponent }
+  { path: 'offers/add', component: OffersAddComponent },
+  { path: 'offers/edit/:id', component: OffersAddComponent },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

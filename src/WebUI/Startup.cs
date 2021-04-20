@@ -35,7 +35,7 @@ namespace HotelReservationSystem.WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-
+            
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddCors(options =>
             {
@@ -101,7 +101,7 @@ namespace HotelReservationSystem.WebUI
             }
 
             app.UseHealthChecks("/health");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
