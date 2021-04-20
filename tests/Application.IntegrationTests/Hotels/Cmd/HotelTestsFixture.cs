@@ -35,7 +35,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
             var roomId = await SendAsync(new CreateRoomCmd
             {
                 HotelRoomNumber = number,
-                HotelId = hotelId,
+                HotelID = hotelId,
             });
             var room = context.Rooms.Find(roomId);
             return room;

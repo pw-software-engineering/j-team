@@ -37,7 +37,7 @@ namespace HotelReservationSystem.Application.Offers.Queries.GetOffersWithPaginat
                 .OrderBy(x => x.Title)
                 .Where(x => request.IsActive == null || request.IsActive == x.IsActive)
                 .ProjectTo<OfferDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize); ;
+                .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
     }
 }

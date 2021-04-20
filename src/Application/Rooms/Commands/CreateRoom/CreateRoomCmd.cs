@@ -12,8 +12,8 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
     public class CreateRoomCmd : IRequest<int>
     {
         public string HotelRoomNumber { get; set; }
-        //TODO: swap for value from token
-        public int HotelId { get; set; }
+        public int OfferID { get; set; }
+        public int HotelID { get; set; } = 1;
     }
 
     public class CreateRoomCmdHandler : IRequestHandler<CreateRoomCmd, int>
@@ -30,7 +30,8 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
             var entity = new Room
             {
                 HotelRoomNumber = request.HotelRoomNumber,
-                HotelId = request.HotelId
+                HotelId = request.HotelID,
+
             };
 
             _context.Rooms.Add(entity);

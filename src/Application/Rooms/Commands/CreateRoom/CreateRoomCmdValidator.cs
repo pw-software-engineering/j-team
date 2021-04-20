@@ -14,7 +14,7 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
             RuleFor(cmd => cmd).Custom((cmd, context) =>
             {
                 if (dbContext.Rooms
-                .Where(x => x.HotelId == cmd.HotelId)
+                .Where(x => x.HotelId == cmd.HotelID)
                 .Any(x => x.HotelRoomNumber == cmd.HotelRoomNumber))
                 {
                     context.AddFailure("Provided hotel room number already exists in database.");
