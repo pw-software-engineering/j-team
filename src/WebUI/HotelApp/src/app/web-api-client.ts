@@ -246,6 +246,7 @@ export class HotelClient implements IHotelClient {
 }
 
 export interface IOfferClient {
+    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined, offerId: number | undefined): Observable<PaginatedListOfRoomDto>;
     getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined): Observable<PaginatedListOfOfferDto>;
     create(command: CreateOfferCmd): Observable<number>;
     update(id: number, command: UpdateOfferCmd): Observable<FileResponse>;
@@ -263,6 +264,69 @@ export class OfferClient implements IOfferClient {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined, offerId: number | undefined): Observable<PaginatedListOfRoomDto> {
+        let url_ = this.baseUrl + "/api/Offer/{id}/rooms?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (offerId === null)
+            throw new Error("The parameter 'offerId' cannot be null.");
+        else if (offerId !== undefined)
+            url_ += "OfferId=" + encodeURIComponent("" + offerId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRooms(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRooms(<any>response_);
+                } catch (e) {
+                    return <Observable<PaginatedListOfRoomDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<PaginatedListOfRoomDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processRooms(response: HttpResponseBase): Observable<PaginatedListOfRoomDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedListOfRoomDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<PaginatedListOfRoomDto>(<any>null);
     }
 
     getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined): Observable<PaginatedListOfOfferDto> {
@@ -957,6 +1021,122 @@ export interface IUpdateHotelCmd {
     country?: string | undefined;
 }
 
+export class PaginatedListOfRoomDto implements IPaginatedListOfRoomDto {
+    items?: RoomDto[] | undefined;
+    pageIndex?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfRoomDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(RoomDto.fromJS(item));
+            }
+            this.pageIndex = _data["pageIndex"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfRoomDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfRoomDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageIndex"] = this.pageIndex;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data; 
+    }
+}
+
+export interface IPaginatedListOfRoomDto {
+    items?: RoomDto[] | undefined;
+    pageIndex?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class RoomDto implements IRoomDto {
+    roomId?: number;
+    hotelRoomNumber?: string | undefined;
+    offerID?: number[] | undefined;
+
+    constructor(data?: IRoomDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roomId = _data["roomId"];
+            this.hotelRoomNumber = _data["hotelRoomNumber"];
+            if (Array.isArray(_data["offerID"])) {
+                this.offerID = [] as any;
+                for (let item of _data["offerID"])
+                    this.offerID!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): RoomDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoomDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roomId"] = this.roomId;
+        data["hotelRoomNumber"] = this.hotelRoomNumber;
+        if (Array.isArray(this.offerID)) {
+            data["offerID"] = [];
+            for (let item of this.offerID)
+                data["offerID"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IRoomDto {
+    roomId?: number;
+    hotelRoomNumber?: string | undefined;
+    offerID?: number[] | undefined;
+}
+
 export class PaginatedListOfOfferDto implements IPaginatedListOfOfferDto {
     items?: OfferDto[] | undefined;
     pageIndex?: number;
@@ -1245,125 +1425,10 @@ export interface IUpdateOfferCmd {
     maxGuests?: number | undefined;
 }
 
-export class PaginatedListOfRoomDto implements IPaginatedListOfRoomDto {
-    items?: RoomDto[] | undefined;
-    pageIndex?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-
-    constructor(data?: IPaginatedListOfRoomDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(RoomDto.fromJS(item));
-            }
-            this.pageIndex = _data["pageIndex"];
-            this.totalPages = _data["totalPages"];
-            this.totalCount = _data["totalCount"];
-            this.hasPreviousPage = _data["hasPreviousPage"];
-            this.hasNextPage = _data["hasNextPage"];
-        }
-    }
-
-    static fromJS(data: any): PaginatedListOfRoomDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedListOfRoomDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["pageIndex"] = this.pageIndex;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        return data; 
-    }
-}
-
-export interface IPaginatedListOfRoomDto {
-    items?: RoomDto[] | undefined;
-    pageIndex?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-}
-
-export class RoomDto implements IRoomDto {
-    roomId?: number;
-    hotelRoomNumber?: string | undefined;
-    offerID?: number[] | undefined;
-
-    constructor(data?: IRoomDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.roomId = _data["roomId"];
-            this.hotelRoomNumber = _data["hotelRoomNumber"];
-            if (Array.isArray(_data["offerID"])) {
-                this.offerID = [] as any;
-                for (let item of _data["offerID"])
-                    this.offerID!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): RoomDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new RoomDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["roomId"] = this.roomId;
-        data["hotelRoomNumber"] = this.hotelRoomNumber;
-        if (Array.isArray(this.offerID)) {
-            data["offerID"] = [];
-            for (let item of this.offerID)
-                data["offerID"].push(item);
-        }
-        return data; 
-    }
-}
-
-export interface IRoomDto {
-    roomId?: number;
-    hotelRoomNumber?: string | undefined;
-    offerID?: number[] | undefined;
-}
-
 export class CreateRoomCmd implements ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
     offerID?: number;
+    hotelID?: number;
 
     constructor(data?: ICreateRoomCmd) {
         if (data) {
@@ -1378,6 +1443,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
         if (_data) {
             this.hotelRoomNumber = _data["hotelRoomNumber"];
             this.offerID = _data["offerID"];
+            this.hotelID = _data["hotelID"];
         }
     }
 
@@ -1392,6 +1458,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
         data = typeof data === 'object' ? data : {};
         data["hotelRoomNumber"] = this.hotelRoomNumber;
         data["offerID"] = this.offerID;
+        data["hotelID"] = this.hotelID;
         return data; 
     }
 }
@@ -1399,6 +1466,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
 export interface ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
     offerID?: number;
+    hotelID?: number;
 }
 
 export class UpdateRoomCmd implements IUpdateRoomCmd {

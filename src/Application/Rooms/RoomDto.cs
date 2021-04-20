@@ -13,6 +13,13 @@ namespace Application.Rooms
             return offer.OfferId;
         }
         public List<int> OfferID => OffersData?.ConvertAll(new System.Converter<Offer, int>(OfferToInt));
+        public bool Contains(int offerId)
+        {
+            foreach (var id in OfferID)
+                if (id == offerId)
+                    return true;
+            return false;
+        }
         [JsonIgnore]
         public List<Offer> OffersData { get; set; }
     }

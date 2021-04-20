@@ -10,6 +10,7 @@ import { API_BASE_URL } from './web-api-client';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { OffersAddComponent } from './offers/offers-add/offers-add.component';
+import { RoomsListComponent } from './offers/offers-rooms-list/offers-rooms-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,7 +20,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   declarations: [
     AppComponent,
     OffersListComponent,
-    OffersAddComponent
+    OffersAddComponent,
+    RoomsListComponent
   ],
   imports: [
     BrowserModule,

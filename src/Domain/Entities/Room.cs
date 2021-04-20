@@ -15,6 +15,13 @@ namespace HotelReservationSystem.Domain.Entities
         public Hotel Hotel { get; set; }
         // relation
         public virtual List<Offer> Offers { get; set; }
-        
+        public bool Contains(int offerId)
+        {
+            foreach (var offer in Offers)
+                if (offer.OfferId == offerId)
+                    return true;
+            return false;
+        }
+
     }
 }

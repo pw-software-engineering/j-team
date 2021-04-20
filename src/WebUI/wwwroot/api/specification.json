@@ -153,6 +153,65 @@
         }
       }
     },
+    "/api/Offer/{id}/rooms": {
+      "get": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "Offer_rooms",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "OfferId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfRoomDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Offer": {
       "get": {
         "tags": [
@@ -590,6 +649,59 @@
           }
         }
       },
+      "PaginatedListOfRoomDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/RoomDto"
+            }
+          },
+          "pageIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RoomDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "roomId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hotelRoomNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "offerID": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "PaginatedListOfOfferDto": {
         "type": "object",
         "additionalProperties": false,
@@ -757,59 +869,6 @@
           }
         }
       },
-      "PaginatedListOfRoomDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/RoomDto"
-            }
-          },
-          "pageIndex": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
-          }
-        }
-      },
-      "RoomDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "roomId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hotelRoomNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "offerID": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        }
-      },
       "CreateRoomCmd": {
         "type": "object",
         "additionalProperties": false,
@@ -819,6 +878,10 @@
             "nullable": true
           },
           "offerID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hotelID": {
             "type": "integer",
             "format": "int32"
           }
