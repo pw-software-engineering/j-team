@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OffersAddComponent } from './offers-add.component';
+import { OffersAddEditComponent } from './offers-add-edit.component';
 
 describe('OffersAddComponent', () => {
-  let component: OffersAddComponent;
-  let fixture: ComponentFixture<OffersAddComponent>;
+  let component: OffersAddEditComponent;
+  let fixture: ComponentFixture<OffersAddEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OffersAddComponent ]
+      declarations: [ OffersAddEditComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OffersAddComponent);
+    fixture = TestBed.createComponent(OffersAddEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { CreateOfferCmd, OfferClient } from 'src/app/web-api-client';
+import { CreateOfferCmd, OfferClient, UpdateOfferCmd } from 'src/app/web-api-client';
 
 @Component({
-  selector: 'app-offers-add',
-  templateUrl: './offers-add.component.html',
-  styleUrls: ['./offers-add.component.scss']
+  selector: 'app-offers-add-edit',
+  templateUrl: './offers-add-edit.component.html',
+  styleUrls: ['./offers-add-edit.component.scss']
 })
-export class OffersAddComponent implements OnInit {
+export class OffersAddEditComponent implements OnInit {
   id!: number;
   isAddMode!: boolean;
   form!: FormGroup;
@@ -28,7 +28,7 @@ export class OffersAddComponent implements OnInit {
 
     this.form = this.formBuilder.group({
         hotelId: [1],
-        offerTitle: ['', Validators.required],
+        title: ['', Validators.required],
         costPerChild: ['', Validators.required],
         costPerAdult: ['', Validators.required],
         maxGuests: ['', [Validators.required]],
@@ -40,13 +40,12 @@ export class OffersAddComponent implements OnInit {
     });
 
     if (!this.isAddMode) {
-      // this.userService.getById(this.id)
-      //     .pipe(first())
-      //     .subscribe(x => this.form.patchValue(x));
       this.offerClient.getOffer(this.id)
         .pipe(first())
-        .subscribe(x => this.form.patchValue(x));
-  }
+        .subscribe(x => {
+          this.form.patchValue(x);
+        });
+    }
   }
 
   get f() { return this.form.controls; }
@@ -58,12 +57,32 @@ export class OffersAddComponent implements OnInit {
           return;
       }
 
-      const addRequest = this.offerClient.create(new CreateOfferCmd(this.form.value));
+      if(this.isAddMode) {
+        this.createOffer();
+      }
+      else {
+        this.updateOffer();
+      }
+
+  }
+
+  private createOffer() {
+    const addRequest = this.offerClient.create(new CreateOfferCmd(this.form.value));
       addRequest.subscribe({
         next: (value) => {
           console.log(value);
           this.router.navigate(['../'], { relativeTo: this.route });
-        },
+        }});
+  }
+
+  private updateOffer() {
+    let cmd = new UpdateOfferCmd(this.form.value);
+    const updateRequest = this.offerClient.update(this.id, cmd);
+      updateRequest.subscribe({
+        next: (value) => {
+          console.log(value);
+          this.router.navigate(['../../'], { relativeTo: this.route });
+        }
       });
   }
 }
