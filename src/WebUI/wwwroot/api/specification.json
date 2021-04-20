@@ -187,15 +187,6 @@
               "format": "int32"
             },
             "x-position": 3
-          },
-          {
-            "name": "OfferId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 4
           }
         ],
         "responses": {

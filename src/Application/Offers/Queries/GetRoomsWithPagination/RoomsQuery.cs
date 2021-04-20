@@ -1,5 +1,4 @@
-﻿using Application.Offers;
-using Application.Rooms;
+﻿using Application.Rooms;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using HotelReservationSystem.Application.Common.Interfaces;
@@ -13,13 +12,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HotelReservationSystem.Application.Offers.Queries.GetOffersWithPagination
+namespace HotelReservationSystem.Application.Offers.Queries.Rooms
 {
     public class RoomsQuery : IRequest<PaginatedList<RoomDto>>
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-        public int OfferId { get; set; } = 1;
+        public int OfferId = 1;
     }
 
     public class RoomsQueryHandler : IRequestHandler<RoomsQuery, PaginatedList<RoomDto>>

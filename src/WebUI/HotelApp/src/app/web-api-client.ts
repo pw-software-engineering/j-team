@@ -246,7 +246,7 @@ export class HotelClient implements IHotelClient {
 }
 
 export interface IOfferClient {
-    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined, offerId: number | undefined): Observable<PaginatedListOfRoomDto>;
+    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto>;
     getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined): Observable<PaginatedListOfOfferDto>;
     create(command: CreateOfferCmd): Observable<number>;
     update(id: number, command: UpdateOfferCmd): Observable<FileResponse>;
@@ -266,7 +266,7 @@ export class OfferClient implements IOfferClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined, offerId: number | undefined): Observable<PaginatedListOfRoomDto> {
+    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto> {
         let url_ = this.baseUrl + "/api/Offer/{id}/rooms?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -279,10 +279,6 @@ export class OfferClient implements IOfferClient {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (offerId === null)
-            throw new Error("The parameter 'offerId' cannot be null.");
-        else if (offerId !== undefined)
-            url_ += "OfferId=" + encodeURIComponent("" + offerId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

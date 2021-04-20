@@ -5,6 +5,7 @@ using HotelReservationSystem.Application.Offers.Commands.CreateOffer;
 using HotelReservationSystem.Application.Offers.Commands.DeleteOffer;
 using HotelReservationSystem.Application.Offers.Commands.UpdateOffer;
 using HotelReservationSystem.Application.Offers.Queries.GetOffersWithPagination;
+using HotelReservationSystem.Application.Offers.Queries.Rooms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

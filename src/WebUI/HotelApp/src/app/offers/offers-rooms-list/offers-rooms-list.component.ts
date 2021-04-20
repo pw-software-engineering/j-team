@@ -45,7 +45,7 @@ export class RoomsListComponent implements AfterViewInit {
       this.length = 0;
       return;
     }
-    const roomsRequest = this.offerClient.rooms(+this.offerId, this.displayedPage + 1, this.pageSize, undefined);
+    const roomsRequest = this.offerClient.rooms(+this.offerId, this.displayedPage + 1, this.pageSize);
     roomsRequest.subscribe({
       next: (value) => {
         console.log(value);
