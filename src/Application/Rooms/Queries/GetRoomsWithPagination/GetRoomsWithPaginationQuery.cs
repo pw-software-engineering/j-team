@@ -35,7 +35,7 @@ namespace HotelReservationSystem.Application.Rooms.Queries.GetRoomsWithPaginatio
                 .OrderBy(x => x.HotelRoomNumber)
                  .Where(x => request.RoomNo == null || request.RoomNo == x.HotelRoomNumber)
                 .ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize); ;
+                .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
     }
 }
