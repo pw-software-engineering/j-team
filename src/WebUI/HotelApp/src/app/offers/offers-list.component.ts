@@ -9,7 +9,7 @@ import { OfferClient, OfferDto } from '../web-api-client';
   styleUrls: ['offers-list.component.scss'],
 })
 export class OffersListComponent implements AfterViewInit {
-  columnsToDisplay = ['title', 'isActive', 'costPerChild', 'costPerAdult', 'maxGuests','delButton'];
+  columnsToDisplay = ['title', 'isActive', 'costPerChild', 'costPerAdult', 'maxGuests', 'delButton', 'roomsButton'];
   dataSource = new MatTableDataSource<OfferDto>();
   displayedPage: number = 0;
   pageSize: number = 5;

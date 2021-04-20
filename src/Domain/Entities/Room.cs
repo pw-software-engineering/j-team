@@ -15,6 +15,5 @@ namespace HotelReservationSystem.Domain.Entities
         public Hotel Hotel { get; set; }
         // relation
         public virtual List<Offer> Offers { get; set; }
-        
     }
 }

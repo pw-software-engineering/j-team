@@ -13,6 +13,7 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
     {
         public string HotelRoomNumber { get; set; }
         public int OfferID { get; set; }
+        public int HotelID { get; set; } = 1;
     }
 
     public class CreateRoomCmdHandler : IRequestHandler<CreateRoomCmd, int>
@@ -37,7 +38,9 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
             var entity = new Room
             {
                 HotelRoomNumber = request.HotelRoomNumber,
-                Offers = offers
+                Offers = offers,
+                HotelId = request.HotelID
+
             };
 
             _context.Rooms.Add(entity);
