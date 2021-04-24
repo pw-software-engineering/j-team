@@ -4,6 +4,7 @@ import { OffersAddEditComponent } from './offers/offers-add-edit/offers-add-edit
 import { OffersListComponent } from './offers/offers-list.component';
 import { RoomsListComponent } from './rooms/rooms-list.component';
 import { OfferRoomsListComponent } from './offers/offers-rooms-list/offers-rooms-list.component';
+import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
 
 
 const routes: Routes = [

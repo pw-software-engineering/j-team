@@ -1333,7 +1333,7 @@ export interface IOfferDto {
 
 export class CreateOfferCmd implements ICreateOfferCmd {
     hotelId?: number;
-    offerTitle?: string | undefined;
+    title?: string | undefined;
     description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
@@ -1355,7 +1355,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     init(_data?: any) {
         if (_data) {
             this.hotelId = _data["hotelId"];
-            this.offerTitle = _data["offerTitle"];
+            this.title = _data["title"];
             this.description = _data["description"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
@@ -1381,7 +1381,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hotelId"] = this.hotelId;
-        data["offerTitle"] = this.offerTitle;
+        data["title"] = this.title;
         data["description"] = this.description;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
@@ -1400,7 +1400,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
 
 export interface ICreateOfferCmd {
     hotelId?: number;
-    offerTitle?: string | undefined;
+    title?: string | undefined;
     description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;

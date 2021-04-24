@@ -819,7 +819,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "offerTitle": {
+          "title": {
             "type": "string",
             "nullable": true
           },
