@@ -10,7 +10,7 @@ import { RoomsListComponent } from './rooms/rooms-list.component';
 import { API_BASE_URL } from './web-api-client';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { OffersAddComponent } from './offers/offers-add/offers-add.component';
+import { OffersAddEditComponent } from './offers/offers-add-edit/offers-add-edit.component';
 import { OfferRoomsListComponent } from './offers/offers-rooms-list/offers-rooms-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -23,9 +23,8 @@ import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
     AppComponent,
     OffersListComponent,
     RoomsListComponent,
-    OffersAddComponent,
     RoomsAddComponent,
-    OffersAddComponent,
+    OffersAddEditComponent,
     OfferRoomsListComponent
   ],
   imports: [

@@ -38,7 +38,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
             });
             var offerId = await SendAsync(new CreateOfferCmd
             {
-                OfferTitle = "offer1",
+                Title = "offer1",
                 HotelId = hotelId
             });
             var roomId = await SendAsync(new CreateRoomCmd

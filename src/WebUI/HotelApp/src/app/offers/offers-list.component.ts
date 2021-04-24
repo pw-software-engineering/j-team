@@ -29,7 +29,7 @@ export class OffersListComponent implements AfterViewInit {
   DeleteOffer(id: number, isActive: boolean) {
     if (isActive) {
       alert("Offer must be deactiveted before being deleted");
-      //return;
+      return;
     }
     const delRequest = this.offerClient.delete(id);
     delRequest.subscribe({
