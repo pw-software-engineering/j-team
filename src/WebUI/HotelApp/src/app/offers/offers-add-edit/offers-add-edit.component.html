@@ -9,10 +9,6 @@
                 <div *ngIf="f.title.errors.required">Title is required</div>
               </div>
         </div>
-        <div class="form-group col-5" *ngIf="!isAddMode">
-          <label>Active</label>
-          <input type="checkbox" formControlName="isActive" class="form-control" />
-        </div>
         <div class="form-group col-5">
           <label>Cost per child</label>
           <input type="text" formControlName="costPerChild" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.costPerChild.errors }"/>
@@ -40,6 +36,10 @@
           <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
             <div *ngIf="f.description.errors.required">Description is required</div>
           </div>
+        </div>
+        <div class="form-group col-2" *ngIf="!isAddMode">
+          <label>Active</label>
+          <input type="checkbox" formControlName="isActive" class="form-control" />
         </div>
     </div>
     <div class="form-group">
