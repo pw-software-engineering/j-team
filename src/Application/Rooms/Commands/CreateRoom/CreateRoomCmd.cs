@@ -29,6 +29,11 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 
         public async Task<int> Handle(CreateRoomCmd request, CancellationToken cancellationToken)
         {
+            //todo: wyrzucic jak bedzie token z hotelid
+            if (request.HotelID == 1)
+            {
+                request.HotelID = _context.Hotels.First().HotelId;
+            }
             var entity = new Room
             {
                 HotelRoomNumber = request.HotelRoomNumber,

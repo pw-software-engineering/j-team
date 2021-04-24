@@ -6,6 +6,7 @@ import { OffersListComponent } from './offers/offers-list.component';
 import { RoomsListComponent } from './rooms/rooms-list.component';
 
 import { OfferRoomsListComponent } from './offers/offers-rooms-list/offers-rooms-list.component';
+import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
 
 
 const routes: Routes = [
@@ -13,7 +14,7 @@ const routes: Routes = [
 
 
   { path: 'rooms', component: RoomsListComponent },
-
+  { path: 'rooms/add', component: RoomsAddComponent },
   { path: 'offers/add', component: OffersAddComponent },
 
 

@@ -14,7 +14,7 @@ namespace HotelReservationSystem.Application.Rooms.Commands.DeleteRoom
     {
         public int Id { get; set; }
         //TODO: swap for value from token
-        public int HotelId { get; set; }
+        public int HotelId { get; set; } = 1;
     }
 
     public class DeleteOfferCmdHandler : IRequestHandler<DeleteRoomCmd>
@@ -35,6 +35,12 @@ namespace HotelReservationSystem.Application.Rooms.Commands.DeleteRoom
         {
             var entity = await _context.Rooms.Include(x => x.Reservations)
             .FirstOrDefaultAsync(x => x.RoomId == request.Id);
+
+            //todo: wywalic jak bedzie token
+            if (request.HotelId == 1)
+            {
+                request.HotelId = _context.Hotels.First().HotelId;
+            }
 
             if (entity == null || entity.HotelId != request.HotelId)
             {
