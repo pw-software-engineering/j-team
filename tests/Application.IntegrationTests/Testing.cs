@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using Npgsql;
 using NUnit.Framework;
 using Respawn;
 using System;
@@ -61,7 +62,12 @@ public class Testing
 
         _checkpoint = new Checkpoint
         {
-            TablesToIgnore = new[] { "__EFMigrationsHistory" }
+            TablesToIgnore = new[] { "__EFMigrationsHistory", "pg_subscription_rel" },
+            SchemasToInclude = new[]
+            {
+                "public"
+            },
+            DbAdapter = DbAdapter.Postgres
         };
 
         EnsureDatabase();
@@ -131,7 +137,11 @@ public class Testing
 
     public static async Task ResetState()
     {
-        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        using (var conn = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+        {
+            await conn.OpenAsync();
+            await _checkpoint.Reset(conn);
+        }
         _currentUserId = null;
     }
 

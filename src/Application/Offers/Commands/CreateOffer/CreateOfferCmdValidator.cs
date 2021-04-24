@@ -9,6 +9,8 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
             RuleFor(v => v.Title)
                 .MaximumLength(200)
                 .NotEmpty();
+            RuleFor(v => v.HotelId)
+                .GreaterThan(0);
         }
     }
 }

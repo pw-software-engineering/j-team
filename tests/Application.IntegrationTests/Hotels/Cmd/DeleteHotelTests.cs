@@ -12,27 +12,27 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
 
     public class DeleteHotelTests : TestBase
     {
-        [Test]
-        public void ShouldRequireValidHotelId()
-        {
-            var command = new DeleteHotelCmd { Id = 99 };
+        // [Test]
+        // public void ShouldRequireValidHotelId()
+        // {
+        //     var command = new DeleteHotelCmd { Id = 99 };
 
-            FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<NotFoundException>();
-        }
+        //     FluentActions.Invoking(() =>
+        //         SendAsync(command)).Should().Throw<NotFoundException>();
+        // }
 
-        [Test]
-        public async Task ShouldDeleteHotel()
-        {
-            var itemId = await SendAsync(new CreateHotelCmd
-            {
-                Name = "New Item"
-            });
+        // [Test]
+        // public async Task ShouldDeleteHotel()
+        // {
+        //     var itemId = await SendAsync(new CreateHotelCmd
+        //     {
+        //         Name = "New Item"
+        //     });
 
-            await SendAsync(new DeleteHotelCmd
-            {
-                Id = itemId
-            });
-        }
+        //     await SendAsync(new DeleteHotelCmd
+        //     {
+        //         Id = itemId
+        //     });
+        // }
     }
 }

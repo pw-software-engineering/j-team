@@ -10,8 +10,10 @@ namespace HotelReservationSystem.Domain.Entities
     {
         public int RoomId { get; set; }
         public string HotelRoomNumber { get; set; }
+        // relation 
+        public int HotelId { get; set; }
+        public Hotel Hotel { get; set; }
         // relation
         public virtual List<Offer> Offers { get; set; }
-        
     }
 }

@@ -12,35 +12,35 @@ namespace HotelReservationSystem.Application.IntegrationTests.TodoItems.Commands
 
     public class CreateTodoItemTests : TestBase
     {
-        [Test]
-        public void ShouldRequireMinimumFields()
-        {
-            var command = new CreateHotelCmd();
+        //[Test]
+        //public void ShouldRequireMinimumFields()
+        //{
+        //    var command = new CreateHotelCmd();
 
-            FluentActions.Invoking(() =>
-                SendAsync(command)).Should().Throw<ValidationException>();
-        }
+        //    FluentActions.Invoking(() =>
+        //        SendAsync(command)).Should().Throw<ValidationException>();
+        //}
 
-        [Test]
-        public async Task ShouldCreateHotel()
-        {
-            var userId = await RunAsDefaultUserAsync();
+        // [Test]
+        // public async Task ShouldCreateHotel()
+        // {
+        //     var userId = await RunAsDefaultUserAsync();
 
-            var command = new CreateHotelCmd
-            {
-                Name = "Tasks"
-            };
+        //     var command = new CreateHotelCmd
+        //     {
+        //         Name = "Tasks"
+        //     };
 
-            var itemId = await SendAsync(command);
+        //     var itemId = await SendAsync(command);
 
-            var item = await FindAsync<Hotel>(itemId);
+        //     var item = await FindAsync<Hotel>(itemId);
 
-            item.Should().NotBeNull();
-            item.Name.Should().Be(command.Name);
-            item.CreatedBy.Should().Be(userId);
-            item.Created.Should().BeCloseTo(DateTime.Now, 10000);
-            item.LastModifiedBy.Should().BeNull();
-            item.LastModified.Should().BeNull();
-        }
+        //     item.Should().NotBeNull();
+        //     item.Name.Should().Be(command.Name);
+        //     item.CreatedBy.Should().Be(userId);
+        //     item.Created.Should().BeCloseTo(DateTime.Now, 10000);
+        //     item.LastModifiedBy.Should().BeNull();
+        //     item.LastModified.Should().BeNull();
+        // }
     }
 }
