@@ -385,7 +385,7 @@
             "x-position": 2
           },
           {
-            "name": "RoomNumber",
+            "name": "RoomNo",
             "in": "query",
             "schema": {
               "type": "string",

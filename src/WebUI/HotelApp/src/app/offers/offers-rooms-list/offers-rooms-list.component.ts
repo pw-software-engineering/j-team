@@ -9,7 +9,7 @@ import { OfferClient, RoomDto } from '../../web-api-client';
   templateUrl: 'offers-rooms-list.component.html',
   styleUrls: ['offers-rooms-list.component.scss'],
 })
-export class RoomsListComponent implements AfterViewInit {
+export class OfferRoomsListComponent implements AfterViewInit {
   columnsToDisplay = ['hotelRoomNumber'];
   myDataArray = new MatTableDataSource<RoomDto>();
   displayedPage: number = 0;
