@@ -35,7 +35,7 @@ namespace HotelReservationSystem.WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-
+            
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddCors(options =>
             {
