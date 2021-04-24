@@ -42,6 +42,18 @@ namespace HotelReservationSystem.Infrastructure.Persistence
 
                 await context.SaveChangesAsync();
             }
+            if (!context.Clients.Any())
+            {
+                context.Clients.Add(new Client
+                {
+                    Name = "Client1",
+                    Surname = "Clientsurname",
+                    Email = "email@email.com",
+                    Username = "Client123"
+                });
+
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

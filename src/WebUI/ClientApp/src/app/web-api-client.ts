@@ -611,7 +611,7 @@ export class RoomClient implements IRoomClient {
     }
 
     getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNo: string | null | undefined): Observable<PaginatedListOfRoomDto> {
-        let url_ = this.baseUrl + "/api/Room?";
+        let url_ = this.baseUrl + "/api/rooms?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -669,7 +669,7 @@ export class RoomClient implements IRoomClient {
     }
 
     create(command: CreateRoomCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api/Room";
+        let url_ = this.baseUrl + "/api/rooms";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -721,7 +721,7 @@ export class RoomClient implements IRoomClient {
     }
 
     update(id: number, command: UpdateRoomCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Room/{id}";
+        let url_ = this.baseUrl + "/api/rooms/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -774,7 +774,7 @@ export class RoomClient implements IRoomClient {
     }
 
     delete(id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Room/{id}";
+        let url_ = this.baseUrl + "/api/rooms/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -1333,7 +1333,7 @@ export interface IOfferDto {
 
 export class CreateOfferCmd implements ICreateOfferCmd {
     hotelId?: number;
-    offerTitle?: string | undefined;
+    title?: string | undefined;
     description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
@@ -1355,7 +1355,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     init(_data?: any) {
         if (_data) {
             this.hotelId = _data["hotelId"];
-            this.offerTitle = _data["offerTitle"];
+            this.title = _data["title"];
             this.description = _data["description"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
@@ -1381,7 +1381,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hotelId"] = this.hotelId;
-        data["offerTitle"] = this.offerTitle;
+        data["title"] = this.title;
         data["description"] = this.description;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
@@ -1400,7 +1400,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
 
 export interface ICreateOfferCmd {
     hotelId?: number;
-    offerTitle?: string | undefined;
+    title?: string | undefined;
     description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
@@ -1477,7 +1477,7 @@ export interface IUpdateOfferCmd {
 
 export class CreateRoomCmd implements ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    offerID?: number | undefined;
     hotelID?: number;
 
     constructor(data?: ICreateRoomCmd) {
@@ -1515,7 +1515,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
 
 export interface ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    offerID?: number | undefined;
     hotelID?: number;
 }
 

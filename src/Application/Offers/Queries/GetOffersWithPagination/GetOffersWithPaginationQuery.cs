@@ -6,6 +6,7 @@ using HotelReservationSystem.Application.Common.Mappings;
 using HotelReservationSystem.Application.Common.Models;
 using HotelReservationSystem.Application.Hotels.Queries;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;

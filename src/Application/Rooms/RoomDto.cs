@@ -8,6 +8,8 @@ namespace Application.Rooms
     {
         public int RoomId { get; set; }
         public string HotelRoomNumber { get; set; }
+        [JsonIgnore]
+        public int HotelId { get; set; }
         public static int OfferToInt(Offer offer)
         {
             return offer.OfferId;
