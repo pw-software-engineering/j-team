@@ -101,7 +101,8 @@ namespace HotelReservationSystem.WebUI
             }
 
             app.UseHealthChecks("/health");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+            // Commented out due to authorization errors in browsers
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
