@@ -110,7 +110,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
             }
             var rooms = await SendAsync(new GetRoomsWithPaginationQuery()
             {
-                RoomNumber = "R01"
+                RoomNo = "R01"
             });
 
             return rooms.Items.First();

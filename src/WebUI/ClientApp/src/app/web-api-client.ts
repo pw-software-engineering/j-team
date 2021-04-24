@@ -559,7 +559,7 @@ export class RoomClient implements IRoomClient {
     }
 
     getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNo: string | null | undefined): Observable<PaginatedListOfRoomDto> {
-        let url_ = this.baseUrl + "/api/Room?";
+        let url_ = this.baseUrl + "/api/rooms?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -822,7 +822,7 @@ export class PaginatedListOfHotelDto implements IPaginatedListOfHotelDto {
         data["totalCount"] = this.totalCount;
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
-        return data;
+        return data; 
     }
 }
 
@@ -889,7 +889,7 @@ export class HotelDto implements IHotelDto {
             for (let item of this.pictures)
                 data["pictures"].push(item);
         }
-        return data;
+        return data; 
     }
 }
 
@@ -954,7 +954,7 @@ export class CreateHotelCmd implements ICreateHotelCmd {
         data["description"] = this.description;
         data["city"] = this.city;
         data["country"] = this.country;
-        return data;
+        return data; 
     }
 }
 
@@ -1007,7 +1007,7 @@ export class UpdateHotelCmd implements IUpdateHotelCmd {
         data["description"] = this.description;
         data["city"] = this.city;
         data["country"] = this.country;
-        return data;
+        return data; 
     }
 }
 
@@ -1070,7 +1070,7 @@ export class PaginatedListOfRoomDto implements IPaginatedListOfRoomDto {
         data["totalCount"] = this.totalCount;
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
-        return data;
+        return data; 
     }
 }
 
@@ -1125,7 +1125,7 @@ export class RoomDto implements IRoomDto {
             for (let item of this.offerID)
                 data["offerID"].push(item);
         }
-        return data;
+        return data; 
     }
 }
 
@@ -1186,7 +1186,7 @@ export class PaginatedListOfOfferDto implements IPaginatedListOfOfferDto {
         data["totalCount"] = this.totalCount;
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
-        return data;
+        return data; 
     }
 }
 
@@ -1262,7 +1262,7 @@ export class OfferDto implements IOfferDto {
             for (let item of this.pictures)
                 data["pictures"].push(item);
         }
-        return data;
+        return data; 
     }
 }
 
@@ -1342,7 +1342,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
         data["costPerChild"] = this.costPerChild;
         data["costPerAdult"] = this.costPerAdult;
         data["maxGuests"] = this.maxGuests;
-        return data;
+        return data; 
     }
 }
 
@@ -1408,7 +1408,7 @@ export class UpdateOfferCmd implements IUpdateOfferCmd {
         data["costPerChild"] = this.costPerChild;
         data["costPerAdult"] = this.costPerAdult;
         data["maxGuests"] = this.maxGuests;
-        return data;
+        return data; 
     }
 }
 
@@ -1457,7 +1457,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
         data["hotelRoomNumber"] = this.hotelRoomNumber;
         data["offerID"] = this.offerID;
         data["hotelID"] = this.hotelID;
-        return data;
+        return data; 
     }
 }
 
@@ -1498,7 +1498,7 @@ export class UpdateRoomCmd implements IUpdateRoomCmd {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["hotelRoomNumber"] = this.hotelRoomNumber;
-        return data;
+        return data; 
     }
 }
 

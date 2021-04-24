@@ -23,7 +23,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         public async Task<ActionResult<PaginatedList<RoomDto>>> GetRoomsWithPagination([FromQuery] GetRoomsWithPaginationQuery query)
         {
             var result = await Mediator.Send(query);
-            if (!string.IsNullOrEmpty(query.RoomNumber) && !result.Items.Any())
+            if (!string.IsNullOrEmpty(query.RoomNo) && !result.Items.Any())
             {
                 return NotFound();
             }
