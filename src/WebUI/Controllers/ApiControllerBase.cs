@@ -19,12 +19,10 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             return Request.Headers["x-hotel-token"];
         }
-        protected async Task<(int?, StatusCodeResult)> GetHotelIdFromToken()
+        protected async Task<int> GetHotelIdFromToken()
         {
             var hotelId = await Mediator.Send(new GetHotelIdFromTokenQuery() { Token = GetHotelToken() });
-            var statusCode = hotelId == null ? new StatusCodeResult((int)HttpStatusCode.Unauthorized)
-            : new StatusCodeResult((int)HttpStatusCode.Accepted);
-            return (hotelId, statusCode);
+            return hotelId.Value;
         }
     }
 }

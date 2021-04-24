@@ -13,11 +13,6 @@ namespace HotelReservationSystem.Application.Rooms.Commands.DeleteRoom
 
             RuleFor(cmd => cmd).Custom((cmd, context) =>
             {
-
-                if (cmd.HotelId == 1)
-                {
-                    cmd.HotelId = dbContext.Hotels.First().HotelId;
-                }
                 if (!dbContext.Rooms
                 .Where(x => x.HotelId == cmd.HotelId)
                 .Any(x => x.RoomId == cmd.Id))

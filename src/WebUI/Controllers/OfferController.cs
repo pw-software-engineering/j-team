@@ -39,6 +39,8 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateOfferCmd command)
         {
+            var hotelId = await GetHotelIdFromToken();
+            command.HotelId = hotelId;
             return await Mediator.Send(command);
         }
 

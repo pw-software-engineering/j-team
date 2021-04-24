@@ -27,7 +27,6 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateHotelCmd command)
         {
-
             return await Mediator.Send(command);
         }
 

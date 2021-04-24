@@ -35,6 +35,8 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateRoomCmd command)
         {
+            var hotelId = await GetHotelIdFromToken();
+            command.HotelID = hotelId;
             try
             {
                 return await Mediator.Send(command);
@@ -62,13 +64,10 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            (int? hotelId, StatusCodeResult status) = await GetHotelIdFromToken();
-            if (hotelId is null)
-                return status;
-
+            var hotelId = await GetHotelIdFromToken();
             try
             {
-                var result = await Mediator.Send(new DeleteRoomCmd { Id = id, HotelId = hotelId.Value });
+                var result = await Mediator.Send(new DeleteRoomCmd { Id = id, HotelId = hotelId });
                 return Ok();
             }
             catch (ValidationException)
