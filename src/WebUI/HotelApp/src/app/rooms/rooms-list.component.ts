@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { HOTEL_TOKEN } from '../app.component';
 import { RoomClient, RoomDto } from '../web-api-client';
 
 @Component({
@@ -15,10 +16,12 @@ export class RoomsListComponent implements AfterViewInit {
   pageSize: number = 5;
   length: number = 0;
   roomfilter: string | null = null;
-
+  token: string  = '';
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
-  constructor(private roomClient: RoomClient) {}
+  constructor(private roomClient: RoomClient, @Inject(HOTEL_TOKEN) hotelToken:string) {
+    this.token = hotelToken;
+  }
 
   ngAfterViewInit(): void {}
 
@@ -41,7 +44,7 @@ export class RoomsListComponent implements AfterViewInit {
   }
 
   fetchData = () => {
-    const roomsRequest = this.roomClient.getRoomsWithPagination(this.displayedPage + 1, this.pageSize, this.roomfilter);
+    const roomsRequest = this.roomClient.getRoomsWithPagination(this.displayedPage + 1, this.pageSize, this.roomfilter, this.token);
     roomsRequest.subscribe({
       next: (value) => {
         console.log(value);
@@ -51,7 +54,7 @@ export class RoomsListComponent implements AfterViewInit {
     });
   }
   DeleteRoom = (room: RoomDto) => {
-      const delRequest = this.roomClient.delete(room.roomId!);
+      const delRequest = this.roomClient.delete(room.roomId!, this.token);
       delRequest.subscribe({
         next: (value) => {
           console.log(value?.status);

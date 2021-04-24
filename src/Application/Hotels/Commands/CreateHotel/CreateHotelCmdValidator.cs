@@ -15,6 +15,9 @@ namespace HotelReservationSystem.Application.Hotels.Commands.CreateHotel
             RuleFor(v => v.City)
                 .MaximumLength(200)
                 .NotEmpty();
+            RuleFor(v => v.Password)
+                .MaximumLength(200)
+                .NotEmpty();
         }
     }
 }

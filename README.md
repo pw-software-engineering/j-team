@@ -27,3 +27,7 @@ setup: 0.
    Aplikacja kliencka uruchamia się na na porcie 4200, a hotelowa na 4201
    1. w WebUI/(ClientApp|HotelApp) npm install i npm start (uruchomienie frontendu)
    2. w WebUI dotnet run (uruchomienie serwera)
+
+
+Access Token do testów hotelu:
+$2a$11$M3hY1eNjsXD4PDEuoJGrSOJLLdvfBvTOo3M0SFurlni7GiQVoHMRS

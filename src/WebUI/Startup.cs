@@ -35,7 +35,7 @@ namespace HotelReservationSystem.WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-            
+
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddCors(options =>
             {
@@ -81,8 +81,10 @@ namespace HotelReservationSystem.WebUI
                 });
 
                 configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+                configure.OperationProcessors.Add(new HotelHeaderOperationProcessor());
             });
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

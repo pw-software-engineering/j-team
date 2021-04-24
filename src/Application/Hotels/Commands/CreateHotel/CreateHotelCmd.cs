@@ -16,6 +16,8 @@ namespace HotelReservationSystem.Application.Hotels.Commands.CreateHotel
         public string Description { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
+
+        public string Password { get; set; }
     }
 
     public class CreateHotelCmdHandler : IRequestHandler<CreateHotelCmd, int>
@@ -34,7 +36,9 @@ namespace HotelReservationSystem.Application.Hotels.Commands.CreateHotel
                 Name = request.Name,
                 Description = request.Description,
                 City = request.City,
-                Country = request.Country
+                Country = request.Country,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                AccessToken = BCrypt.Net.BCrypt.HashPassword(request.Password + request.Name)
             };
 
             _context.Hotels.Add(entity);

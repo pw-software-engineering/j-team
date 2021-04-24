@@ -37,7 +37,9 @@ namespace HotelReservationSystem.Infrastructure.Persistence
                     Name = "Hotel1",
                     Description = "Description of the Hotel1",
                     City = "City of the Hotel1",
-                    Country = "Country of the Hotel1"
+                    Country = "Country of the Hotel1",
+                    Password = BCrypt.Net.BCrypt.HashPassword("Hotel1"),
+                    AccessToken = BCrypt.Net.BCrypt.HashPassword("Hotel1Hotel1")
                 });
 
                 await context.SaveChangesAsync();

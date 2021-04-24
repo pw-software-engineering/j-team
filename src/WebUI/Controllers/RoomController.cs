@@ -1,6 +1,8 @@
-﻿using Application.Rooms;
+﻿using Application.Auth;
+using Application.Rooms;
 using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Models;
+using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Rooms.Commands.CreateRoom;
 using HotelReservationSystem.Application.Rooms.Commands.DeleteRoom;
 using HotelReservationSystem.Application.Rooms.Commands.UpdateRoom;
@@ -14,9 +16,9 @@ using System.Threading.Tasks;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    // [Authorize]
     [ApiController]
     [Route("api/rooms")]
+    [AuthorizeHotel]
     public class RoomController : ApiControllerBase
     {
         [HttpGet]
@@ -60,9 +62,13 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
+            (int? hotelId, StatusCodeResult status) = await GetHotelIdFromToken();
+            if (hotelId is null)
+                return status;
+
             try
             {
-                var result = await Mediator.Send(new DeleteRoomCmd { Id = id });
+                var result = await Mediator.Send(new DeleteRoomCmd { Id = id, HotelId = hotelId.Value });
                 return Ok();
             }
             catch (ValidationException)
