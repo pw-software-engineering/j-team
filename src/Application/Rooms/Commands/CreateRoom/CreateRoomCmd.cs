@@ -6,13 +6,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using HotelReservationSystem.Application.Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 {
     public class CreateRoomCmd : IRequest<int>
     {
         public string HotelRoomNumber { get; set; }
-        public int OfferID { get; set; }
+        public int? OfferID { get; set; }
         public int HotelID { get; set; } = 1;
     }
 
@@ -31,12 +33,18 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
             {
                 HotelRoomNumber = request.HotelRoomNumber,
                 HotelId = request.HotelID,
-
             };
 
             _context.Rooms.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
+            if (request.OfferID.HasValue)
+            {
+                var offer = _context.Offers.Include(x => x.Rooms)
+                .FirstOrDefault(x => x.OfferId == request.OfferID);
+                offer.Rooms.Add(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
 
             return entity.RoomId;
         }

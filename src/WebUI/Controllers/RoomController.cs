@@ -62,7 +62,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             try
             {
-                await Mediator.Send(new DeleteRoomCmd { Id = id });
+                var result = await Mediator.Send(new DeleteRoomCmd { Id = id });
                 return Ok();
             }
             catch (ValidationException)

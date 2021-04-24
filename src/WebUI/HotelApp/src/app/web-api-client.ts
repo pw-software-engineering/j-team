@@ -1425,7 +1425,7 @@ export interface IUpdateOfferCmd {
 
 export class CreateRoomCmd implements ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    offerID?: number | undefined;
     hotelID?: number;
 
     constructor(data?: ICreateRoomCmd) {
@@ -1463,7 +1463,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
 
 export interface ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    offerID?: number | undefined;
     hotelID?: number;
 }
 
