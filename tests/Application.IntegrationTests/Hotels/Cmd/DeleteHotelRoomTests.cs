@@ -56,7 +56,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
             });
             var rooms = await SendAsync(new GetRoomsWithPaginationQuery()
             {
-                RoomNo = room.HotelRoomNumber
+                RoomNumber = room.HotelRoomNumber
             });
             rooms.Items.Any(x => x.RoomId == room.RoomId).Should().BeFalse();
 
@@ -75,7 +75,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
             });
             var rooms = await SendAsync(new GetRoomsWithPaginationQuery()
             {
-                RoomNo = room.HotelRoomNumber
+                RoomNumber = room.HotelRoomNumber
             });
             rooms.Items.Any(x => x.RoomId == room.RoomId).Should().BeFalse();
         }
