@@ -12,6 +12,7 @@ namespace HotelReservationSystem.Domain.Entities
         public int ChildrenCount { get; set; }
         public int AdultsCount { get; set; }
         public int? RoomId { get; set; }
+        public Room Room { get; set; }
         // relation 
         public int ClientId { get; set; }
         public Client Client { get; set; }

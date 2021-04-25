@@ -10,7 +10,7 @@ import { error } from '@angular/compiler/src/util';
   styleUrls: ['rooms-list.component.scss'],
 })
 export class RoomsListComponent implements AfterViewInit {
-  columnsToDisplay = ['Id', 'RoomNo'];
+  columnsToDisplay = ['Id', 'RoomNo', 'delButton'];
   dataSource = new MatTableDataSource<RoomDto>();
   displayedPage: number = 0;
   pageSize: number = 5;
@@ -30,7 +30,7 @@ export class RoomsListComponent implements AfterViewInit {
     this.roomfilter = roomNumFilter;
     this.fetchData();
   }
- 
+
   setData = (items: Array<RoomDto> | undefined) => {
     this.dataSource.data = items ? items: [];
   }
@@ -55,4 +55,18 @@ error: (error) => {
       }
     });
   }
+  DeleteRoom = (room: RoomDto) => {
+      const delRequest = this.roomClient.delete(room.roomId!);
+      delRequest.subscribe({
+        next: (value) => {
+          console.log(value?.status);
+          this.fetchData();
+        },
+        error: (error) => {
+          console.log(error);
+          alert("Server error: could not remove room");
+        }
+      });
+  }
+
 }

@@ -19,6 +19,7 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
                 .IsRequired();
             builder.HasOne(t => t.Client).WithMany(t => t.Reservations);
             builder.HasOne(t => t.Offer).WithMany(t => t.Reservations);
+            builder.HasOne(t => t.Room).WithMany(t => t.Reservations);
         }
     }
 }

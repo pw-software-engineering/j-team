@@ -12,7 +12,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
     public class CreateOfferCmd : IRequest<int>
     {
         public int HotelId { get; set; }
-        public string OfferTitle { get; set; }
+        public string Title { get; set; }
         public string Description { get; set; }
         public byte[] OfferPreviewPicture { get; set; }
         public List<byte[]> Pictures { get; set; }
@@ -45,7 +45,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
             {
                 HotelId = request.HotelId,
                 Hotel = hotel,
-                Title = request.OfferTitle,
+                Title = request.Title,
                 Description = request.Description,
                 IsActive = request.IsActive,
                 IsDeleted = request.IsDeleted,

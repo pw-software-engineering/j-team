@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CreateOfferCmd, OfferClient } from 'src/app/web-api-client';
+
+import { CreateOfferCmd, CreateRoomCmd, OfferClient, RoomClient } from 'src/app/web-api-client';
 
 @Component({
-  selector: 'app-offers-add',
-  templateUrl: './offers-add.component.html',
-  styleUrls: ['./offers-add.component.scss']
+  selector: 'app-rooms-add',
+  templateUrl: './rooms-add.component.html',
+  styleUrls: ['./rooms-add.component.scss']
 })
-export class OffersAddComponent implements OnInit {
+export class RoomsAddComponent implements OnInit {
 
     form!: FormGroup;
     submitted = false;
 
     constructor(
         private formBuilder: FormBuilder,
-        private offerClient: OfferClient,
+        private roomClient: RoomClient,
         private route: ActivatedRoute,
         private router: Router
     ) {}
@@ -23,15 +24,7 @@ export class OffersAddComponent implements OnInit {
     ngOnInit() {
         this.form = this.formBuilder.group({
             hotelId: [1],
-            offerTitle: ['', Validators.required],
-            costPerChild: ['', Validators.required],
-            costPerAdult: ['', Validators.required],
-            maxGuests: ['', [Validators.required]],
-            description: [''],
-            offerPreviewPicture: [''],
-            pictures: [''],
-            isActive: [true],
-            isDeleted: [false]
+            hotelRoomNumber: ['', Validators.required],
         });
     }
 
@@ -44,12 +37,17 @@ export class OffersAddComponent implements OnInit {
             return;
         }
 
-        const addRequest = this.offerClient.create(new CreateOfferCmd(this.form.value));
+        const addRequest = this.roomClient.create(new CreateRoomCmd(this.form.value));
         addRequest.subscribe({
           next: (value) => {
             console.log(value);
             this.router.navigate(['../'], { relativeTo: this.route });
           },
+          error: (error) => {
+            alert("Server error: could not add room.");
+            console.log(error);
+            this.router.navigate(['../'], { relativeTo: this.route });
+          }
         });
     }
 }
