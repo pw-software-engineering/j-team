@@ -46,7 +46,7 @@ jobs:
         run: dotnet build --no-restore
         working-directory: src/WebUI/
       - name: UnitTests
-        run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+        run: dotnet test --no-restore --verbosity Minimal /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
         working-directory: tests/Application.UnitTests/
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
@@ -54,5 +54,5 @@ jobs:
          github-token: ${{ secrets.GITHUB_TOKEN }}
          path-to-lcov: tests/Application.UnitTests/TestResults/coverage.info
       - name: IntegrationTests
-        run: dotnet test --no-restore --verbosity Quiet /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --no-restore --verbosity Minimal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
         working-directory: tests/Application.IntegrationTests/
