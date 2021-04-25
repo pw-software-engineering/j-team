@@ -63,5 +63,80 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             result.Items.Count.Should().Be(1);
             result.Items.Any(x => x.RoomId == room1id || x.RoomId == room2id).Should().BeTrue();
         }
+        [Test]
+        public async Task ShouldReturnOnlyRoomsWithSpecifiedNumber()
+        {
+            var hotelId = await SendAsync(new CreateHotelCmd
+            {
+                Name = "hotel1",
+                City = "city",
+                Country = "country"
+            });
+            var offerid = await SendAsync(new CreateOfferCmd
+            {
+                OfferTitle = "offer1",
+                HotelId = hotelId
+            });
+            var room1id = await SendAsync(new CreateRoomCmd
+            {
+                OfferID = offerid,
+                HotelID = hotelId,
+                HotelRoomNumber = "420"
+            });
+            var room2id = await SendAsync(new CreateRoomCmd
+            {
+                OfferID = offerid,
+                HotelID = hotelId,
+                HotelRoomNumber = "489"
+            });
+            var result = await SendAsync(new GetRoomsWithPaginationQuery
+            {
+                PageNumber = 1,
+                PageSize = 1,
+                RoomNumber="420"
+            });
+            result.Should().NotBeNull();
+            result.TotalPages.Should().Be(1);
+            result.TotalCount.Should().Be(1);
+            result.Items.Should().NotBeNull();
+            result.Items.Any(x => x.RoomId == room1id ).Should().BeTrue();
+        }
+        [Test]
+        public async Task ShouldReturnOnlyRoomsWithSpecifiedNumberEmptyResult()
+        {
+            var hotelId = await SendAsync(new CreateHotelCmd
+            {
+                Name = "hotel1",
+                City = "city",
+                Country = "country"
+            });
+            var offerid = await SendAsync(new CreateOfferCmd
+            {
+                OfferTitle = "offer1",
+                HotelId = hotelId
+            });
+            var room1id = await SendAsync(new CreateRoomCmd
+            {
+                OfferID = offerid,
+                HotelID = hotelId,
+                HotelRoomNumber = "420"
+            });
+            var room2id = await SendAsync(new CreateRoomCmd
+            {
+                OfferID = offerid,
+                HotelID = hotelId,
+                HotelRoomNumber = "489"
+            });
+            var result = await SendAsync(new GetRoomsWithPaginationQuery
+            {
+                PageNumber = 1,
+                PageSize = 1,
+                RoomNumber = "123"
+            });
+            result.Should().NotBeNull();
+            result.TotalPages.Should().Be(0);
+            result.TotalCount.Should().Be(0);
+            
+        }
     }
 }

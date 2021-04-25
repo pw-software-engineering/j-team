@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { RoomClient, RoomDto } from '../web-api-client';
+import { error } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-rooms-list',
@@ -48,6 +49,10 @@ export class RoomsListComponent implements AfterViewInit {
         this.length = value.totalCount!;
         this.setData(value.items);
       },
+error: (error) => {
+  console.log(error);
+  this.setData([]);
+      }
     });
   }
 }
