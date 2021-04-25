@@ -1,5 +1,7 @@
 FROM node:12.2.0
 
+
+EXPOSE 4200
 # set working directory
 WORKDIR /HotelApp
 
@@ -14,5 +16,6 @@ RUN npm install -g @angular/cli@7.3.9
 # add app
 COPY . /HotelApp
 
+
 # start app
-CMD ng serve --host 0.0.0.0
+CMD ["ng","serve","--host", "0.0.0.0","--port","4200","--disableHostCheck"]
