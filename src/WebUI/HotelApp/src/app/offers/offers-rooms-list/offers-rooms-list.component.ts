@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { OfferClient, RoomDto } from '../../web-api-client';
+import { OfferClient, RoomClient, RoomDto } from '../../web-api-client';
+import { AddOfferRoomDialogComponent } from './add-offer-room-dialog/add-offer-room-dialog.component';
 
 @Component({
   selector: 'app-offers-rooms-list',
@@ -17,10 +19,16 @@ export class OfferRoomsListComponent implements AfterViewInit {
   pageSize: number = 5;
   length: number = 0;
   offerId: string | null = "";
+  allRooms: RoomDto[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
-  constructor(private offerClient: OfferClient, private route: ActivatedRoute) { }
+  constructor(
+    private offerClient: OfferClient,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private roomClient: RoomClient
+    ) { }
 
   ngAfterViewInit(): void { }
 
@@ -54,6 +62,7 @@ export class OfferRoomsListComponent implements AfterViewInit {
         this.setData(value.items);
       },
     });
+    this.loadAllRooms();
   }
 
   deleteRoom(roomId: number): void {
@@ -63,6 +72,43 @@ export class OfferRoomsListComponent implements AfterViewInit {
           console.log(data);
           this.fetchData();
         });
+  }
 
+  openAddDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+
+
+    this.loadAllRooms();
+    dialogConfig.data = this.allRooms;
+    const dialogRef = this.dialog.open(AddOfferRoomDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(data => {
+      if(data == null)
+        return;
+      this.offerClient.addRoom(Number(this.offerId), data)
+        .pipe(first())
+        .subscribe(data => {
+          console.log(data);
+          this.fetchData();
+      });
+    });
+  }
+
+  loadAllRooms(): void {
+    this.roomClient.getRoomsWithPagination(1, 100, null)
+      .pipe(first())
+      .subscribe(data => {
+        this.allRooms = [];
+        if(data.items) {
+          data.items.forEach(x => {
+            if(this.myDataArray.data.find(room => room.roomId == x.roomId) == undefined) {
+              this.allRooms.push(x);
+            }
+          })
+        }
+    });
   }
 }

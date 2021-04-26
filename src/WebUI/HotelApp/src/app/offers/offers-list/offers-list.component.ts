@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { OfferClient, OfferDto } from '../web-api-client';
+import { OfferClient, OfferDto } from '../../web-api-client';
 
 @Component({
   selector: 'app-offers-list',

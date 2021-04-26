@@ -59,8 +59,16 @@ namespace HotelReservationSystem.WebUI.Controllers
             return NoContent();
         }
 
+        [HttpPost("{offerId}/rooms")]
+        public async Task<ActionResult> AddRoom(int offerId, int roomId)
+        {
+            await Mediator.Send(new AddOfferRoomCmd { OfferId = offerId, RoomId = roomId });
+
+            return Ok();
+        }
+
         [HttpDelete("{offerId}/rooms/{roomId}")]
-        public async Task<ActionResult> deleteRoom(int offerId, int roomId)
+        public async Task<ActionResult> DeleteRoom(int offerId, int roomId)
         {
             await Mediator.Send(new DeleteOfferRoomCmd { OfferId = offerId, RoomId = roomId });
 

@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material-module';
-import { OffersListComponent } from './offers/offers-list.component';
+import { OffersListComponent } from './offers/offers-list/offers-list.component';
 import { RoomsListComponent } from './rooms/rooms-list.component';
 import { API_BASE_URL } from './web-api-client';
 import { HttpClientModule } from '@angular/common/http';
@@ -16,6 +16,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offer-room-dialog/add-offer-room-dialog.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     OffersListComponent,
     RoomsListComponent,
     OffersAddEditComponent,
-    OfferRoomsListComponent
+    OfferRoomsListComponent,
+    AddOfferRoomDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +38,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatFormFieldModule,
     MatInputModule,
     NgbModule,
+    MatDialogModule,
     HttpClientModule
   ],
     providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' }],
