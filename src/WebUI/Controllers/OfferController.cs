@@ -58,5 +58,13 @@ namespace HotelReservationSystem.WebUI.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("{offerId}/rooms/{roomId}")]
+        public async Task<ActionResult> rooms(int offerId, int roomId)
+        {
+            await Mediator.Send(new DeleteOfferRoomCmd { OfferId = offerId, RoomId = roomId });
+
+            return Ok();
+        }
     }
 }
