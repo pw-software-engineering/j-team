@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { first } from 'rxjs/operators';
 import { OfferClient, RoomDto } from '../../web-api-client';
 
 @Component({
@@ -10,7 +11,7 @@ import { OfferClient, RoomDto } from '../../web-api-client';
   styleUrls: ['offers-rooms-list.component.scss'],
 })
 export class OfferRoomsListComponent implements AfterViewInit {
-  columnsToDisplay = ['hotelRoomNumber'];
+  columnsToDisplay = ['hotelRoomNumber', 'delete'];
   myDataArray = new MatTableDataSource<RoomDto>();
   displayedPage: number = 0;
   pageSize: number = 5;
@@ -53,5 +54,15 @@ export class OfferRoomsListComponent implements AfterViewInit {
         this.setData(value.items);
       },
     });
+  }
+
+  deleteRoom(roomId: number): void {
+    this.offerClient.deleteRoom(Number(this.offerId), roomId)
+    .pipe(first())
+        .subscribe(data => {
+          console.log(data);
+          this.fetchData();
+        });
+
   }
 }
