@@ -10,9 +10,9 @@ using System.Linq;
 
 namespace HotelReservationSystem.Application.IntegrationTests
 {
-    
+
     using static Testing;
-    class DeleteOfferTests :TestBase
+    class DeleteOfferTests : TestBase
     {
 
         [Test]
@@ -20,9 +20,9 @@ namespace HotelReservationSystem.Application.IntegrationTests
         {
             FluentActions.Invoking(() =>
                SendAsync(new DeleteOfferCmd
-            {
-                Id = 65
-            })).Should().Throw<NotFoundException>();
+               {
+                   Id = 65
+               })).Should().Throw<NotFoundException>();
         }
         [Test]
         public async Task DeletedOfferIsNotVisibleOnOffersLists()
@@ -31,24 +31,25 @@ namespace HotelReservationSystem.Application.IntegrationTests
             {
                 Name = "hotel1",
                 City = "city",
-                Country = "country"
+                Country = "country",
+                Password = "hotel1"
             });
             var id1 = await SendAsync(new CreateOfferCmd
             {
                 Title = "offer1",
                 HotelId = hotelId
             });
-         
-           await SendAsync(new DeleteOfferCmd
-             {
-                   Id = id1
-              });
+
+            await SendAsync(new DeleteOfferCmd
+            {
+                Id = id1
+            });
             var result = await SendAsync(new GetOffersWithPaginationQuery
             {
                 PageNumber = 1,
                 PageSize = 1
             });
-            result.Items.Any(x => x.OfferId == id1 ).Should().BeFalse();
+            result.Items.Any(x => x.OfferId == id1).Should().BeFalse();
         }
     }
 }

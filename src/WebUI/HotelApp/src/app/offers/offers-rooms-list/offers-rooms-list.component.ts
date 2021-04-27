@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { HOTEL_TOKEN } from 'src/app/app.component';
 import { first } from 'rxjs/operators';
 import { OfferClient, RoomClient, RoomDto } from '../../web-api-client';
 import { AddOfferRoomDialogComponent } from './add-offer-room-dialog/add-offer-room-dialog.component';
@@ -24,11 +25,12 @@ export class OfferRoomsListComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   constructor(
-    private offerClient: OfferClient,
-    private route: ActivatedRoute,
-    private dialog: MatDialog,
-    private roomClient: RoomClient
-    ) { }
+      private offerClient: OfferClient,
+      private route: ActivatedRoute,
+      private dialog: MatDialog,
+      private roomClient: RoomClient,
+      @Inject(HOTEL_TOKEN) private hotelToken:string
+     ) { }
 
   ngAfterViewInit(): void { }
 
@@ -54,7 +56,7 @@ export class OfferRoomsListComponent implements AfterViewInit {
       this.length = 0;
       return;
     }
-    const roomsRequest = this.offerClient.rooms(+this.offerId, this.displayedPage + 1, this.pageSize);
+    const roomsRequest = this.offerClient.rooms(+this.offerId, this.displayedPage + 1, this.pageSize, this.hotelToken);
     roomsRequest.subscribe({
       next: (value) => {
         console.log(value);

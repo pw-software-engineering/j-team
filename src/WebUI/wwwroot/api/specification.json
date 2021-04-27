@@ -30,6 +30,13 @@
               "format": "int32"
             },
             "x-position": 2
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -50,6 +57,15 @@
           "Hotel"
         ],
         "operationId": "Hotel_Create",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -93,6 +109,13 @@
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "requestBody": {
@@ -136,6 +159,13 @@
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -187,6 +217,13 @@
               "format": "int32"
             },
             "x-position": 3
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -236,6 +273,13 @@
               "nullable": true
             },
             "x-position": 3
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -256,6 +300,15 @@
           "Offer"
         ],
         "operationId": "Offer_Create",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -299,6 +352,13 @@
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -329,6 +389,13 @@
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "requestBody": {
@@ -372,6 +439,13 @@
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -389,7 +463,7 @@
         }
       }
     },
-    "/api/Room": {
+    "/api/rooms": {
       "get": {
         "tags": [
           "Room"
@@ -415,13 +489,20 @@
             "x-position": 2
           },
           {
-            "name": "RoomNo",
+            "name": "RoomNumber",
             "in": "query",
             "schema": {
               "type": "string",
               "nullable": true
             },
             "x-position": 3
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -442,6 +523,15 @@
           "Room"
         ],
         "operationId": "Room_Create",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -469,7 +559,7 @@
         }
       }
     },
-    "/api/Room/{id}": {
+    "/api/rooms/{id}": {
       "put": {
         "tags": [
           "Room"
@@ -485,6 +575,13 @@
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "requestBody": {
@@ -528,6 +625,13 @@
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -648,6 +752,10 @@
             "nullable": true
           },
           "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
             "type": "string",
             "nullable": true
           }
@@ -819,7 +927,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "offerTitle": {
+          "title": {
             "type": "string",
             "nullable": true
           },
@@ -909,7 +1017,8 @@
           },
           "offerID": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "hotelID": {
             "type": "integer",

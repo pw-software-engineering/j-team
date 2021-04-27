@@ -1,5 +1,6 @@
 ﻿using Application.Hotels;
 using HotelReservationSystem.Application.Common.Models;
+using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Hotels.Commands.CreateHotel;
 using HotelReservationSystem.Application.Hotels.Commands.DeleteHotel;
 using HotelReservationSystem.Application.Hotels.Commands.UpdateHotel;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    // [Authorize]
+    [AuthorizeHotel]
     public class HotelController : ApiControllerBase
     {
         [HttpGet]
@@ -26,7 +27,6 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateHotelCmd command)
         {
-            
             return await Mediator.Send(command);
         }
 

@@ -15,10 +15,24 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IHotelClient {
-    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfHotelDto>;
-    create(command: CreateHotelCmd): Observable<number>;
-    update(id: number, command: UpdateHotelCmd): Observable<FileResponse>;
-    delete(id: number): Observable<FileResponse>;
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfHotelDto>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    create(x_hotel_token: string | undefined, command: CreateHotelCmd): Observable<number>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    update(id: number, x_hotel_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -34,7 +48,12 @@ export class HotelClient implements IHotelClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfHotelDto> {
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfHotelDto> {
         let url_ = this.baseUrl + "/api/Hotel?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -50,6 +69,7 @@ export class HotelClient implements IHotelClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Accept": "application/json"
             })
         };
@@ -90,7 +110,10 @@ export class HotelClient implements IHotelClient {
         return _observableOf<PaginatedListOfHotelDto>(<any>null);
     }
 
-    create(command: CreateHotelCmd): Observable<number> {
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    create(x_hotel_token: string | undefined, command: CreateHotelCmd): Observable<number> {
         let url_ = this.baseUrl + "/api/Hotel";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -101,6 +124,7 @@ export class HotelClient implements IHotelClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -142,7 +166,10 @@ export class HotelClient implements IHotelClient {
         return _observableOf<number>(<any>null);
     }
 
-    update(id: number, command: UpdateHotelCmd): Observable<FileResponse> {
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    update(id: number, x_hotel_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/Hotel/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -156,6 +183,7 @@ export class HotelClient implements IHotelClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             })
@@ -195,7 +223,10 @@ export class HotelClient implements IHotelClient {
         return _observableOf<FileResponse>(<any>null);
     }
 
-    delete(id: number): Observable<FileResponse> {
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/Hotel/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -206,6 +237,7 @@ export class HotelClient implements IHotelClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Accept": "application/octet-stream"
             })
         };
@@ -246,12 +278,35 @@ export class HotelClient implements IHotelClient {
 }
 
 export interface IOfferClient {
-    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto>;
-    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined): Observable<PaginatedListOfOfferDto>;
-    create(command: CreateOfferCmd): Observable<number>;
-    getOffer(id: number): Observable<OfferDto>;
-    update(id: number, command: UpdateOfferCmd): Observable<FileResponse>;
-    delete(id: number): Observable<FileResponse>;
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto>;
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param isActive (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfOfferDto>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    create(x_hotel_token: string | undefined, command: CreateOfferCmd): Observable<number>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getOffer(id: number, x_hotel_token: string | undefined): Observable<OfferDto>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    update(id: number, x_hotel_token: string | undefined, command: UpdateOfferCmd): Observable<FileResponse>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -267,7 +322,12 @@ export class OfferClient implements IOfferClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfRoomDto> {
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto> {
         let url_ = this.baseUrl + "/api/Offer/{id}/rooms?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -286,6 +346,7 @@ export class OfferClient implements IOfferClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Accept": "application/json"
             })
         };
@@ -326,7 +387,13 @@ export class OfferClient implements IOfferClient {
         return _observableOf<PaginatedListOfRoomDto>(<any>null);
     }
 
-    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined): Observable<PaginatedListOfOfferDto> {
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param isActive (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfOfferDto> {
         let url_ = this.baseUrl + "/api/Offer?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -344,6 +411,7 @@ export class OfferClient implements IOfferClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Accept": "application/json"
             })
         };
@@ -384,7 +452,10 @@ export class OfferClient implements IOfferClient {
         return _observableOf<PaginatedListOfOfferDto>(<any>null);
     }
 
-    create(command: CreateOfferCmd): Observable<number> {
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    create(x_hotel_token: string | undefined, command: CreateOfferCmd): Observable<number> {
         let url_ = this.baseUrl + "/api/Offer";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -395,6 +466,7 @@ export class OfferClient implements IOfferClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -436,7 +508,10 @@ export class OfferClient implements IOfferClient {
         return _observableOf<number>(<any>null);
     }
 
-    getOffer(id: number): Observable<OfferDto> {
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getOffer(id: number, x_hotel_token: string | undefined): Observable<OfferDto> {
         let url_ = this.baseUrl + "/api/Offer/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -447,6 +522,7 @@ export class OfferClient implements IOfferClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Accept": "application/json"
             })
         };
@@ -487,7 +563,10 @@ export class OfferClient implements IOfferClient {
         return _observableOf<OfferDto>(<any>null);
     }
 
-    update(id: number, command: UpdateOfferCmd): Observable<FileResponse> {
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    update(id: number, x_hotel_token: string | undefined, command: UpdateOfferCmd): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/Offer/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -501,6 +580,7 @@ export class OfferClient implements IOfferClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             })
@@ -540,7 +620,10 @@ export class OfferClient implements IOfferClient {
         return _observableOf<FileResponse>(<any>null);
     }
 
-    delete(id: number): Observable<FileResponse> {
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/Offer/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -551,6 +634,7 @@ export class OfferClient implements IOfferClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Accept": "application/octet-stream"
             })
         };
@@ -591,10 +675,25 @@ export class OfferClient implements IOfferClient {
 }
 
 export interface IRoomClient {
-    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNo: string | null | undefined): Observable<PaginatedListOfRoomDto>;
-    create(command: CreateRoomCmd): Observable<number>;
-    update(id: number, command: UpdateRoomCmd): Observable<FileResponse>;
-    delete(id: number): Observable<FileResponse>;
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param roomNumber (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNumber: string | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    create(x_hotel_token: string | undefined, command: CreateRoomCmd): Observable<number>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    update(id: number, x_hotel_token: string | undefined, command: UpdateRoomCmd): Observable<FileResponse>;
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -610,8 +709,14 @@ export class RoomClient implements IRoomClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNo: string | null | undefined): Observable<PaginatedListOfRoomDto> {
-        let url_ = this.baseUrl + "/api/Room?";
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param roomNumber (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNumber: string | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto> {
+        let url_ = this.baseUrl + "/api/rooms?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -620,14 +725,15 @@ export class RoomClient implements IRoomClient {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (roomNo !== undefined && roomNo !== null)
-            url_ += "RoomNo=" + encodeURIComponent("" + roomNo) + "&";
+        if (roomNumber !== undefined && roomNumber !== null)
+            url_ += "RoomNumber=" + encodeURIComponent("" + roomNumber) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Accept": "application/json"
             })
         };
@@ -668,8 +774,11 @@ export class RoomClient implements IRoomClient {
         return _observableOf<PaginatedListOfRoomDto>(<any>null);
     }
 
-    create(command: CreateRoomCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api/Room";
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    create(x_hotel_token: string | undefined, command: CreateRoomCmd): Observable<number> {
+        let url_ = this.baseUrl + "/api/rooms";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -679,6 +788,7 @@ export class RoomClient implements IRoomClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -720,8 +830,11 @@ export class RoomClient implements IRoomClient {
         return _observableOf<number>(<any>null);
     }
 
-    update(id: number, command: UpdateRoomCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Room/{id}";
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    update(id: number, x_hotel_token: string | undefined, command: UpdateRoomCmd): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/rooms/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -734,6 +847,7 @@ export class RoomClient implements IRoomClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             })
@@ -773,8 +887,11 @@ export class RoomClient implements IRoomClient {
         return _observableOf<FileResponse>(<any>null);
     }
 
-    delete(id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Room/{id}";
+    /**
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/rooms/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -784,6 +901,7 @@ export class RoomClient implements IRoomClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
                 "Accept": "application/octet-stream"
             })
         };
@@ -962,6 +1080,7 @@ export class CreateHotelCmd implements ICreateHotelCmd {
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
+    password?: string | undefined;
 
     constructor(data?: ICreateHotelCmd) {
         if (data) {
@@ -984,6 +1103,7 @@ export class CreateHotelCmd implements ICreateHotelCmd {
             this.description = _data["description"];
             this.city = _data["city"];
             this.country = _data["country"];
+            this.password = _data["password"];
         }
     }
 
@@ -1006,6 +1126,7 @@ export class CreateHotelCmd implements ICreateHotelCmd {
         data["description"] = this.description;
         data["city"] = this.city;
         data["country"] = this.country;
+        data["password"] = this.password;
         return data; 
     }
 }
@@ -1017,6 +1138,7 @@ export interface ICreateHotelCmd {
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
+    password?: string | undefined;
 }
 
 export class UpdateHotelCmd implements IUpdateHotelCmd {
@@ -1333,7 +1455,7 @@ export interface IOfferDto {
 
 export class CreateOfferCmd implements ICreateOfferCmd {
     hotelId?: number;
-    offerTitle?: string | undefined;
+    title?: string | undefined;
     description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
@@ -1355,7 +1477,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     init(_data?: any) {
         if (_data) {
             this.hotelId = _data["hotelId"];
-            this.offerTitle = _data["offerTitle"];
+            this.title = _data["title"];
             this.description = _data["description"];
             this.offerPreviewPicture = _data["offerPreviewPicture"];
             if (Array.isArray(_data["pictures"])) {
@@ -1381,7 +1503,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["hotelId"] = this.hotelId;
-        data["offerTitle"] = this.offerTitle;
+        data["title"] = this.title;
         data["description"] = this.description;
         data["offerPreviewPicture"] = this.offerPreviewPicture;
         if (Array.isArray(this.pictures)) {
@@ -1400,7 +1522,7 @@ export class CreateOfferCmd implements ICreateOfferCmd {
 
 export interface ICreateOfferCmd {
     hotelId?: number;
-    offerTitle?: string | undefined;
+    title?: string | undefined;
     description?: string | undefined;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
@@ -1477,7 +1599,7 @@ export interface IUpdateOfferCmd {
 
 export class CreateRoomCmd implements ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    offerID?: number | undefined;
     hotelID?: number;
 
     constructor(data?: ICreateRoomCmd) {
@@ -1515,7 +1637,7 @@ export class CreateRoomCmd implements ICreateRoomCmd {
 
 export interface ICreateRoomCmd {
     hotelRoomNumber?: string | undefined;
-    offerID?: number;
+    offerID?: number | undefined;
     hotelID?: number;
 }
 

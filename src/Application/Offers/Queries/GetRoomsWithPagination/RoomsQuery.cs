@@ -6,9 +6,11 @@ using HotelReservationSystem.Application.Common.Interfaces;
 using HotelReservationSystem.Application.Common.Mappings;
 using HotelReservationSystem.Application.Common.Models;
 using HotelReservationSystem.Application.Hotels.Queries;
+using HotelReservationSystem.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,15 +38,15 @@ namespace HotelReservationSystem.Application.Offers.Queries.Rooms
 
         public async Task<PaginatedList<RoomDto>> Handle(RoomsQuery request, CancellationToken cancellationToken)
         {
-            var offer = _context.Offers.Find(request.OfferId);
+            var offer = _context.Offers.Include(x => x.Rooms).FirstOrDefault(x => x.OfferId == request.OfferId);
             if (offer == null)
                 throw new NotFoundException(nameof(Domain.Entities.Offer), request.OfferId); ;
             //if (offer.HotelId != request.HotelId) // TODO po czytaniu z tokena
             //    throw new ForbiddenAccessException();
-            return await _context.Rooms
-                .Where(r => r.Offers.Any(o => o.OfferId == request.OfferId))
+            return offer.Rooms
+                .AsQueryable()
                 .ProjectTo<RoomDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize);
+                .GetPaginatedList(request.PageNumber, request.PageSize);
         }
     }
 }

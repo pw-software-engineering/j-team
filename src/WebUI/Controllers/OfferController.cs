@@ -1,6 +1,8 @@
 ﻿using Application.Offers;
 using Application.Rooms;
 using HotelReservationSystem.Application.Common.Models;
+using HotelReservationSystem.Application.Common.Security;
+using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Offers.Commands.CreateOffer;
 using HotelReservationSystem.Application.Offers.Commands.DeleteOffer;
 using HotelReservationSystem.Application.Offers.Commands.UpdateOffer;
@@ -13,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    // [Authorize]
+    [AuthorizeHotel]
     public class OfferController : ApiControllerBase
     {
         [HttpGet("{id}/rooms")]
@@ -38,6 +40,8 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateOfferCmd command)
         {
+            var hotelId = await GetHotelIdFromToken();
+            command.HotelId = hotelId;
             return await Mediator.Send(command);
         }
 
@@ -54,9 +58,16 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteOfferCmd { Id = id });
 
-            return NoContent();
+            try
+            {
+                await Mediator.Send(new DeleteOfferCmd { Id = id });
+                return Ok();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost("{offerId}/rooms")]

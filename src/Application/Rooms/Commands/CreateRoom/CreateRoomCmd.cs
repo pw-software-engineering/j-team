@@ -6,14 +6,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using HotelReservationSystem.Application.Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 {
     public class CreateRoomCmd : IRequest<int>
     {
         public string HotelRoomNumber { get; set; }
-        public int OfferID { get; set; }
-        public int HotelID { get; set; } = 1;
+        public int? OfferID { get; set; }
+        public int HotelID { get; set; }
     }
 
     public class CreateRoomCmdHandler : IRequestHandler<CreateRoomCmd, int>
@@ -27,25 +29,22 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 
         public async Task<int> Handle(CreateRoomCmd request, CancellationToken cancellationToken)
         {
-            var offer = await _context.Offers.FindAsync(request.OfferID);
-
-            if (offer == null)
-            {
-                throw new NotFoundException(nameof(Offer), request.OfferID);
-            }
-            var offers = new List<Offer>();
-            offers.Add(offer);
             var entity = new Room
             {
                 HotelRoomNumber = request.HotelRoomNumber,
-                Offers = offers,
-                HotelId = request.HotelID
-
+                HotelId = request.HotelID,
             };
 
             _context.Rooms.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
+            if (request.OfferID.HasValue)
+            {
+                var offer = _context.Offers.Include(x => x.Rooms)
+                .FirstOrDefault(x => x.OfferId == request.OfferID);
+                offer.Rooms.Add(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
 
             return entity.RoomId;
         }

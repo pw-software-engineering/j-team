@@ -37,7 +37,21 @@ namespace HotelReservationSystem.Infrastructure.Persistence
                     Name = "Hotel1",
                     Description = "Description of the Hotel1",
                     City = "City of the Hotel1",
-                    Country = "Country of the Hotel1"
+                    Country = "Country of the Hotel1",
+                    Password = BCrypt.Net.BCrypt.HashPassword("Hotel1"),
+                    AccessToken =  "$2a$11$M3hY1eNjsXD4PDEuoJGrSOJLLdvfBvTOo3M0SFurlni7GiQVoHMRS"
+                });
+
+                await context.SaveChangesAsync();
+            }
+            if (!context.Clients.Any())
+            {
+                context.Clients.Add(new Client
+                {
+                    Name = "Client1",
+                    Surname = "Clientsurname",
+                    Email = "email@email.com",
+                    Username = "Client123"
                 });
 
                 await context.SaveChangesAsync();

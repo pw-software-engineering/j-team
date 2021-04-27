@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { AppComponent, HOTEL_TOKEN } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material-module';
 import { OffersListComponent } from './offers/offers-list/offers-list.component';
@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offer-room-dialog/add-offer-room-dialog.component';
 
@@ -24,6 +25,7 @@ import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offe
     AppComponent,
     OffersListComponent,
     RoomsListComponent,
+    RoomsAddComponent,
     OffersAddEditComponent,
     OfferRoomsListComponent,
     AddOfferRoomDialogComponent
@@ -41,7 +43,8 @@ import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offe
     MatDialogModule,
     HttpClientModule
   ],
-    providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' }],
+    providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' },
+     {provide: HOTEL_TOKEN, useValue: '$2a$11$M3hY1eNjsXD4PDEuoJGrSOJLLdvfBvTOo3M0SFurlni7GiQVoHMRS'}],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

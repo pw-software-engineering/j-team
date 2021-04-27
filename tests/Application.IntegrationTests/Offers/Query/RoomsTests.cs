@@ -25,7 +25,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
                    PageNumber = 1,
                    PageSize = 1,
                    OfferId = 65
-               })).Should().Throw<NotFoundException> ();
+               })).Should().Throw<NotFoundException>();
         }
         [Test]
         public async Task ListsRoomsForOfferWithOneRoom()
@@ -34,7 +34,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
             {
                 Name = "hotel1",
                 City = "city",
-                Country = "country"
+                Country = "country",
+                Password = "hotel1"
             });
             var offerId = await SendAsync(new CreateOfferCmd
             {
@@ -51,7 +52,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
             {
                 PageNumber = 1,
                 PageSize = 1,
-                OfferId = offerId
+                OfferId = offerId,
+                HotelId = hotelId
             });
 
             result.Items.Any(x => x.RoomId == roomId).Should().BeTrue();
