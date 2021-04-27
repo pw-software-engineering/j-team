@@ -68,7 +68,7 @@ export class OfferRoomsListComponent implements AfterViewInit {
   }
 
   deleteRoom(roomId: number): void {
-    this.offerClient.deleteRoom(Number(this.offerId), roomId)
+    this.offerClient.deleteRoom(Number(this.offerId), roomId, this.hotelToken)
     .pipe(first())
         .subscribe(data => {
           console.log(data);
@@ -90,7 +90,7 @@ export class OfferRoomsListComponent implements AfterViewInit {
     dialogRef.afterClosed().subscribe(data => {
       if(data == null)
         return;
-      this.offerClient.addRoom(Number(this.offerId), data)
+      this.offerClient.addRoom(Number(this.offerId), data, this.hotelToken)
         .pipe(first())
         .subscribe(data => {
           console.log(data);
@@ -100,7 +100,7 @@ export class OfferRoomsListComponent implements AfterViewInit {
   }
 
   loadAllRooms(): void {
-    this.roomClient.getRoomsWithPagination(1, 100, null)
+    this.roomClient.getRoomsWithPagination(1, 100, null, this.hotelToken)
       .pipe(first())
       .subscribe(data => {
         this.allRooms = [];

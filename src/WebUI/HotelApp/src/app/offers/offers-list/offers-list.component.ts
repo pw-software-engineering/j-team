@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { HOTEL_TOKEN } from '../app.component';
+import { HOTEL_TOKEN } from '../../app.component';
 import { OfferClient, OfferDto } from '../../web-api-client';
 
 @Component({
