@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HOTEL_TOKEN } from 'src/app/app.component';
 
 import { CreateOfferCmd, CreateRoomCmd, OfferClient, RoomClient } from 'src/app/web-api-client';
 
@@ -18,7 +19,8 @@ export class RoomsAddComponent implements OnInit {
         private formBuilder: FormBuilder,
         private roomClient: RoomClient,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        @Inject(HOTEL_TOKEN) private hotelToken:string
     ) {}
 
     ngOnInit() {
@@ -37,7 +39,7 @@ export class RoomsAddComponent implements OnInit {
             return;
         }
 
-        const addRequest = this.roomClient.create(new CreateRoomCmd(this.form.value));
+        const addRequest = this.roomClient.create(this.hotelToken,new CreateRoomCmd(this.form.value));
         addRequest.subscribe({
           next: (value) => {
             console.log(value);

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, InjectionToken } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,3 +8,4 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'HotelApp';
 }
+export const HOTEL_TOKEN = new InjectionToken<string>('HOTEL_TOKEN');

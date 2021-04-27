@@ -34,7 +34,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
             {
                 Name = "hotel1",
                 City = "city",
-                Country = "country"
+                Country = "country",
+                Password = "hotel1"
             });
             var offerId = await SendAsync(new CreateOfferCmd
             {

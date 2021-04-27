@@ -22,6 +22,14 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
                 .IsRequired();
             builder.HasMany(t => t.Offers).WithOne(t => t.Hotel);
 
+            builder.Property(t => t.Password)
+                .HasMaxLength(300)
+                .IsRequired();
+
+            builder.Property(t => t.AccessToken)
+                .HasMaxLength(300)
+                .IsRequired();
+
             builder.HasOne(t => t.HotelPreviewPicture).WithOne().HasForeignKey<Hotel>(x => x.HotelPreviewPictureId);
             builder.HasMany(t => t.Pictures).WithOne(x => x.Hotel);
             builder.HasMany(t => t.Rooms).WithOne(x => x.Hotel);

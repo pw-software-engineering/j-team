@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { HOTEL_TOKEN } from 'src/app/app.component';
 import { CreateOfferCmd, OfferClient, UpdateOfferCmd } from 'src/app/web-api-client';
 
 @Component({
@@ -19,7 +20,8 @@ export class OffersAddEditComponent implements OnInit {
       private formBuilder: FormBuilder,
       private offerClient: OfferClient,
       private route: ActivatedRoute,
-      private router: Router
+      private router: Router,
+      @Inject(HOTEL_TOKEN) private hotelToken:string
   ) {}
 
   ngOnInit() {
@@ -40,7 +42,7 @@ export class OffersAddEditComponent implements OnInit {
     });
 
     if (!this.isAddMode) {
-      this.offerClient.getOffer(this.id)
+      this.offerClient.getOffer(this.id, this.hotelToken)
         .pipe(first())
         .subscribe(x => {
           this.form.patchValue(x);
@@ -67,7 +69,7 @@ export class OffersAddEditComponent implements OnInit {
   }
 
   private createOffer() {
-    const addRequest = this.offerClient.create(new CreateOfferCmd(this.form.value));
+    const addRequest = this.offerClient.create(this.hotelToken, new CreateOfferCmd(this.form.value));
       addRequest.subscribe({
         next: (value) => {
           console.log(value);
@@ -77,7 +79,7 @@ export class OffersAddEditComponent implements OnInit {
 
   private updateOffer() {
     let cmd = new UpdateOfferCmd(this.form.value);
-    const updateRequest = this.offerClient.update(this.id, cmd);
+    const updateRequest = this.offerClient.update(this.id, this.hotelToken, cmd);
       updateRequest.subscribe({
         next: (value) => {
           console.log(value);

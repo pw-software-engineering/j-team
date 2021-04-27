@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { HOTEL_TOKEN } from '../app.component';
 import { OfferClient, OfferDto } from '../web-api-client';
 
 @Component({
@@ -19,7 +20,10 @@ export class OffersListComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
-  constructor(private offerClient: OfferClient) {}
+  constructor(
+      private offerClient: OfferClient,
+      @Inject(HOTEL_TOKEN) private hotelToken:string
+    ) {}
 
   ngAfterViewInit(): void {}
 
@@ -31,7 +35,7 @@ export class OffersListComponent implements AfterViewInit {
       alert("Offer must be deactiveted before being deleted");
       return;
     }
-    const delRequest = this.offerClient.delete(id);
+    const delRequest = this.offerClient.delete(id, this.hotelToken);
     delRequest.subscribe({
       next: (value) => {
         console.log(value?.status);
@@ -66,7 +70,7 @@ export class OffersListComponent implements AfterViewInit {
     }
 
     const isActive = (this.showActive && this.showInactive) ? null: this.showActive;
-    const offersRequest = this.offerClient.getOffersWithPagination(this.displayedPage + 1, this.pageSize, isActive);
+    const offersRequest = this.offerClient.getOffersWithPagination(this.displayedPage + 1, this.pageSize, isActive, this.hotelToken);
     offersRequest.subscribe({
       next: (value) => {
         console.log(value);
