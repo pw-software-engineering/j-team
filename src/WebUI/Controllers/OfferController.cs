@@ -2,6 +2,7 @@
 using Application.Rooms;
 using HotelReservationSystem.Application.Common.Models;
 using HotelReservationSystem.Application.Common.Security;
+using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Offers.Commands.CreateOffer;
 using HotelReservationSystem.Application.Offers.Commands.DeleteOffer;
 using HotelReservationSystem.Application.Offers.Commands.UpdateOffer;
@@ -57,9 +58,16 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteOfferCmd { Id = id });
 
-            return NoContent();
+            try
+            {
+                await Mediator.Send(new DeleteOfferCmd { Id = id });
+                return Ok();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

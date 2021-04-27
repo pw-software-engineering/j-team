@@ -111,7 +111,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
             }
             var rooms = await SendAsync(new GetRoomsWithPaginationQuery()
             {
-                RoomNo = "R01"
+                RoomNumber = "R01"
             });
 
             return rooms.Items.First();
