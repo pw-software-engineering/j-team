@@ -678,10 +678,10 @@ export interface IRoomClient {
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
-     * @param roomNo (optional) 
+     * @param roomNumber (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNo: string | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto>;
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNumber: string | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto>;
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
@@ -712,10 +712,10 @@ export class RoomClient implements IRoomClient {
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
-     * @param roomNo (optional) 
+     * @param roomNumber (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNo: string | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto> {
+    getRoomsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomNumber: string | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto> {
         let url_ = this.baseUrl + "/api/rooms?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -725,8 +725,8 @@ export class RoomClient implements IRoomClient {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (roomNo !== undefined && roomNo !== null)
-            url_ += "RoomNo=" + encodeURIComponent("" + roomNo) + "&";
+        if (roomNumber !== undefined && roomNumber !== null)
+            url_ += "RoomNumber=" + encodeURIComponent("" + roomNumber) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

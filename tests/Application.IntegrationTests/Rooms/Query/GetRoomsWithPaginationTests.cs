@@ -32,7 +32,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             {
                 Name = "hotel1",
                 City = "city",
-                Country = "country"
+                Country = "country",
+                Password = "hotel1"
             });
             var offerid = await SendAsync(new CreateOfferCmd
             {
@@ -43,7 +44,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             {
                 OfferID = offerid,
                 HotelID = hotelId,
-                HotelRoomNumber="420"
+                HotelRoomNumber = "420"
             });
             var room2id = await SendAsync(new CreateRoomCmd
             {
@@ -70,7 +71,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             {
                 Name = "hotel1",
                 City = "city",
-                Country = "country"
+                Country = "country",
+                Password = "hotel1"
             });
             var offerid = await SendAsync(new CreateOfferCmd
             {
@@ -93,13 +95,13 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             {
                 PageNumber = 1,
                 PageSize = 1,
-                RoomNumber="420"
+                RoomNumber = "420"
             });
             result.Should().NotBeNull();
             result.TotalPages.Should().Be(1);
             result.TotalCount.Should().Be(1);
             result.Items.Should().NotBeNull();
-            result.Items.Any(x => x.RoomId == room1id ).Should().BeTrue();
+            result.Items.Any(x => x.RoomId == room1id).Should().BeTrue();
         }
         [Test]
         public async Task ShouldReturnOnlyRoomsWithSpecifiedNumberEmptyResult()
@@ -108,7 +110,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             {
                 Name = "hotel1",
                 City = "city",
-                Country = "country"
+                Country = "country",
+                Password = "hotel1"
             });
             var offerid = await SendAsync(new CreateOfferCmd
             {
@@ -136,7 +139,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             result.Should().NotBeNull();
             result.TotalPages.Should().Be(0);
             result.TotalCount.Should().Be(0);
-            
+
         }
     }
 }
