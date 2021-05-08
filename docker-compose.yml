@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  webui:
+    image: ${DOCKER_REGISTRY-}webui
+    build:
+      context: .
+      dockerfile: src/WebUI/Dockerfile
+    environment:
+      - "UseInMemoryDatabase=false"
+      - "IdentityServer__Key__Type=Development"
+      - "ASPNETCORE_Kestrel__Certificates__Default__Password=Your_password123"
+      - "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx"
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - postgresserver
+    restart: on-failure
+
+  postgresserver:
+     image: postgres:latest
+     ports:
+       - 5432:5432
+     environment:
+         POSTGRES_USER: test_user
+         POSTGRES_PASSWORD: test
+     
