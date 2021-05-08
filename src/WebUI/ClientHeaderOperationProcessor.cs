@@ -4,7 +4,7 @@ using NSwag.Generation.Processors.Contexts;
 
 namespace HotelReservationSystem.WebUI
 {
-    public class HotelHeaderOperationProcessor : IOperationProcessor
+    public class ClientHeaderOperationProcessor : IOperationProcessor
     {
         bool IOperationProcessor.Process(OperationProcessorContext context)
         {
@@ -12,11 +12,11 @@ namespace HotelReservationSystem.WebUI
                 new OpenApiParameter
                 {
 
-                    Name = "x-hotel-token",
+                    Name = "x-client-token",
                     Kind = OpenApiParameterKind.Header,
                     Type = NJsonSchema.JsonObjectType.String,
                     IsRequired = false,
-                    Description = "hotel authorization token",
+                    Description = "client authorization token",
                     Default = "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
                 });
 
