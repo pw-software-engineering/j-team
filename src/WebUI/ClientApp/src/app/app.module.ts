@@ -7,10 +7,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material-module';
 import { API_BASE_URL } from './web-api-client';
 import { HttpClientModule } from '@angular/common/http';
+import { OffersListComponent } from './offers-list/offers-list.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    OffersListComponent
   ],
   imports: [
     BrowserModule,
