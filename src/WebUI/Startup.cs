@@ -31,21 +31,22 @@ namespace HotelReservationSystem.WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplication();
-            services.AddInfrastructure(Configuration);
-
-            services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddCors(options =>
             {
                 options.AddPolicy(MyAllowSpecificOrigins, builder =>
                 {
                     builder.AllowAnyOrigin()
                     .AllowAnyMethod()
+                    .SetIsOriginAllowed((host) => true)
                     .AllowAnyHeader();
                 });
             });
+            services.AddApplication();
+            services.AddInfrastructure(Configuration);
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
             services.AddHttpContextAccessor();
 
             services.AddHealthChecks()
@@ -108,7 +109,7 @@ namespace HotelReservationSystem.WebUI
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
-                app.UseSpaStaticFiles();
+                //app.UseSpaStaticFiles();
             }
 
             app.UseSwaggerUi3(settings =>
@@ -126,23 +127,19 @@ namespace HotelReservationSystem.WebUI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                    pattern: "{controller}/{action=Index}/{id?}").RequireCors(MyAllowSpecificOrigins);
+                endpoints.MapRazorPages().RequireCors(MyAllowSpecificOrigins);
             });
 
-            app.UseSpa(spa =>
+            /*app.UseSpa(spa =>
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
                 spa.Options.SourcePath = "HotelApp";
-
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                     // spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                 }
-            });
+            });*/
         }
     }
 }
