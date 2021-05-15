@@ -1,4 +1,8 @@
-<h2>Offers</h2>
+<div>
+  <h2>Offers</h2>
+  <button class="btn btn-sm btn-success mb-2" (click)="backToList()">Go back</button>
+</div>
+
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="title">

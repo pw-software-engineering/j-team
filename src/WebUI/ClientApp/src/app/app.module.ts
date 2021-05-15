@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HotelsListComponent } from './hotels/hotels-list/hotels-list.component';
-import { OffersListComponent } from './offers-list/offers-list.component';
+import { OffersListComponent } from './hotels/hotels-list/offers-list/offers-list.component';
 
 
 @NgModule({

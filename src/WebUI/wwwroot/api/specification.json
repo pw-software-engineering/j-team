@@ -260,7 +260,7 @@
             "x-position": 4
           },
           {
-            "name": "MaxGuest",
+            "name": "MinGuest",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -291,9 +291,9 @@
           },
           {
             "type": "string",
-            "name": "x-hotel-token",
+            "name": "x-client-token",
             "in": "header",
-            "description": "hotel authorization token",
+            "description": "client authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],

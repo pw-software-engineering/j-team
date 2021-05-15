@@ -18,31 +18,34 @@ export interface IHotelClient {
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param country (optional) 
+     * @param city (optional) 
+     * @param hotelName (optional) 
+     * @param x_client_token (optional) client authorization token
      */
-    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfHotelDto>;
+    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]>;
     /**
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    create(x_hotel_token: string | undefined, command: CreateHotelCmd): Observable<number>;
+    create(x_client_token: string | undefined, command: CreateHotelCmd): Observable<number>;
     /**
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    update(id: number, x_hotel_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse>;
+    update(id: number, x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse>;
     /**
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse>;
+    delete(id: number, x_client_token: string | undefined): Observable<FileResponse>;
     /**
      * @param hotelId (optional) 
      * @param fromTime (optional) 
      * @param toTime (optional) 
-     * @param maxGuest (optional) 
+     * @param minGuest (optional) 
      * @param costMax (optional) 
      * @param costMin (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, maxGuest: number | null | undefined, costMax: number | null | undefined, costMin: number | null | undefined, x_hotel_token: string | undefined): Observable<OfferDto[]>;
+    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMax: number | null | undefined, costMin: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]>;
 }
 
 @Injectable({
@@ -61,9 +64,12 @@ export class HotelClient implements IHotelClient {
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param country (optional) 
+     * @param city (optional) 
+     * @param hotelName (optional) 
+     * @param x_client_token (optional) client authorization token
      */
-    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfHotelDto> {
+    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]> {
         let url_ = this.baseUrl + "/api/Hotel?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -73,13 +79,19 @@ export class HotelClient implements IHotelClient {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (country !== undefined && country !== null)
+            url_ += "Country=" + encodeURIComponent("" + country) + "&";
+        if (city !== undefined && city !== null)
+            url_ += "City=" + encodeURIComponent("" + city) + "&";
+        if (hotelName !== undefined && hotelName !== null)
+            url_ += "HotelName=" + encodeURIComponent("" + hotelName) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Accept": "application/json"
             })
         };
@@ -91,14 +103,14 @@ export class HotelClient implements IHotelClient {
                 try {
                     return this.processGetHotelsWithPagination(<any>response_);
                 } catch (e) {
-                    return <Observable<PaginatedListOfHotelDto>><any>_observableThrow(e);
+                    return <Observable<HotelListedDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PaginatedListOfHotelDto>><any>_observableThrow(response_);
+                return <Observable<HotelListedDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetHotelsWithPagination(response: HttpResponseBase): Observable<PaginatedListOfHotelDto> {
+    protected processGetHotelsWithPagination(response: HttpResponseBase): Observable<HotelListedDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -109,7 +121,11 @@ export class HotelClient implements IHotelClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedListOfHotelDto.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(HotelListedDto.fromJS(item));
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -117,13 +133,13 @@ export class HotelClient implements IHotelClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PaginatedListOfHotelDto>(<any>null);
+        return _observableOf<HotelListedDto[]>(<any>null);
     }
 
     /**
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    create(x_hotel_token: string | undefined, command: CreateHotelCmd): Observable<number> {
+    create(x_client_token: string | undefined, command: CreateHotelCmd): Observable<number> {
         let url_ = this.baseUrl + "/api/Hotel";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -134,7 +150,7 @@ export class HotelClient implements IHotelClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -177,9 +193,9 @@ export class HotelClient implements IHotelClient {
     }
 
     /**
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    update(id: number, x_hotel_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse> {
+    update(id: number, x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/Hotel/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -193,7 +209,7 @@ export class HotelClient implements IHotelClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             })
@@ -234,9 +250,9 @@ export class HotelClient implements IHotelClient {
     }
 
     /**
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse> {
+    delete(id: number, x_client_token: string | undefined): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/Hotel/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -247,7 +263,7 @@ export class HotelClient implements IHotelClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Accept": "application/octet-stream"
             })
         };
@@ -290,12 +306,12 @@ export class HotelClient implements IHotelClient {
      * @param hotelId (optional) 
      * @param fromTime (optional) 
      * @param toTime (optional) 
-     * @param maxGuest (optional) 
+     * @param minGuest (optional) 
      * @param costMax (optional) 
      * @param costMin (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, maxGuest: number | null | undefined, costMax: number | null | undefined, costMin: number | null | undefined, x_hotel_token: string | undefined): Observable<OfferDto[]> {
+    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMax: number | null | undefined, costMin: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]> {
         let url_ = this.baseUrl + "/api/Hotel/{id}/offers?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -308,8 +324,8 @@ export class HotelClient implements IHotelClient {
             url_ += "FromTime=" + encodeURIComponent(fromTime ? "" + fromTime.toJSON() : "") + "&";
         if (toTime !== undefined && toTime !== null)
             url_ += "ToTime=" + encodeURIComponent(toTime ? "" + toTime.toJSON() : "") + "&";
-        if (maxGuest !== undefined && maxGuest !== null)
-            url_ += "MaxGuest=" + encodeURIComponent("" + maxGuest) + "&";
+        if (minGuest !== undefined && minGuest !== null)
+            url_ += "MinGuest=" + encodeURIComponent("" + minGuest) + "&";
         if (costMax !== undefined && costMax !== null)
             url_ += "CostMax=" + encodeURIComponent("" + costMax) + "&";
         if (costMin !== undefined && costMin !== null)
@@ -320,7 +336,7 @@ export class HotelClient implements IHotelClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Accept": "application/json"
             })
         };
@@ -1153,80 +1169,14 @@ export class RoomClient implements IRoomClient {
     }
 }
 
-export class PaginatedListOfHotelDto implements IPaginatedListOfHotelDto {
-    items?: HotelDto[] | undefined;
-    pageIndex?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-
-    constructor(data?: IPaginatedListOfHotelDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(HotelDto.fromJS(item));
-            }
-            this.pageIndex = _data["pageIndex"];
-            this.totalPages = _data["totalPages"];
-            this.totalCount = _data["totalCount"];
-            this.hasPreviousPage = _data["hasPreviousPage"];
-            this.hasNextPage = _data["hasNextPage"];
-        }
-    }
-
-    static fromJS(data: any): PaginatedListOfHotelDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedListOfHotelDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["pageIndex"] = this.pageIndex;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        return data; 
-    }
-}
-
-export interface IPaginatedListOfHotelDto {
-    items?: HotelDto[] | undefined;
-    pageIndex?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-}
-
-export class HotelDto implements IHotelDto {
-    hotelId?: number;
-    name?: string | undefined;
-    description?: string | undefined;
+export class HotelListedDto implements IHotelListedDto {
+    hotelID?: number;
+    hotelName?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
     hotelPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
 
-    constructor(data?: IHotelDto) {
+    constructor(data?: IHotelListedDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1237,52 +1187,38 @@ export class HotelDto implements IHotelDto {
 
     init(_data?: any) {
         if (_data) {
-            this.hotelId = _data["hotelId"];
-            this.name = _data["name"];
-            this.description = _data["description"];
+            this.hotelID = _data["hotelID"];
+            this.hotelName = _data["hotelName"];
             this.city = _data["city"];
             this.country = _data["country"];
             this.hotelPreviewPicture = _data["hotelPreviewPicture"];
-            if (Array.isArray(_data["pictures"])) {
-                this.pictures = [] as any;
-                for (let item of _data["pictures"])
-                    this.pictures!.push(item);
-            }
         }
     }
 
-    static fromJS(data: any): HotelDto {
+    static fromJS(data: any): HotelListedDto {
         data = typeof data === 'object' ? data : {};
-        let result = new HotelDto();
+        let result = new HotelListedDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["hotelId"] = this.hotelId;
-        data["name"] = this.name;
-        data["description"] = this.description;
+        data["hotelID"] = this.hotelID;
+        data["hotelName"] = this.hotelName;
         data["city"] = this.city;
         data["country"] = this.country;
         data["hotelPreviewPicture"] = this.hotelPreviewPicture;
-        if (Array.isArray(this.pictures)) {
-            data["pictures"] = [];
-            for (let item of this.pictures)
-                data["pictures"].push(item);
-        }
         return data; 
     }
 }
 
-export interface IHotelDto {
-    hotelId?: number;
-    name?: string | undefined;
-    description?: string | undefined;
+export interface IHotelListedDto {
+    hotelID?: number;
+    hotelName?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
     hotelPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
 }
 
 export class CreateHotelCmd implements ICreateHotelCmd {

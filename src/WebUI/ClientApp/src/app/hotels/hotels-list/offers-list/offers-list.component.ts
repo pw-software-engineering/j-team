@@ -3,7 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { HotelClient, OfferClient, OfferDto } from '../web-api-client';
+import { HotelClient, OfferClient, OfferDto } from '../../../web-api-client';
 
 @Component({
   selector: 'app-offers-list',
@@ -46,6 +46,10 @@ export class OffersListComponent implements AfterViewInit {
     this.pageSize = event.pageSize;
     this.displayedPage = event.pageIndex;
     this.fetchData();
+  }
+
+  backToList(): void {
+    this.router.navigate(['hotels']);
   }
 
   fetchData = () => {
