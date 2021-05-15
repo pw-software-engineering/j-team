@@ -9,7 +9,7 @@ import { OffersListComponent } from './offers/offers-list/offers-list.component'
 import { RoomsListComponent } from './rooms/rooms-list.component';
 import { API_BASE_URL } from './web-api-client';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { OffersAddEditComponent } from './offers/offers-add-edit/offers-add-edit.component';
 import { OfferRoomsListComponent } from './offers/offers-rooms-list/offers-rooms-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,8 +17,26 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offer-room-dialog/add-offer-room-dialog.component';
+
+export const imports = [
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgbModule,
+    MatDialogModule,
+    HttpClientModule,
+]
+export const providers = [
+      { provide: API_BASE_URL, useValue: 'http://localhost:5000' },
+     {provide: HOTEL_TOKEN, useValue: '$2a$11$M3hY1eNjsXD4PDEuoJGrSOJLLdvfBvTOo3M0SFurlni7GiQVoHMRS'}
+]
 
 @NgModule({
   declarations: [
@@ -30,21 +48,8 @@ import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offe
     OfferRoomsListComponent,
     AddOfferRoomDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    MaterialModule,
-    MatFormFieldModule,
-    MatInputModule,
-    NgbModule,
-    MatDialogModule,
-    HttpClientModule
-  ],
-    providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' },
-     {provide: HOTEL_TOKEN, useValue: '$2a$11$M3hY1eNjsXD4PDEuoJGrSOJLLdvfBvTOo3M0SFurlni7GiQVoHMRS'}],
+  imports: imports,
+    providers: providers,
     bootstrap: [AppComponent]
 })
 export class AppModule { }

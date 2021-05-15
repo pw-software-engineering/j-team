@@ -13,28 +13,29 @@ using HotelReservationSystem.Application.Offers.Commands.UpdateOffer;
 using HotelReservationSystem.Application.Offers.Queries.GetOffersWithPagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
+    [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
     public class HotelController : ApiControllerBase
     {
-        [AuthorizeHotel]
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<HotelDto>>> GetHotelsWithPagination([FromQuery] GetHotelsWithPaginationQuery query)
+        public async Task<ActionResult<List<HotelListedDto>>> GetHotelsWithPagination([FromQuery] GetHotelsWithPaginationQuery query)
         {
-            return await Mediator.Send(query);
+            var paginated = await Mediator.Send(query);
+            return paginated.Items;
         }
 
-        [AuthorizeHotel]
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateHotelCmd command)
         {
             return await Mediator.Send(command);
         }
 
-        [AuthorizeHotel]
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateHotelCmd command)
         {
@@ -45,7 +46,6 @@ namespace HotelReservationSystem.WebUI.Controllers
             return NoContent();
         }
 
-        [AuthorizeHotel]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
