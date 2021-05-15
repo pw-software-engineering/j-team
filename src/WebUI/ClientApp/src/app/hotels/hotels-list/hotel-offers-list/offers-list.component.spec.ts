@@ -21,6 +21,7 @@ describe('OffersListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(OffersListComponent);
     component = fixture.componentInstance;
+    component.hotelId = 1;
     fixture.detectChanges();
   });
 
