@@ -31,7 +31,8 @@ export class OffersListComponent implements AfterViewInit {
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
-    this.hotelId = this.route.snapshot.params['id'];
+    if(this.route.snapshot.params['id'] != null)
+      this.hotelId = this.route.snapshot.params['id'];
     this.fetchData();
   }
 
