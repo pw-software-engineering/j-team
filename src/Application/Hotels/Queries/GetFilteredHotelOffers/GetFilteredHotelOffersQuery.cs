@@ -47,8 +47,8 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffe
                 .Where(x =>
                     x.HotelId == request.HotelId &&
                     x.IsActive.Value &&
-                    (request.MinGuest == null || x.MaxGuests > request.MinGuest) &&
-                    (request.CostMin == null || x.CostPerAdult > request.CostMin) &&
+                    (request.MinGuest == null || x.MaxGuests >= request.MinGuest) &&
+                    (request.CostMin == null || x.CostPerAdult >= request.CostMin) &&
                     (request.CostMax == null || x.CostPerAdult <= request.CostMax))
                 .ProjectToListAsync<OfferDto>(_mapper.ConfigurationProvider);
         }
