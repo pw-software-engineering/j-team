@@ -1,0 +1,36 @@
+<h2>Hotels</h2>
+<section class="example-section">
+  <label class="example-margin">Name:</label>
+  <input type="string" name="theValue" (change)="updateName(hotelNameFilter.value)" class="w3-input w3-animate-input"
+    style="width:15%" #hotelNameFilter>
+  <label class="example-margin">Country:</label>
+  <input type="string" name="theValue" (change)="updateCountry(countryFilter.value)" class="w3-input w3-animate-input"
+    style="width:15%" #countryFilter>
+  <label class="example-margin">City:</label>
+  <input type="string" name="theValue" (change)="updateCity(cityFilter.value)" class="w3-input w3-animate-input"
+    style="width:15%" #cityFilter>
+</section>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="hotelName">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let hotel"><a routerLink="/{{hotel.hotelID}}">{{ hotel.hotelName }}</a></td>
+    </ng-container>
+
+    <ng-container matColumnDef="country">
+      <th mat-header-cell *matHeaderCellDef>Country</th>
+      <td mat-cell *matCellDef="let hotel">{{ hotel.country }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="city">
+      <th mat-header-cell *matHeaderCellDef>City</th>
+      <td mat-cell *matCellDef="let hotel">{{ hotel.city }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+  </table>
+  <mat-paginator (page)="handlePageEvent($event)" [length]="length" [pageIndex]="displayedPage" [pageSize]="pageSize"
+    [pageSizeOptions]="[2, 10, 20]" showFirstLastButtons>
+  </mat-paginator>
+</div>
