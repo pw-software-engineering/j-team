@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { OfferClient, OfferDto } from '../web-api-client';
+import { ActivatedRoute, Router } from '@angular/router';
+import { first } from 'rxjs/operators';
+import { HotelClient, OfferClient, OfferDto } from '../web-api-client';
 
 @Component({
   selector: 'app-offers-list',
@@ -9,46 +11,33 @@ import { OfferClient, OfferDto } from '../web-api-client';
   styleUrls: ['offers-list.component.scss'],
 })
 export class OffersListComponent implements AfterViewInit {
-  columnsToDisplay = ['title', 'isActive', 'costPerChild', 'costPerAdult', 'maxGuests', 'delButton', 'roomsButton'];
+  columnsToDisplay = ['title', 'costPerChild', 'costPerAdult', 'maxGuests'];
   dataSource = new MatTableDataSource<OfferDto>();
   displayedPage: number = 0;
   pageSize: number = 5;
-  length:number = 0;
-  showActive: boolean = true;
-  showInactive: boolean = true;
+  length: number = 0;
+  hotelId: number = 0;
+  fromTime!: Date;
+  toTime!: Date;
+  minGuests!: number;
+  costMin!: number;
+  costMax!: number;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   constructor(
-      private offerClient: OfferClient
+      private hotelClient: HotelClient,
+      private route: ActivatedRoute,
+      private router: Router
     ) {}
 
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
+    this.hotelId = this.route.snapshot.params['id'];
     this.fetchData();
   }
-  DeleteOffer(id: number, isActive: boolean) {
-    if (isActive) {
-      alert("Offer must be deactiveted before being deleted");
-      return;
-    }
-    const delRequest = this.offerClient.delete(id, undefined);
-    delRequest.subscribe({
-      next: (value) => {
-        console.log(value?.status);
-        this.fetchData();
-      },
-    });
-  }
-  setShowActive(value: boolean) {
-    this.showActive = value;
-    this.fetchData();
-  }
-  setShowInactive(value: boolean) {
-    this.showInactive = value;
-    this.fetchData();
-  }
+
   setData = (items: Array<OfferDto> | undefined) => {
     this.dataSource.data = items ? items: [];
   }
@@ -60,21 +49,20 @@ export class OffersListComponent implements AfterViewInit {
   }
 
   fetchData = () => {
-
-    if(!this.showInactive && !this.showActive){
-      this.setData([]);
-      this.length = 0;
-      return;
-    }
-
-    const isActive = (this.showActive && this.showInactive) ? null: this.showActive;
-    const offersRequest = this.offerClient.getOffersWithPagination(this.displayedPage + 1, this.pageSize, isActive, undefined);
-    offersRequest.subscribe({
-      next: (value) => {
-        console.log(value);
-        this.length = value.totalCount!;
-        this.setData(value.items);
-      },
-    });
+    this.hotelClient.getFilteredHotelOffersWithPagination(
+      this.hotelId,
+      this.hotelId,
+      this.fromTime,
+      this.toTime,
+      this.minGuests,
+      this.costMin,
+      this.costMax,
+      undefined
+      )
+      .pipe(first())
+      .subscribe(data => {
+        console.log(data);
+        this.setData(data);
+      });
   }
 }

@@ -18,11 +18,11 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffe
     public class GetFilteredHotelOffersQuery : IRequest<List<OfferDto>>
     {
         public int HotelId { get; set; }
-        public DateTime From { get; set; }
-        public DateTime To { get; set; }
-        public int MaxGuest { get; set; }
-        public int CostMax { get; set; }
-        public int CostMin { get; set; }
+        public DateTime? FromTime { get; set; }
+        public DateTime? ToTime { get; set; }
+        public int? MinGuest { get; set; }
+        public int? CostMax { get; set; }
+        public int? CostMin { get; set; }
     }
 
     public class GetFilteredHotelOffersQueryHandler : IRequestHandler<GetFilteredHotelOffersQuery, List<OfferDto>>
@@ -39,7 +39,7 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffe
         public async Task<List<OfferDto>> Handle(GetFilteredHotelOffersQuery request, CancellationToken cancellationToken)
         {
             return await _context.Offers
-                .Where(x => x.HotelId == request.HotelId)
+                .Where(x => x.HotelId == request.HotelId && x.IsActive.Value)
                 .ProjectToListAsync<OfferDto>(_mapper.ConfigurationProvider);
         }
     }

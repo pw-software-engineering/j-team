@@ -35,14 +35,14 @@ export interface IHotelClient {
     delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse>;
     /**
      * @param hotelId (optional) 
-     * @param from (optional) 
-     * @param to (optional) 
+     * @param fromTime (optional) 
+     * @param toTime (optional) 
      * @param maxGuest (optional) 
      * @param costMax (optional) 
      * @param costMin (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getFilteredHotelOffersWithPagination(hotelId: number | undefined, from: Date | undefined, to: Date | undefined, maxGuest: number | undefined, costMax: number | undefined, costMin: number | undefined, id: string, x_hotel_token: string | undefined): Observable<OfferDto[]>;
+    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, maxGuest: number | null | undefined, costMax: number | null | undefined, costMin: number | null | undefined, x_hotel_token: string | undefined): Observable<OfferDto[]>;
 }
 
 @Injectable({
@@ -288,14 +288,14 @@ export class HotelClient implements IHotelClient {
 
     /**
      * @param hotelId (optional) 
-     * @param from (optional) 
-     * @param to (optional) 
+     * @param fromTime (optional) 
+     * @param toTime (optional) 
      * @param maxGuest (optional) 
      * @param costMax (optional) 
      * @param costMin (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getFilteredHotelOffersWithPagination(hotelId: number | undefined, from: Date | undefined, to: Date | undefined, maxGuest: number | undefined, costMax: number | undefined, costMin: number | undefined, id: string, x_hotel_token: string | undefined): Observable<OfferDto[]> {
+    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, maxGuest: number | null | undefined, costMax: number | null | undefined, costMin: number | null | undefined, x_hotel_token: string | undefined): Observable<OfferDto[]> {
         let url_ = this.baseUrl + "/api/Hotel/{id}/offers?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -304,25 +304,15 @@ export class HotelClient implements IHotelClient {
             throw new Error("The parameter 'hotelId' cannot be null.");
         else if (hotelId !== undefined)
             url_ += "HotelId=" + encodeURIComponent("" + hotelId) + "&";
-        if (from === null)
-            throw new Error("The parameter 'from' cannot be null.");
-        else if (from !== undefined)
-            url_ += "From=" + encodeURIComponent(from ? "" + from.toJSON() : "") + "&";
-        if (to === null)
-            throw new Error("The parameter 'to' cannot be null.");
-        else if (to !== undefined)
-            url_ += "To=" + encodeURIComponent(to ? "" + to.toJSON() : "") + "&";
-        if (maxGuest === null)
-            throw new Error("The parameter 'maxGuest' cannot be null.");
-        else if (maxGuest !== undefined)
+        if (fromTime !== undefined && fromTime !== null)
+            url_ += "FromTime=" + encodeURIComponent(fromTime ? "" + fromTime.toJSON() : "") + "&";
+        if (toTime !== undefined && toTime !== null)
+            url_ += "ToTime=" + encodeURIComponent(toTime ? "" + toTime.toJSON() : "") + "&";
+        if (maxGuest !== undefined && maxGuest !== null)
             url_ += "MaxGuest=" + encodeURIComponent("" + maxGuest) + "&";
-        if (costMax === null)
-            throw new Error("The parameter 'costMax' cannot be null.");
-        else if (costMax !== undefined)
+        if (costMax !== undefined && costMax !== null)
             url_ += "CostMax=" + encodeURIComponent("" + costMax) + "&";
-        if (costMin === null)
-            throw new Error("The parameter 'costMin' cannot be null.");
-        else if (costMin !== undefined)
+        if (costMin !== undefined && costMin !== null)
             url_ += "CostMin=" + encodeURIComponent("" + costMin) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
