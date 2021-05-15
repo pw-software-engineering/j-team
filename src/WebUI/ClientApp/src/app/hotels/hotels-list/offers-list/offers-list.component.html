@@ -1,8 +1,30 @@
-<div>
+<section>
   <h2>Offers</h2>
   <button class="btn btn-sm btn-success mb-2" (click)="backToList()">Go back</button>
-</div>
-
+</section>
+<section class="example-section">
+  <label class="example-margin">
+    From:
+    <input type="date" [(ngModel)]="fromTime" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <label class="example-margin">
+    To:
+    <input type="date" [(ngModel)]="toTime" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <label class="example-margin">
+    Min guests:
+    <input type="number" [(ngModel)]="minGuests" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <label class="example-margin">
+    Cost min:
+    <input type="number" [(ngModel)]="costMin" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <label class="example-margin">
+    Cost max:
+    <input type="number" [(ngModel)]="costMax" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <button class="btn btn-sm btn-success mb-2" (click)="refresh()" >Clear filters</button>
+</section>
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="title">
@@ -28,7 +50,4 @@
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
   </table>
-  <mat-paginator (page)="handlePageEvent($event)" [length]="length" [pageIndex]="displayedPage" [pageSize]="pageSize"
-    [pageSizeOptions]="[2, 10, 20]" showFirstLastButtons>
-  </mat-paginator>
 </div>

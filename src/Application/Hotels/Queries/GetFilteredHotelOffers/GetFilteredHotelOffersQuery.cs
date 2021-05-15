@@ -9,6 +9,7 @@ using HotelReservationSystem.Application.Hotels.Queries;
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,8 +39,17 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffe
 
         public async Task<List<OfferDto>> Handle(GetFilteredHotelOffersQuery request, CancellationToken cancellationToken)
         {
+            var hotel = _context.Hotels.Where(x => x.HotelId == request.HotelId).FirstOrDefault();
+            if (hotel == null)
+                throw new ValidationException();
+
             return await _context.Offers
-                .Where(x => x.HotelId == request.HotelId && x.IsActive.Value)
+                .Where(x =>
+                    x.HotelId == request.HotelId &&
+                    x.IsActive.Value &&
+                    (request.MinGuest == null || x.MaxGuests > request.MinGuest) &&
+                    (request.CostMin == null || x.CostPerAdult > request.CostMin) &&
+                    (request.CostMax == null || x.CostPerAdult <= request.CostMax))
                 .ProjectToListAsync<OfferDto>(_mapper.ConfigurationProvider);
         }
     }

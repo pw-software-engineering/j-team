@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace HotelReservationSystem.WebUI.Controllers
@@ -58,7 +59,14 @@ namespace HotelReservationSystem.WebUI.Controllers
         public async Task<ActionResult<List<OfferDto>>> GetFilteredHotelOffersWithPagination(int id, [FromQuery] GetFilteredHotelOffersQuery query)
         {
             query.HotelId = id;
-            return await Mediator.Send(query);
+            try
+            {
+                return await Mediator.Send(query);
+            }
+            catch (ValidationException)
+            {
+                return new StatusCodeResult((int)HttpStatusCode.NotFound);
+            }
         }
     }
 }

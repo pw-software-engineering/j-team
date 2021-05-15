@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { HotelClient, OfferClient, OfferDto } from '../../../web-api-client';
+import { HotelClient, OfferDto } from '../../../web-api-client';
 
 @Component({
   selector: 'app-offers-list',
@@ -13,15 +13,12 @@ import { HotelClient, OfferClient, OfferDto } from '../../../web-api-client';
 export class OffersListComponent implements AfterViewInit {
   columnsToDisplay = ['title', 'costPerChild', 'costPerAdult', 'maxGuests'];
   dataSource = new MatTableDataSource<OfferDto>();
-  displayedPage: number = 0;
-  pageSize: number = 5;
-  length: number = 0;
   hotelId: number = 0;
-  fromTime!: Date;
-  toTime!: Date;
-  minGuests!: number;
-  costMin!: number;
-  costMax!: number;
+  fromTime: Date | null = null;
+  toTime: Date | null = null;
+  minGuests: number | null = null;
+  costMin: number | null = null
+  costMax: number | null = null
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
@@ -42,14 +39,17 @@ export class OffersListComponent implements AfterViewInit {
     this.dataSource.data = items ? items: [];
   }
 
-  handlePageEvent(event: PageEvent) {
-    this.pageSize = event.pageSize;
-    this.displayedPage = event.pageIndex;
-    this.fetchData();
-  }
-
   backToList(): void {
     this.router.navigate(['hotels']);
+  }
+
+  refresh(): void {
+    this.fromTime = null;
+    this.toTime = null;
+    this.minGuests = null;
+    this.costMax = null;
+    this.costMin = null;
+    this.fetchData();
   }
 
   fetchData = () => {
@@ -61,7 +61,7 @@ export class OffersListComponent implements AfterViewInit {
       this.minGuests,
       this.costMin,
       this.costMax,
-      undefined
+      ""
       )
       .pipe(first())
       .subscribe(data => {
