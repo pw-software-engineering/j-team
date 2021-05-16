@@ -22,8 +22,8 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffe
         public DateTime? FromTime { get; set; }
         public DateTime? ToTime { get; set; }
         public int? MinGuest { get; set; }
-        public int? CostMax { get; set; }
         public int? CostMin { get; set; }
+        public int? CostMax { get; set; }
     }
 
     public class GetFilteredHotelOffersQueryHandler : IRequestHandler<GetFilteredHotelOffersQuery, List<OfferDto>>

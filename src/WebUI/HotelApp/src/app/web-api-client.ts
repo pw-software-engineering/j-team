@@ -41,11 +41,11 @@ export interface IHotelClient {
      * @param fromTime (optional) 
      * @param toTime (optional) 
      * @param minGuest (optional) 
-     * @param costMax (optional) 
      * @param costMin (optional) 
+     * @param costMax (optional) 
      * @param x_client_token (optional) client authorization token
      */
-    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMax: number | null | undefined, costMin: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]>;
+    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMin: number | null | undefined, costMax: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]>;
 }
 
 @Injectable({
@@ -307,11 +307,11 @@ export class HotelClient implements IHotelClient {
      * @param fromTime (optional) 
      * @param toTime (optional) 
      * @param minGuest (optional) 
-     * @param costMax (optional) 
      * @param costMin (optional) 
+     * @param costMax (optional) 
      * @param x_client_token (optional) client authorization token
      */
-    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMax: number | null | undefined, costMin: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]> {
+    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMin: number | null | undefined, costMax: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]> {
         let url_ = this.baseUrl + "/api/Hotel/{id}/offers?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -326,10 +326,10 @@ export class HotelClient implements IHotelClient {
             url_ += "ToTime=" + encodeURIComponent(toTime ? "" + toTime.toJSON() : "") + "&";
         if (minGuest !== undefined && minGuest !== null)
             url_ += "MinGuest=" + encodeURIComponent("" + minGuest) + "&";
-        if (costMax !== undefined && costMax !== null)
-            url_ += "CostMax=" + encodeURIComponent("" + costMax) + "&";
         if (costMin !== undefined && costMin !== null)
             url_ += "CostMin=" + encodeURIComponent("" + costMin) + "&";
+        if (costMax !== undefined && costMax !== null)
+            url_ += "CostMax=" + encodeURIComponent("" + costMax) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

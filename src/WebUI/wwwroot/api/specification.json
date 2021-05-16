@@ -270,7 +270,7 @@
             "x-position": 5
           },
           {
-            "name": "CostMax",
+            "name": "CostMin",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -280,7 +280,7 @@
             "x-position": 6
           },
           {
-            "name": "CostMin",
+            "name": "CostMax",
             "in": "query",
             "schema": {
               "type": "integer",
