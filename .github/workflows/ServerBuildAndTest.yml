@@ -62,3 +62,5 @@ jobs:
         with:
          github-token: ${{ secrets.GITHUB_TOKEN }}
          path-to-lcov: tests/Application.IntegrationTests/TestResults/coverage.info
+
+   
