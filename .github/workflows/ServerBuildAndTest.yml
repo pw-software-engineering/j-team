@@ -51,14 +51,14 @@ jobs:
       - name: UnitTests
         run: dotnet test  --verbosity Normal --no-build /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
         working-directory: tests/Application.UnitTests/
-      - name: Publish coverage report to coveralls.io
-        uses: coverallsapp/github-action@master
-        with:
-         github-token: ${{ secrets.GITHUB_TOKEN }}
-         path-to-lcov: tests/Application.UnitTests/TestResults/coverage.info
       - name: Build IntegrationTests proj
         run: dotnet build --no-restore
         working-directory: tests/Application.IntegrationTests/
       - name: IntegrationTests
-        run: dotnet test --verbosity Normal --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: dotnet test --verbosity Normal --no-build /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
         working-directory: tests/Application.IntegrationTests/
+      - name: Publish coverage report to coveralls.io
+        uses: coverallsapp/github-action@master
+        with:
+         github-token: ${{ secrets.GITHUB_TOKEN }}
+         path-to-lcov: tests/Application.IntegrationTests/TestResults/coverage.info
