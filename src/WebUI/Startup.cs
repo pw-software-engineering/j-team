@@ -72,16 +72,6 @@ namespace HotelReservationSystem.WebUI
             services.AddOpenApiDocument(configure =>
             {
                 configure.Title = "HotelReservationSystem API";
-                configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
-                {
-                    Type = OpenApiSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    In = OpenApiSecurityApiKeyLocation.Header,
-                    Description = "Type into the textbox: Bearer {your JWT token}."
-                });
-
-                configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
-                configure.OperationProcessors.Add(new HotelHeaderOperationProcessor());
             });
         }
 
@@ -110,7 +100,6 @@ namespace HotelReservationSystem.WebUI
             {
                 app.UseSpaStaticFiles();
             }
-
             app.UseSwaggerUi3(settings =>
             {
                 settings.DocumentPath = "/api/specification.json";

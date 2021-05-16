@@ -32,10 +32,37 @@
             "x-position": 2
           },
           {
+            "name": "Country",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "City",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "HotelName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
             "type": "string",
-            "name": "x-hotel-token",
+            "name": "x-client-token",
             "in": "header",
-            "description": "hotel authorization token",
+            "description": "client authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -45,7 +72,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfHotelDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HotelListedDto"
+                  }
                 }
               }
             }
@@ -60,9 +90,9 @@
         "parameters": [
           {
             "type": "string",
-            "name": "x-hotel-token",
+            "name": "x-client-token",
             "in": "header",
-            "description": "hotel authorization token",
+            "description": "client authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -112,9 +142,9 @@
           },
           {
             "type": "string",
-            "name": "x-hotel-token",
+            "name": "x-client-token",
             "in": "header",
-            "description": "hotel authorization token",
+            "description": "client authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -162,9 +192,9 @@
           },
           {
             "type": "string",
-            "name": "x-hotel-token",
+            "name": "x-client-token",
             "in": "header",
-            "description": "hotel authorization token",
+            "description": "client authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -562,6 +592,7 @@
         }
       }
     },
+
     "/api/reservations": {
       "get": {
         "tags": [
@@ -628,6 +659,7 @@
         }
       }
     },
+
     "/api/rooms": {
       "get": {
         "tags": [
@@ -817,50 +849,15 @@
   },
   "components": {
     "schemas": {
-      "PaginatedListOfHotelDto": {
+      "HotelListedDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/HotelDto"
-            }
-          },
-          "pageIndex": {
+          "hotelID": {
             "type": "integer",
             "format": "int32"
           },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
-          }
-        }
-      },
-      "HotelDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "hotelId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
+          "hotelName": {
             "type": "string",
             "nullable": true
           },
@@ -876,14 +873,6 @@
             "type": "string",
             "format": "byte",
             "nullable": true
-          },
-          "pictures": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
           }
         }
       },
@@ -1283,19 +1272,6 @@
           }
         }
       }
-    },
-    "securitySchemes": {
-      "JWT": {
-        "type": "apiKey",
-        "description": "Type into the textbox: Bearer {your JWT token}.",
-        "name": "Authorization",
-        "in": "header"
-      }
     }
-  },
-  "security": [
-    {
-      "JWT": []
-    }
-  ]
+  }
 }
