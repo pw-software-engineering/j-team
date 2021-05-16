@@ -21,19 +21,8 @@ import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/materia
 import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offer-room-dialog/add-offer-room-dialog.component';
 import { ReservationsComponent } from './reservations/reservations.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    OffersListComponent,
-    RoomsListComponent,
-    RoomsAddComponent,
-    OffersAddEditComponent,
-    OfferRoomsListComponent,
-    AddOfferRoomDialogComponent,
-    ReservationsComponent
-  ],
-  imports: [
-=======
+
+
 export const imports = [
 
     BrowserModule,
@@ -61,7 +50,8 @@ export const providers = [
     RoomsAddComponent,
     OffersAddEditComponent,
     OfferRoomsListComponent,
-    AddOfferRoomDialogComponent
+    AddOfferRoomDialogComponent,
+    ReservationsComponent
   ],
   imports: imports,
     providers: providers,

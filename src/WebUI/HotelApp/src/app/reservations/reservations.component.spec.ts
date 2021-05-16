@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { imports, providers } from '../app.module';
 import { ReservationsComponent } from './reservations.component';
 
 describe('ReservationsComponent', () => {
@@ -8,9 +8,12 @@ describe('ReservationsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReservationsComponent ]
-    })
-    .compileComponents();
+      declarations: [ReservationsComponent],
+
+      imports: imports,
+      providers: providers
+
+    }).compileComponents();
   });
 
   beforeEach(() => {

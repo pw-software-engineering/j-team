@@ -826,86 +826,86 @@ export interface IReservationsClient {
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ReservationsClient implements IReservationsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+  private http: HttpClient;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
+  constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    this.http = http;
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+  }
 
-    /**
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param roomID (optional) 
-     * @param currentOnly (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
-     */
-    getReservationsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomID: number | null | undefined, currentOnly: boolean | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfReservationDto> {
-        let url_ = this.baseUrl + "/api/reservations?";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
-            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
-            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (roomID !== undefined && roomID !== null)
-            url_ += "RoomID=" + encodeURIComponent("" + roomID) + "&";
-        if (currentOnly !== undefined && currentOnly !== null)
-            url_ += "currentOnly=" + encodeURIComponent("" + currentOnly) + "&";
-        url_ = url_.replace(/[?&]$/, "");
+  /**
+   * @param pageNumber (optional) 
+   * @param pageSize (optional) 
+   * @param roomID (optional) 
+   * @param currentOnly (optional) 
+   * @param x_hotel_token (optional) hotel authorization token
+   */
+  getReservationsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, roomID: number | null | undefined, currentOnly: boolean | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfReservationDto> {
+    let url_ = this.baseUrl + "/api/reservations?";
+    if (pageNumber === null)
+      throw new Error("The parameter 'pageNumber' cannot be null.");
+    else if (pageNumber !== undefined)
+      url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+    if (pageSize === null)
+      throw new Error("The parameter 'pageSize' cannot be null.");
+    else if (pageSize !== undefined)
+      url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+    if (roomID !== undefined && roomID !== null)
+      url_ += "RoomID=" + encodeURIComponent("" + roomID) + "&";
+    if (currentOnly !== undefined && currentOnly !== null)
+      url_ += "currentOnly=" + encodeURIComponent("" + currentOnly) + "&";
+    url_ = url_.replace(/[?&]$/, "");
 
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
-                "Accept": "application/json"
-            })
-        };
+    let options_: any = {
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+        "Accept": "application/json"
+      })
+    };
 
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetReservationsWithPagination(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetReservationsWithPagination(<any>response_);
-                } catch (e) {
-                    return <Observable<PaginatedListOfReservationDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<PaginatedListOfReservationDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetReservationsWithPagination(response: HttpResponseBase): Observable<PaginatedListOfReservationDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedListOfReservationDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
+    return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_: any) => {
+      return this.processGetReservationsWithPagination(response_);
+    })).pipe(_observableCatch((response_: any) => {
+      if (response_ instanceof HttpResponseBase) {
+        try {
+          return this.processGetReservationsWithPagination(<any>response_);
+        } catch (e) {
+          return <Observable<PaginatedListOfReservationDto>><any>_observableThrow(e);
         }
-        return _observableOf<PaginatedListOfReservationDto>(<any>null);
-    }
+      } else
+        return <Observable<PaginatedListOfReservationDto>><any>_observableThrow(response_);
+    }));
+  }
 
+  protected processGetReservationsWithPagination(response: HttpResponseBase): Observable<PaginatedListOfReservationDto> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse ? response.body :
+        (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } }
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = PaginatedListOfReservationDto.fromJS(resultData200);
+        return _observableOf(result200);
+      }));
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      }));
+    }
+    return _observableOf<PaginatedListOfReservationDto>(<any>null);
+  }
+}
 export interface IRoomClient {
     /**
      * @param pageNumber (optional) 
