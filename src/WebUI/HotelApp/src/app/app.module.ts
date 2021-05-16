@@ -19,6 +19,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offer-room-dialog/add-offer-room-dialog.component';
+import { ReservationsComponent } from './reservations/reservations.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offe
     RoomsAddComponent,
     OffersAddEditComponent,
     OfferRoomsListComponent,
-    AddOfferRoomDialogComponent
+    AddOfferRoomDialogComponent,
+    ReservationsComponent
   ],
   imports: [
     BrowserModule,

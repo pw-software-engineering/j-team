@@ -2,7 +2,7 @@
 
 namespace HotelReservationSystem.Application.Rooms.Queries.GetReservationsWithPagination
 {
-    public class GetReservationsWithPaginationQueryValidator : AbstractValidator<GetRoomsWithPaginationQuery>
+    public class GetReservationsWithPaginationQueryValidator : AbstractValidator<GetReservationsWithPaginationQuery>
     {
         public GetReservationsWithPaginationQueryValidator()
         {

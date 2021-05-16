@@ -1,6 +1,7 @@
 using HotelReservationSystem.Domain.Entities;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
+using System;
 
 namespace Application.Reservations
 {
@@ -12,6 +13,10 @@ namespace Application.Reservations
         public int ChildrenCount { get; set; }
         public int AdultsCount { get; set; }
         public int? RoomId { get; set; }
-        
+
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
     }
 }
