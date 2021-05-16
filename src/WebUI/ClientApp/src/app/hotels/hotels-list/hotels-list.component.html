@@ -27,6 +27,12 @@
       <td mat-cell *matCellDef="let hotel">{{ hotel.city }}</td>
     </ng-container>
 
+    <ng-container matColumnDef="offersButton">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let hotel"><a routerLink="{{ hotel.hotelID }}/offers"
+          class="btn btn-sm btn-success mb-2">Show offers</a></td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
   </table>

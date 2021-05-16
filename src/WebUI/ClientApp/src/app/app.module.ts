@@ -12,11 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HotelsListComponent } from './hotels/hotels-list/hotels-list.component';
+import { OffersListComponent } from './hotels/hotels-list/hotel-offers-list/offers-list.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    HotelsListComponent
+    HotelsListComponent,
+    OffersListComponent
   ],
   imports: [
     BrowserModule,

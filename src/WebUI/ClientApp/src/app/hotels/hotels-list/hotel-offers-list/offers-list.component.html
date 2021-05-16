@@ -1,0 +1,53 @@
+<section>
+  <h2>Offers</h2>
+  <button class="btn btn-sm btn-success mb-2" (click)="backToList()">Go back</button>
+</section>
+<section class="example-section">
+  <label class="example-margin">
+    From:
+    <input type="date" [(ngModel)]="fromTime" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <label class="example-margin">
+    To:
+    <input type="date" [(ngModel)]="toTime" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <label class="example-margin">
+    Min guests:
+    <input type="number" [(ngModel)]="minGuests" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <label class="example-margin">
+    Cost min:
+    <input type="number" [(ngModel)]="costMin" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <label class="example-margin">
+    Cost max:
+    <input type="number" [(ngModel)]="costMax" (change)="fetchData()" class="w3-input w3-animate-input">
+  </label>
+  <button class="btn btn-sm btn-success mb-2" (click)="refresh()" >Clear filters</button>
+</section>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let offer">{{ offer.title }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="costPerChild">
+      <th mat-header-cell *matHeaderCellDef>Cost per child</th>
+      <td mat-cell *matCellDef="let offer">{{ offer.costPerChild }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="costPerAdult">
+      <th mat-header-cell *matHeaderCellDef>Cost per adult</th>
+      <td mat-cell *matCellDef="let offer">{{ offer.costPerAdult }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="maxGuests">
+      <th mat-header-cell *matHeaderCellDef>Max guests</th>
+      <td mat-cell *matCellDef="let offer">{{ offer.maxGuests }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+  </table>
+</div>

@@ -10,7 +10,7 @@ import { HotelClient, HotelListedDto, OfferClient, OfferDto } from '../../web-ap
   styleUrls: ['hotels-list.component.scss'],
 })
 export class HotelsListComponent implements AfterViewInit {
-  columnsToDisplay = ['country', 'city', 'hotelName'];
+  columnsToDisplay = ['hotelName', 'country', 'city', 'offersButton'];
   dataSource = new MatTableDataSource<HotelListedDto>();
   displayedPage: number = 0;
   pageSize: number = 5;
