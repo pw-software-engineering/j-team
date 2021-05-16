@@ -9,6 +9,7 @@ using HotelReservationSystem.Application.Rooms.Commands.UpdateRoom;
 using HotelReservationSystem.Application.Rooms.Queries.GetRoomsWithPagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 using System;
 using System.Linq;
 using System.Net;
@@ -19,6 +20,7 @@ namespace HotelReservationSystem.WebUI.Controllers
     [ApiController]
     [Route("api/rooms")]
     [AuthorizeHotel]
+    [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
     public class RoomController : ApiControllerBase
     {
         [HttpGet]

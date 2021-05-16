@@ -12,10 +12,12 @@ using HotelReservationSystem.Application.Offers.Queries.Rooms;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using NSwag.Annotations;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [AuthorizeHotel]
+    [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
     public class OfferController : ApiControllerBase
     {
         [HttpGet("{id}/rooms")]

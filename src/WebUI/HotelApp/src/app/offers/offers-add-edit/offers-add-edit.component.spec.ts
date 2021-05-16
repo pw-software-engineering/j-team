@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { imports, providers } from 'src/app/app.module';
 
 import { OffersAddEditComponent } from './offers-add-edit.component';
 
@@ -8,7 +9,9 @@ describe('OffersAddComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OffersAddEditComponent ]
+      declarations: [ OffersAddEditComponent ],
+      imports: imports,
+      providers: providers
     })
     .compileComponents();
   });
