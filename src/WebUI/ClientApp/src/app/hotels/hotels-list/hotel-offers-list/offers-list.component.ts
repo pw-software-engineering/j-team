@@ -11,7 +11,7 @@ import { HotelClient, OfferDto } from '../../../web-api-client';
   styleUrls: ['offers-list.component.scss'],
 })
 export class OffersListComponent implements AfterViewInit {
-  columnsToDisplay = ['title', 'costPerChild', 'costPerAdult', 'maxGuests'];
+  columnsToDisplay = ['title', 'costPerChild', 'costPerAdult', 'maxGuests', 'reservationButton'];
   dataSource = new MatTableDataSource<OfferDto>();
   hotelId: number = 0;
   fromTime: Date | null = null;
@@ -53,11 +53,19 @@ export class OffersListComponent implements AfterViewInit {
   }
 
   fetchData = () => {
+    let fromTime = null;
+    if (this.fromTime != null)
+      fromTime = new Date(this.fromTime);
+
+    let toTime = null;
+    if (this.toTime != null)
+      toTime = new Date(this.toTime);
+
     this.hotelClient.getFilteredHotelOffersWithPagination(
       this.hotelId,
       this.hotelId,
-      this.fromTime,
-      this.toTime,
+      fromTime,
+      toTime,
       this.minGuests,
       this.costMin,
       this.costMax,

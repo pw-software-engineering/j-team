@@ -13,13 +13,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HotelsListComponent } from './hotels/hotels-list/hotels-list.component';
 import { OffersListComponent } from './hotels/hotels-list/hotel-offers-list/offers-list.component';
+import {MakeReservationComponent} from "./hotels/hotels-list/hotel-offers-list/make-reservation/make-reservation.component";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HotelsListComponent,
-    OffersListComponent
+    OffersListComponent,
+    MakeReservationComponent
   ],
   imports: [
     BrowserModule,
@@ -30,8 +33,9 @@ import { OffersListComponent } from './hotels/hotels-list/hotel-offers-list/offe
     MaterialModule,
     MatFormFieldModule,
     MatInputModule,
+    NgbModule,
     MatDialogModule,
-    HttpClientModule
+    HttpClientModule,
   ],
     providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' }],
     bootstrap: [AppComponent]

@@ -116,7 +116,6 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpDelete("{offerID}")]
         public async Task<ActionResult> Delete(int offerID)
         {
-
             try
             {
                 var hotelId = await GetHotelIdFromToken();
