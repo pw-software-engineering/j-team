@@ -34,7 +34,7 @@ export const imports = [
     HttpClientModule,
 ]
 export const providers = [
-      { provide: API_BASE_URL, useValue: 'http://localhost:5000' },
+      { provide: API_BASE_URL, useValue: 'http://localhost:80' },
      {provide: HOTEL_TOKEN, useValue: '$2a$11$M3hY1eNjsXD4PDEuoJGrSOJLLdvfBvTOo3M0SFurlni7GiQVoHMRS'}
 ]
 

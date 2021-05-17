@@ -66,6 +66,7 @@ namespace HotelReservationSystem.WebUI
 
                 }).ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureKestrel(options => options.ListenAnyIP(80));
                     webBuilder.UseStartup<Startup>();
                 });
     }
