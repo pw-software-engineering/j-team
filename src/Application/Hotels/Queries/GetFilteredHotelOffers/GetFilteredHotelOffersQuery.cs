@@ -42,11 +42,15 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffe
             var hotel = _context.Hotels.Where(x => x.HotelId == request.HotelId).FirstOrDefault();
             if (hotel == null)
                 throw new ValidationException();
-
             return await _context.Offers
                 .Where(x =>
                     x.HotelId == request.HotelId &&
                     x.IsActive.Value &&
+                    (request.FromTime == null || request.ToTime == null || x.Rooms.Where(r => r.Reservations
+                        .All(r => !((DateTime.Compare(r.FromTime, request.FromTime.GetValueOrDefault()) < 0 &&
+                                    DateTime.Compare(r.ToTime, request.FromTime.GetValueOrDefault()) > 0) ||
+                                   (DateTime.Compare(r.FromTime, request.ToTime.GetValueOrDefault()) < 0 &&
+                                    DateTime.Compare(r.ToTime, request.ToTime.GetValueOrDefault()) > 0)))).Any()) &&
                     (request.MinGuest == null || x.MaxGuests >= request.MinGuest) &&
                     (request.CostMin == null || x.CostPerAdult >= request.CostMin) &&
                     (request.CostMax == null || x.CostPerAdult <= request.CostMax))

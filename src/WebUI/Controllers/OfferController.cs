@@ -60,7 +60,6 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-
             try
             {
                 await Mediator.Send(new DeleteOfferCmd { Id = id });
