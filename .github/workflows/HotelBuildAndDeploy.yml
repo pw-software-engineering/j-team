@@ -1,4 +1,4 @@
-name: BuildTestServer
+name: HotelDeploy
 
 on:
   push:

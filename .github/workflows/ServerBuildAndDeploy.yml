@@ -1,4 +1,4 @@
-name: BuildTestServer
+name: ServerDeploy
 
 on:
   push:
