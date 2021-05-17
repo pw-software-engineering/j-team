@@ -34,7 +34,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
         [Test]
         public async Task ShouldCreateReservation()
         {
-           /* var hotelId = await SendAsync(new CreateHotelCmd
+            var hotelId = await SendAsync(new CreateHotelCmd
             {
                 Name = "hotel1",
                 City = "city",
@@ -54,9 +54,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
                 To = new DateTime(2020, 1, 3),
                 NumberOfChildren = 1,
                 NumberOfAdults = 2
-            });*/
-            int result = 1;
-            result.Should().Be(1);
+            });
+           result.Should().Be(1);
         }
     }
 }
