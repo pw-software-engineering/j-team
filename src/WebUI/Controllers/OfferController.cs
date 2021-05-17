@@ -21,7 +21,7 @@ namespace HotelReservationSystem.WebUI.Controllers
 {
     [AuthorizeHotel]
     [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
-    [Route("api/offers")]
+    [Route("api-hotel/offers")]
     public class OfferController : ApiControllerBase
     {
         [HttpGet("{offerID}/rooms")]
