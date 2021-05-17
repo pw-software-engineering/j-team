@@ -1,6 +1,7 @@
 ﻿using Application.Hotels;
 using Application.Offers;
 using Application.Rooms;
+using Application.Reservations;
 using AutoMapper;
 using HotelReservationSystem.Domain.Entities;
 using System;
@@ -31,6 +32,11 @@ namespace HotelReservationSystem.Application.Common.Mappings
                 .ForMember(dest => dest.OfferID, opt => opt.MapFrom(src => src.Offers));
             CreateMap<Offer, int>()
                 .ConstructUsing(src => src.OfferId);
+            CreateMap<Reservation, ReservationDto>()
+              .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Client.Name))
+              .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Client.Surname))
+              .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Client.Username))
+              .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Client.Email));
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {

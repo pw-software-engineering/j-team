@@ -38,7 +38,7 @@
 
     <ng-container matColumnDef="ClientName">
       <th mat-header-cell *matHeaderCellDef> Client name</th>
-      <td mat-cell *matCellDef="let reservation">{{ reservation.Name + reservation.Surname }}</td>
+      <td mat-cell *matCellDef="let reservation">{{reservation.Surname }}</td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
     <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>

@@ -17,6 +17,7 @@ namespace HotelReservationSystem.Application.Rooms.Queries.GetReservationsWithPa
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+        public int HotelId { get; set; }
 #nullable enable
         public int? RoomID { get; set; } = null;
         public bool? CurrentOnly { get; set; } = null;

@@ -30,7 +30,7 @@ export class ReservationsComponent implements AfterViewInit {
     this.fetchData();
   }
   fetchData = () => {
-    const reservationsRequest = this.reservationsClient.getReservationsWithPagination(this.displayedPage + 1, this.pageSize, this.roomIdFilter, this.currentOnlyFilter, this.token);
+    const reservationsRequest = this.reservationsClient.getReservationsWithPagination(this.displayedPage + 1, this.pageSize, this.roomIdFilter, this.currentOnlyFilter,this.token);
     reservationsRequest.subscribe({
       next: (value) => {
         console.log(value);
