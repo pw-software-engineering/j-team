@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MakeReservationComponent } from './make-reservation.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('OffersListComponent', () => {
+describe('MakeReservationComponent', () => {
   let component: MakeReservationComponent;
   let fixture: ComponentFixture<MakeReservationComponent>;
 
