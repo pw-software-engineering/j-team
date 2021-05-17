@@ -14,7 +14,11 @@ namespace HotelReservationSystem.Application.Rooms.Commands.DeleteRoom
     {
         public int Id { get; set; }
         //TODO: swap for value from token
-        public int HotelId { get; set; } = 1;
+        public int HotelId { get; set; } 
+    }
+    public class DeleteRoomResponse
+    {
+        public string Error { get; set; }
     }
 
     public class DeleteOfferCmdHandler : IRequestHandler<DeleteRoomCmd>
