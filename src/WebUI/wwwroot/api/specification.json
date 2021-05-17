@@ -1289,37 +1289,6 @@
           }
         }
       },
-      "PaginatedListOfRoomDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/RoomDto"
-            }
-          },
-          "pageIndex": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
-          }
-        }
-      },
       "CreateReservationCmd": {
         "type": "object",
         "additionalProperties": false,
@@ -1352,6 +1321,37 @@
           "numberOfAdults": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "PaginatedListOfRoomDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/RoomDto"
+            }
+          },
+          "pageIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
           }
         }
       },

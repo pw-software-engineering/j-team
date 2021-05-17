@@ -1881,6 +1881,66 @@ export interface IUpdateOfferCmd {
     hotelId?: number;
 }
 
+export class CreateReservationCmd implements ICreateReservationCmd {
+    clientId?: number | undefined;
+    hotelId?: number;
+    offerId?: number;
+    from?: Date;
+    to?: Date;
+    numberOfChildren?: number;
+    numberOfAdults?: number;
+
+    constructor(data?: ICreateReservationCmd) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.clientId = _data["clientId"];
+            this.hotelId = _data["hotelId"];
+            this.offerId = _data["offerId"];
+            this.from = _data["from"] ? new Date(_data["from"].toString()) : <any>undefined;
+            this.to = _data["to"] ? new Date(_data["to"].toString()) : <any>undefined;
+            this.numberOfChildren = _data["numberOfChildren"];
+            this.numberOfAdults = _data["numberOfAdults"];
+        }
+    }
+
+    static fromJS(data: any): CreateReservationCmd {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateReservationCmd();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["clientId"] = this.clientId;
+        data["hotelId"] = this.hotelId;
+        data["offerId"] = this.offerId;
+        data["from"] = this.from ? this.from.toISOString() : <any>undefined;
+        data["to"] = this.to ? this.to.toISOString() : <any>undefined;
+        data["numberOfChildren"] = this.numberOfChildren;
+        data["numberOfAdults"] = this.numberOfAdults;
+        return data; 
+    }
+}
+
+export interface ICreateReservationCmd {
+    clientId?: number | undefined;
+    hotelId?: number;
+    offerId?: number;
+    from?: Date;
+    to?: Date;
+    numberOfChildren?: number;
+    numberOfAdults?: number;
+}
+
 export class PaginatedListOfRoomDto implements IPaginatedListOfRoomDto {
     items?: RoomDto[] | undefined;
     pageIndex?: number;
@@ -1943,66 +2003,6 @@ export interface IPaginatedListOfRoomDto {
     totalCount?: number;
     hasPreviousPage?: boolean;
     hasNextPage?: boolean;
-}
-
-export class CreateReservationCmd implements ICreateReservationCmd {
-    clientId?: number | undefined;
-    hotelId?: number;
-    offerId?: number;
-    from?: Date;
-    to?: Date;
-    numberOfChildren?: number;
-    numberOfAdults?: number;
-
-    constructor(data?: ICreateReservationCmd) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.clientId = _data["clientId"];
-            this.hotelId = _data["hotelId"];
-            this.offerId = _data["offerId"];
-            this.from = _data["from"] ? new Date(_data["from"].toString()) : <any>undefined;
-            this.to = _data["to"] ? new Date(_data["to"].toString()) : <any>undefined;
-            this.numberOfChildren = _data["numberOfChildren"];
-            this.numberOfAdults = _data["numberOfAdults"];
-        }
-    }
-
-    static fromJS(data: any): CreateReservationCmd {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateReservationCmd();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["clientId"] = this.clientId;
-        data["hotelId"] = this.hotelId;
-        data["offerId"] = this.offerId;
-        data["from"] = this.from ? this.from.toISOString() : <any>undefined;
-        data["to"] = this.to ? this.to.toISOString() : <any>undefined;
-        data["numberOfChildren"] = this.numberOfChildren;
-        data["numberOfAdults"] = this.numberOfAdults;
-        return data; 
-    }
-}
-
-export interface ICreateReservationCmd {
-    clientId?: number | undefined;
-    hotelId?: number;
-    offerId?: number;
-    from?: Date;
-    to?: Date;
-    numberOfChildren?: number;
-    numberOfAdults?: number;
 }
 
 export class CreateRoomCmd implements ICreateRoomCmd {
