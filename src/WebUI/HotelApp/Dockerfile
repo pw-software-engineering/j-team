@@ -1,21 +1,13 @@
-FROM node:12.2.0
-
-
-EXPOSE 80
-# set working directory
-WORKDIR /HotelApp
-
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /HotelApp/node_modules/.bin:$PATH
-
-# install and cache app dependencies
-COPY package.json package.json
+# Stage 0: compile angular frontend
+FROM node:latest as build
+WORKDIR /app
+COPY . .
 RUN npm install
-RUN npm install -g @angular/cli@7.3.9
-
-# add app
-COPY . /HotelApp
+RUN npm run build
 
 
-# start app
-CMD ["ng","serve","--configuration", "production","--host", "0.0.0.0","--port","80","--disableHostCheck"]
+# Stage 1: serve app with nginx server
+FROM nginx:latest
+COPY --from=build /app/dist/HotelApp  /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
