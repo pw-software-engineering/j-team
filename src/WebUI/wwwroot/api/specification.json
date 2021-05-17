@@ -681,9 +681,10 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             },
-            "x-position": 3
+            "x-position": 2
           },
           {
             "type": "string",
@@ -693,19 +694,6 @@
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
-        "requestBody": {
-          "x-name": "roomID",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 2
-        },
         "responses": {
           "200": {
             "description": "",

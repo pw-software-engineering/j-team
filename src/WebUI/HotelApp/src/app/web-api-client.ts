@@ -420,7 +420,7 @@ export interface IOfferClient {
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    deleteRoom(offerID: number, roomIDPath: string, x_hotel_token: string | undefined, roomIDBody: number): Observable<FileResponse>;
+    deleteRoom(offerID: number, roomID: number, x_hotel_token: string | undefined): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -858,25 +858,21 @@ export class OfferClient implements IOfferClient {
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    deleteRoom(offerID: number, roomIDPath: string, x_hotel_token: string | undefined, roomIDBody: number): Observable<FileResponse> {
+    deleteRoom(offerID: number, roomID: number, x_hotel_token: string | undefined): Observable<FileResponse> {
         let url_ = this.baseUrl + "/api/offers/{offerID}/rooms/{roomID}";
         if (offerID === undefined || offerID === null)
             throw new Error("The parameter 'offerID' must be defined.");
         url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
-        if (roomIDPath === undefined || roomIDPath === null)
-            throw new Error("The parameter 'roomIDPath' must be defined.");
-        url_ = url_.replace("{roomID}", encodeURIComponent("" + roomIDPath));
+        if (roomID === undefined || roomID === null)
+            throw new Error("The parameter 'roomID' must be defined.");
+        url_ = url_.replace("{roomID}", encodeURIComponent("" + roomID));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(roomIDBody);
-
         let options_ : any = {
-            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
                 "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
-                "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             })
         };

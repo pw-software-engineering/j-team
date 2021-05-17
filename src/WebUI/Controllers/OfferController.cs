@@ -143,8 +143,13 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             try
             {
-
-                await Mediator.Send(new AddOfferRoomCmd { OfferId = offerID, RoomId = roomID });
+                var hotelId = await GetHotelIdFromToken();
+                await Mediator.Send(new AddOfferRoomCmd
+                {
+                    OfferId = offerID,
+                    RoomId = roomID,
+                    HotelId = hotelId
+                });
                 return Ok();
             }
             catch (NotFoundException)
@@ -162,7 +167,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         }
 
         [HttpDelete("{offerID}/rooms/{roomID}")]
-        public async Task<ActionResult> DeleteRoom(int offerID, [FromBody] int roomID)
+        public async Task<ActionResult> DeleteRoom(int offerID, int roomID)
         {
             try
             {
