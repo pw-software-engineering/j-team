@@ -39,7 +39,7 @@ export class RoomsAddComponent implements OnInit {
             return;
         }
 
-        const addRequest = this.roomClient.create(this.hotelToken,new CreateRoomCmd(this.form.value));
+        const addRequest = this.roomClient.create(this.hotelToken, new CreateRoomCmd(this.form.value));
         addRequest.subscribe({
           next: (value) => {
             console.log(value);

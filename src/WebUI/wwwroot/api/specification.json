@@ -6,6 +6,39 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/Client": {
+      "post": {
+        "tags": [
+          "Client"
+        ],
+        "operationId": "Client_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientCmd"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Hotel": {
       "get": {
         "tags": [
@@ -693,17 +726,17 @@
         }
       }
     },
-
-    "/api/reservations": {
-      "get": {
+    "/api-client/hotels/{hotelID}/offers/{offerID}/reservations": {
+      "post": {
         "tags": [
-          "Reservations"
+          "Reservation"
         ],
-        "operationId": "Reservations_GetReservationsWithPagination",
+        "operationId": "Reservation_Create",
         "parameters": [
           {
-            "name": "PageNumber",
-            "in": "query",
+            "name": "hotelID",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -711,48 +744,36 @@
             "x-position": 1
           },
           {
-            "name": "PageSize",
-            "in": "query",
+            "name": "offerID",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "x-position": 2
-          },
-          {
-            "name": "RoomID",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
-            "name": "currentOnly",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "nullable": true
-            },
-            "x-position": 4
-          },
-          {
-            "type": "string",
-            "name": "x-hotel-token",
-            "in": "header",
-            "description": "hotel authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReservationCmd"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 3
+        },
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfReservationDto"
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -760,7 +781,6 @@
         }
       }
     },
-
     "/api/rooms": {
       "get": {
         "tags": [
@@ -950,6 +970,28 @@
   },
   "components": {
     "schemas": {
+      "CreateClientCmd": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "HotelListedDto": {
         "type": "object",
         "additionalProperties": false,
@@ -1262,81 +1304,38 @@
           }
         }
       },
-      "PaginatedListOfReservationDto": {
+      "CreateReservationCmd": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ReservationDto"
-            }
-          },
-          "pageIndex": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
-          }
-        }
-      },
-      "ReservationDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "reservationId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "fromTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "toTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "childrenCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "adultsCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "roomId": {
+          "clientId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "name": {
-            "type": "string",
-            "nullable": true
+          "hotelId": {
+            "type": "integer",
+            "format": "int32"
           },
-          "surname": {
-            "type": "string",
-            "nullable": true
+          "offerId": {
+            "type": "integer",
+            "format": "int32"
           },
-          "username": {
+          "from": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
           },
-          "email": {
+          "to": {
             "type": "string",
-            "nullable": true
+            "format": "date-time"
+          },
+          "numberOfChildren": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfAdults": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
