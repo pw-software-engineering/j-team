@@ -33,8 +33,14 @@ namespace HotelReservationSystem.Application.Common.Security
             var hotelId = await mediator.Send(new GetHotelIdFromTokenQuery() { Token = token });
             if (hotelId is null)
             {
-                context.Result = new ForbidResult();
+                var result = new ObjectResult(new AuthFailedResult() { Desc = "Authentication failed" });
+                result.StatusCode = 401;
+                context.Result = result;
             }
         }
+    }
+    public class AuthFailedResult
+    {
+        public string Desc { get; set; }
     }
 }

@@ -314,7 +314,7 @@
         }
       }
     },
-    "/api/Offer/{id}/rooms": {
+    "/api/offers/{offerID}/rooms": {
       "get": {
         "tags": [
           "Offer"
@@ -322,7 +322,7 @@
         "operationId": "Offer_rooms",
         "parameters": [
           {
-            "name": "id",
+            "name": "offerId",
             "in": "path",
             "required": true,
             "schema": {
@@ -332,13 +332,22 @@
             "x-position": 1
           },
           {
+            "name": "RoomNumber",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
             "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 2
+            "x-position": 3
           },
           {
             "name": "PageSize",
@@ -347,7 +356,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 3
+            "x-position": 4
           },
           {
             "type": "string",
@@ -363,24 +372,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfRoomDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomDto"
+                  }
                 }
               }
             }
           }
         }
-      }
-    },
-    "/api/Offer": {
-      "get": {
+      },
+      "post": {
         "tags": [
           "Offer"
         ],
-        "operationId": "Offer_GetOffersWithPagination",
+        "operationId": "Offer_AddRoom",
         "parameters": [
           {
-            "name": "PageNumber",
-            "in": "query",
+            "name": "offerID",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -388,7 +399,59 @@
             "x-position": 1
           },
           {
-            "name": "PageSize",
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "requestBody": {
+          "x-name": "roomID",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/offers": {
+      "get": {
+        "tags": [
+          "Offer"
+        ],
+        "operationId": "Offer_GetOffersWithPagination",
+        "parameters": [
+          {
+            "name": "IsActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageNumber",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -397,11 +460,11 @@
             "x-position": 2
           },
           {
-            "name": "IsActive",
+            "name": "PageSize",
             "in": "query",
             "schema": {
-              "type": "boolean",
-              "nullable": true
+              "type": "integer",
+              "format": "int32"
             },
             "x-position": 3
           },
@@ -419,7 +482,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfOfferDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OfferDto"
+                  }
                 }
               }
             }
@@ -458,8 +524,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/CreateOfferResponse"
                 }
               }
             }
@@ -467,7 +532,7 @@
         }
       }
     },
-    "/api/Offer/{id}": {
+    "/api/offers/{offerID}": {
       "get": {
         "tags": [
           "Offer"
@@ -475,7 +540,7 @@
         "operationId": "Offer_GetOffer",
         "parameters": [
           {
-            "name": "id",
+            "name": "offerID",
             "in": "path",
             "required": true,
             "schema": {
@@ -505,14 +570,14 @@
           }
         }
       },
-      "put": {
+      "patch": {
         "tags": [
           "Offer"
         ],
         "operationId": "Offer_Update",
         "parameters": [
           {
-            "name": "id",
+            "name": "offerID",
             "in": "path",
             "required": true,
             "schema": {
@@ -562,7 +627,7 @@
         "operationId": "Offer_Delete",
         "parameters": [
           {
-            "name": "id",
+            "name": "offerID",
             "in": "path",
             "required": true,
             "schema": {
@@ -594,56 +659,7 @@
         }
       }
     },
-    "/api/Offer/{offerId}/rooms": {
-      "post": {
-        "tags": [
-          "Offer"
-        ],
-        "operationId": "Offer_AddRoom",
-        "parameters": [
-          {
-            "name": "offerId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "roomId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "type": "string",
-            "name": "x-hotel-token",
-            "in": "header",
-            "description": "hotel authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Offer/{offerId}/rooms/{roomId}": {
+    "/api/offers/{offerID}/rooms/{roomID}": {
       "delete": {
         "tags": [
           "Offer"
@@ -651,7 +667,7 @@
         "operationId": "Offer_DeleteRoom",
         "parameters": [
           {
-            "name": "offerId",
+            "name": "offerID",
             "in": "path",
             "required": true,
             "schema": {
@@ -661,14 +677,13 @@
             "x-position": 1
           },
           {
-            "name": "roomId",
+            "name": "roomID",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             },
-            "x-position": 2
+            "x-position": 3
           },
           {
             "type": "string",
@@ -678,6 +693,19 @@
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
+        "requestBody": {
+          "x-name": "roomID",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
         "responses": {
           "200": {
             "description": "",
@@ -978,11 +1006,11 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "offerId": {
+          "offerID": {
             "type": "integer",
             "format": "int32"
           },
-          "title": {
+          "offerTitle": {
             "type": "string",
             "nullable": true
           },
@@ -1022,37 +1050,6 @@
           }
         }
       },
-      "PaginatedListOfRoomDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/RoomDto"
-            }
-          },
-          "pageIndex": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
-          }
-        }
-      },
       "RoomDto": {
         "type": "object",
         "additionalProperties": false,
@@ -1075,34 +1072,17 @@
           }
         }
       },
-      "PaginatedListOfOfferDto": {
+      "CreateOfferResponse": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/OfferDto"
-            }
-          },
-          "pageIndex": {
+          "offerID": {
             "type": "integer",
             "format": "int32"
           },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
+          "error": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1114,7 +1094,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "title": {
+          "offerTitle": {
             "type": "string",
             "nullable": true
           },
@@ -1162,7 +1142,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "title": {
+          "offerTitle": {
             "type": "string",
             "nullable": true
           },
@@ -1191,6 +1171,54 @@
           "maxGuests": {
             "type": "integer",
             "nullable": true
+          },
+          "offerPreviewPicture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "offerPictures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "hotelId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PaginatedListOfRoomDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/RoomDto"
+            }
+          },
+          "pageIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
           }
         }
       },

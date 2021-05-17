@@ -36,20 +36,21 @@ namespace HotelReservationSystem.Application.IntegrationTests
             });
             var id1 = await SendAsync(new CreateOfferCmd
             {
-                Title = "offer1",
+                OfferTitle = "offer1",
                 HotelId = hotelId
             });
 
             await SendAsync(new DeleteOfferCmd
             {
-                Id = id1
+                Id = id1,
+                HotelId = hotelId
             });
             var result = await SendAsync(new GetOffersWithPaginationQuery
             {
                 PageNumber = 1,
                 PageSize = 1
             });
-            result.Items.Any(x => x.OfferId == id1).Should().BeFalse();
+            result.Items.Any(x => x.OfferID == id1).Should().BeFalse();
         }
     }
 }

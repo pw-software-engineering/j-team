@@ -39,7 +39,7 @@ namespace HotelReservationSystem.Infrastructure.Persistence
                     City = "City of the Hotel1",
                     Country = "Country of the Hotel1",
                     Password = BCrypt.Net.BCrypt.HashPassword("Hotel1"),
-                    AccessToken =  "$2a$11$M3hY1eNjsXD4PDEuoJGrSOJLLdvfBvTOo3M0SFurlni7GiQVoHMRS"
+                    AccessToken = "99999999"
                 });
 
                 await context.SaveChangesAsync();
@@ -48,10 +48,10 @@ namespace HotelReservationSystem.Infrastructure.Persistence
             {
                 context.Clients.Add(new Client
                 {
-                    Name = "Client1",
-                    Surname = "Clientsurname",
+                    Name = "client",
+                    Surname = "client",
                     Email = "email@email.com",
-                    Username = "Client123"
+                    Username = "client"
                 });
 
                 await context.SaveChangesAsync();

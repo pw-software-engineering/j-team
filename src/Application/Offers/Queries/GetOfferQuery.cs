@@ -1,10 +1,12 @@
 ﻿using Application.Offers;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Interfaces;
 using HotelReservationSystem.Application.Common.Mappings;
 using HotelReservationSystem.Application.Common.Models;
 using HotelReservationSystem.Application.Hotels.Queries;
+using HotelReservationSystem.Domain.Entities;
 using MediatR;
 using System.Linq;
 using System.Threading;
@@ -15,6 +17,7 @@ namespace HotelReservationSystem.Application.Offers.Queries
     public class GetOfferQuery : IRequest<OfferDto>
     {
         public int Id { get; set; }
+        public int HotelId { get; set; }
     }
 
     public class GetOfferQueryHandler : IRequestHandler<GetOfferQuery, OfferDto>
@@ -30,8 +33,12 @@ namespace HotelReservationSystem.Application.Offers.Queries
 
         public async Task<OfferDto> Handle(GetOfferQuery request, CancellationToken cancellationToken)
         {
-            var findTask = Task.Run(() => _context.Offers.Where(x => x.OfferId == request.Id).ProjectTo<OfferDto>(_mapper.ConfigurationProvider).SingleOrDefault());
-            return await findTask;
+            var offer = await _context.Offers.FindAsync(request.Id);
+            if (offer is null)
+                throw new NotFoundException();
+            if (offer.HotelId != request.HotelId)
+                throw new ForbiddenAccessException();
+            return _mapper.Map<OfferDto>(offer);
         }
     }
 }

@@ -13,79 +13,171 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using NSwag.Annotations;
+using System.Collections.Generic;
+using System.Net;
+using WebUI;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [AuthorizeHotel]
     [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
+    [Route("api/offers")]
     public class OfferController : ApiControllerBase
     {
-        [HttpGet("{id}/rooms")]
-        public async Task<ActionResult<PaginatedList<RoomDto>>> rooms(int id, [FromQuery] RoomsQuery query)
+        [HttpGet("{offerID}/rooms")]
+        public async Task<ActionResult<List<RoomDto>>> rooms(int offerId, [FromQuery] RoomsQuery query)
         {
-            query.OfferId = id;
-
-            return await Mediator.Send(query);
+            query.OfferId = offerId;
+            query.HotelId = await GetHotelIdFromToken();
+            try
+            {
+                var response = await Mediator.Send(query);
+                return response.Items;
+            }
+            catch (NotFoundException)
+            {
+                return new StatusCodeResult(404);
+            }
+            catch (ForbiddenAccessException)
+            {
+                return new StatusCodeResult(401);
+            }
         }
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<OfferDto>>> GetOffersWithPagination([FromQuery] GetOffersWithPaginationQuery query)
+        public async Task<ActionResult<List<OfferDto>>> GetOffersWithPagination([FromQuery] GetOffersWithPaginationQuery query)
         {
-            return await Mediator.Send(query);
+            var response = await Mediator.Send(query);
+            return response.Items;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<OfferDto>> GetOffer(int id)
+        [HttpGet("{offerID}")]
+        public async Task<ActionResult<OfferDto>> GetOffer(int offerID)
         {
-            return await Mediator.Send(new GetOfferQuery { Id = id });
+            try
+            {
+                var hotelId = await GetHotelIdFromToken();
+                var offer = await Mediator.Send(new GetOfferQuery { Id = offerID, HotelId = hotelId });
+                return offer;
+            }
+            catch (NotFoundException)
+            {
+                return new StatusCodeResult(404);
+            }
+            catch (ForbiddenAccessException)
+            {
+                return new StatusCodeResult(401);
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Create(CreateOfferCmd command)
+        public async Task<ActionResult<CreateOfferResponse>> Create(CreateOfferCmd command)
         {
             var hotelId = await GetHotelIdFromToken();
             command.HotelId = hotelId;
-            return await Mediator.Send(command);
+            var response = new CreateOfferResponse();
+            try
+            {
+                var id = await Mediator.Send(command);
+                response.OfferID = id;
+                return new ActionResult<CreateOfferResponse>(response);
+            }
+            catch (ValidationException ex)
+            {
+                response.Error = ex.Message;
+                return new ApiResponse<CreateOfferResponse>(response);
+            }
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateOfferCmd command)
+        [HttpPatch("{offerID}")]
+        public async Task<ActionResult> Update(int offerID, UpdateOfferCmd command)
         {
-            command.Id = id;
-
-            await Mediator.Send(command);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
+            command.Id = offerID;
+            command.HotelId = await GetHotelIdFromToken();
 
             try
             {
-                await Mediator.Send(new DeleteOfferCmd { Id = id });
+                await Mediator.Send(command);
                 return Ok();
             }
             catch (NotFoundException)
             {
-                return NotFound();
+                return new StatusCodeResult(404);
+            }
+            catch (ForbiddenAccessException)
+            {
+                return new StatusCodeResult(401);
+            }
+            catch (ValidationException ex)
+            {
+                return new ApiResponse(ex.Message, 400);
             }
         }
 
-        [HttpPost("{offerId}/rooms")]
-        public async Task<ActionResult> AddRoom(int offerId, int roomId)
+        [HttpDelete("{offerID}")]
+        public async Task<ActionResult> Delete(int offerID)
         {
-            await Mediator.Send(new AddOfferRoomCmd { OfferId = offerId, RoomId = roomId });
 
-            return Ok();
+            try
+            {
+                var hotelId = await GetHotelIdFromToken();
+                await Mediator.Send(new DeleteOfferCmd { Id = offerID, HotelId = hotelId });
+                return Ok();
+            }
+            catch (NotFoundException)
+            {
+                return new StatusCodeResult(404);
+            }
+            catch (ForbiddenAccessException)
+            {
+                return new StatusCodeResult(401);
+            }
+            catch (ValidationException ex)
+            {
+                var response = new DeleteOfferResponse() { Error = ex.Message };
+                return new ApiResponse<DeleteOfferResponse>(response, 409);
+            }
         }
 
-        [HttpDelete("{offerId}/rooms/{roomId}")]
-        public async Task<ActionResult> DeleteRoom(int offerId, int roomId)
+        [HttpPost("{offerID}/rooms")]
+        public async Task<ActionResult> AddRoom(int offerID, [FromBody] int roomID)
         {
-            await Mediator.Send(new DeleteOfferRoomCmd { OfferId = offerId, RoomId = roomId });
+            try
+            {
 
-            return Ok();
+                await Mediator.Send(new AddOfferRoomCmd { OfferId = offerID, RoomId = roomID });
+                return Ok();
+            }
+            catch (NotFoundException)
+            {
+                return new StatusCodeResult(404);
+            }
+            catch (ForbiddenAccessException)
+            {
+                return new StatusCodeResult(401);
+            }
+            catch (ValidationException ex)
+            {
+                return new ApiResponse(ex.Message, 400);
+            }
+        }
+
+        [HttpDelete("{offerID}/rooms/{roomID}")]
+        public async Task<ActionResult> DeleteRoom(int offerID, [FromBody] int roomID)
+        {
+            try
+            {
+                var hotelId = await GetHotelIdFromToken();
+                await Mediator.Send(new DeleteOfferRoomCmd { OfferId = offerID, RoomId = roomID, HotelId = hotelId });
+                return Ok();
+            }
+            catch (NotFoundException)
+            {
+                return new StatusCodeResult(404);
+            }
+            catch (ForbiddenAccessException)
+            {
+                return new StatusCodeResult(401);
+            }
         }
     }
 }

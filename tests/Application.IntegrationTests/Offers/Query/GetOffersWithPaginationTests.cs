@@ -36,12 +36,12 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             });
             var id1 = await SendAsync(new CreateOfferCmd
             {
-                Title = "offer1",
+                OfferTitle = "offer1",
                 HotelId = hotelId
             });
             var id2 = await SendAsync(new CreateOfferCmd
             {
-                Title = "offer2",
+                OfferTitle = "offer2",
                 HotelId = hotelId
             });
 
@@ -55,7 +55,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             result.TotalCount.Should().Be(2);
             result.Items.Should().NotBeNull();
             result.Items.Count.Should().Be(1);
-            result.Items.Any(x => x.OfferId == id1 || x.OfferId == id2).Should().BeTrue();
+            result.Items.Any(x => x.OfferID == id1 || x.OfferID == id2).Should().BeTrue();
         }
     }
 }

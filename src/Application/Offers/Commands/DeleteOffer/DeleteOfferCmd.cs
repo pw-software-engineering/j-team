@@ -12,6 +12,11 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
     public class DeleteOfferCmd : IRequest
     {
         public int Id { get; set; }
+        public int HotelId { get; set; }
+    }
+    public class DeleteOfferResponse
+    {
+        public string Error { get; set; }
     }
 
     public class DeleteOfferCmdHandler : IRequestHandler<DeleteOfferCmd>
@@ -34,6 +39,8 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
             {
                 throw new NotFoundException(nameof(Offer), request.Id);
             }
+            if (entity.HotelId != request.HotelId)
+                throw new ForbiddenAccessException();
 
             if (entity.OfferPreviewPicture != null)
             {
@@ -44,7 +51,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
 
             foreach (File file in entity.Pictures)
                 _context.Files.Remove(file);
-            
+
             _context.Offers.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
