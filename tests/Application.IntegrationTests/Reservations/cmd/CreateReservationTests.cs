@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using HotelReservationSystem.Application.Common.Exceptions;
 using System.Linq;
+using HotelReservationSystem.Application.Clients.Commands.CreateClient;
 using HotelReservationSystem.Application.Reservations.Commands.CreateReservation;
+using HotelReservationSystem.Application.Rooms.Commands.CreateRoom;
 
 namespace HotelReservationSystem.Application.IntegrationTests
 {
@@ -41,21 +43,36 @@ namespace HotelReservationSystem.Application.IntegrationTests
                 Country = "country",
                 Password = "hotel1"
             });
-            var id1 = await SendAsync(new CreateOfferCmd
+            var offerId = await SendAsync(new CreateOfferCmd
             {
                 Title = "offer1",
-                HotelId = hotelId
+                HotelId = hotelId,
+                IsActive = true
+            });
+            var roomId = await SendAsync(new CreateRoomCmd
+            {
+                HotelID = hotelId,
+                OfferID = offerId,
+                HotelRoomNumber = "123A"
+            });
+            var clientId = await SendAsync(new CreateClientCmd
+            {
+                Name = "John",
+                Surname = "Kowalski",
+                Username = "johnkowalski",
+                Email = "john@kowalski.com"
             });
             var result = await SendAsync(new CreateReservationCmd
             {
-                HotelId = 1,
-                OfferId = 1,
+                HotelId = hotelId,
+                OfferId = offerId,
+                ClientId = clientId,
                 From = new DateTime(2020, 1, 1),
                 To = new DateTime(2020, 1, 3),
                 NumberOfChildren = 1,
                 NumberOfAdults = 2
             });
-           result.Should().Be(1);
+           result.Should().BePositive();
         }
     }
 }
