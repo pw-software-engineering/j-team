@@ -42,6 +42,9 @@ namespace HotelReservationSystem.Application.Reservations.Commands.CreateReserva
                 throw new NotFoundException(nameof(Offer), request.OfferId);
 
             List<ValidationFailure> validationFailures = new List<ValidationFailure>();
+            if (DateTime.Compare(request.From, request.To) > 0)
+                validationFailures.Add(new ValidationFailure(nameof(offer), 
+                    "From must be no lower than To."));
             if (!offer.IsActive.Value)
                 validationFailures.Add(new ValidationFailure(nameof(offer), "Offer is not active"));
             if (offer.IsDeleted.Value)
@@ -53,6 +56,7 @@ namespace HotelReservationSystem.Application.Reservations.Commands.CreateReserva
             if (!availableRooms.Any())
                 validationFailures.Add(new ValidationFailure(nameof(offer), 
                     "Offer is not available - please refresh information related to the offer availability"));
+            
             
             if (validationFailures.Count > 0)
                 throw new ValidationException(validationFailures);

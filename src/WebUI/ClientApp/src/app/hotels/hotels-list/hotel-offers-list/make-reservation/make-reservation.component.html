@@ -1,0 +1,39 @@
+<h2>Make reservation</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <div class="form-group col-5">
+      <label>From</label>
+      <input type="date" formControlName="from" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.from.errors }"/>
+      <div *ngIf="submitted && f.from.errors" class="invalid-feedback">
+        <div *ngIf="f.from.errors.required">from is required</div>
+      </div>
+    </div>
+    <div class="form-group col-5">
+      <label>To</label>
+      <input type="date" formControlName="to" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.to.errors }"/>
+      <div *ngIf="submitted && f.to.errors" class="invalid-feedback">
+        <div *ngIf="f.to.errors.required">to is required</div>
+      </div>
+    </div>
+    <div class="form-group col-5">
+      <label>Number of Adults</label>
+      <input type="number" formControlName="numberOfAdults" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.numberOfAdults.errors }"/>
+      <div *ngIf="submitted && f.numberOfAdults.errors" class="invalid-feedback">
+        <div *ngIf="f.numberOfAdults.errors.required">adults is required</div>
+      </div>
+    </div>
+    <div class="form-group col-5">
+      <label>Number of Childs</label>
+      <input type="number" formControlName="numberOfChildren" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.numberOfChildren.errors }"/>
+      <div *ngIf="submitted && f.numberOfChildren.errors" class="invalid-feedback">
+        <div *ngIf="f.numberOfChildren.errors.required">childs is required</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary">
+      Save
+    </button>
+    <a routerLink="/hotels" class="btn btn-link">Cancel</a>
+  </div>
+</form>
