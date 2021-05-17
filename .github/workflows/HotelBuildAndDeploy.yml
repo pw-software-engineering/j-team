@@ -42,7 +42,7 @@ jobs:
         run: xvfb-run --auto-servernum npm run test -- --no-watch --no-progress
         working-directory: src/WebUI/ClientApp/
 
-   build:
+  build:
     runs-on: ubuntu-latest
     needs: test
     steps:
