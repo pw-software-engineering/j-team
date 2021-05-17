@@ -17,6 +17,7 @@ namespace HotelReservationSystem.Application.Common.Mappings
             CreateMap<Hotel, HotelDto>()
                 .ForMember(dest => dest.HotelPreviewPictureData, opt => opt.MapFrom(src => src.HotelPreviewPicture))
                 .ForMember(dest => dest.PicturesData, opt => opt.MapFrom(src => src.Pictures))
+                .ForMember(dest => dest.HotelDesc, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Name));
             CreateMap<Hotel, HotelListedDto>()
                 .ForMember(dest => dest.HotelPreviewPictureData, opt => opt.MapFrom(src => src.HotelPreviewPicture))

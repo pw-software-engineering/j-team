@@ -6,7 +6,7 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
     {
         public UpdateHotelCmdValidator()
         {
-            RuleFor(v => v.Name)
+            RuleFor(v => v.hotelName)
                 .MaximumLength(200)
                 .NotEmpty();
         }

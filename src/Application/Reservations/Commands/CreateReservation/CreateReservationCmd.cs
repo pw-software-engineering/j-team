@@ -14,9 +14,9 @@ namespace HotelReservationSystem.Application.Reservations.Commands.CreateReserva
 {
     public class CreateReservationCmd : IRequest<int>
     {
-        public int? ClientId { get; set; }
-        public int HotelId { get; set; }
-        public int OfferId { get; set; }
+        public int? ClientId;
+        public int HotelId;
+        public int OfferId;
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public int NumberOfChildren { get; set; }
