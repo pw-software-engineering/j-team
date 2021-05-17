@@ -6,6 +6,11 @@ on:
       - main
       - develop
 
+  pull_request:
+    branches:
+      - main
+      - develop
+
 env:
   registry: my_registry_name
   DB_HOST: localhost
