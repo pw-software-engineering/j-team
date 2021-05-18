@@ -56,12 +56,12 @@ export class OfferRoomsListComponent implements AfterViewInit {
       this.length = 0;
       return;
     }
-    const roomsRequest = this.offerClient.rooms(+this.offerId, this.displayedPage + 1, this.pageSize, this.hotelToken);
+    const roomsRequest = this.offerClient.rooms(+this.offerId,null, this.displayedPage + 1, this.pageSize, this.hotelToken);
     roomsRequest.subscribe({
       next: (value) => {
         console.log(value);
-        this.length = value.totalCount!;
-        this.setData(value.items);
+        this.length = value.length!;
+        this.setData(value);
       },
     });
     this.loadAllRooms();
@@ -90,7 +90,7 @@ export class OfferRoomsListComponent implements AfterViewInit {
     dialogRef.afterClosed().subscribe(data => {
       if(data == null)
         return;
-      this.offerClient.addRoom(Number(this.offerId), data, this.hotelToken)
+      this.offerClient.addRoom(Number(this.offerId), this.hotelToken, data)
         .pipe(first())
         .subscribe(data => {
           console.log(data);

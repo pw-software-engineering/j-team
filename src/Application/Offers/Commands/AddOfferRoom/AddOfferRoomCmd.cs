@@ -13,6 +13,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
     {
         public int OfferId { get; set; }
         public int RoomId { get; set; }
+        public int HotelId { get; set; }
     }
 
     public class AddOfferRoomCmdHandler : IRequestHandler<AddOfferRoomCmd>
@@ -34,6 +35,9 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
             {
                 throw new NotFoundException(nameof(Offer), request.OfferId);
             }
+            if (entity.HotelId != request.HotelId)
+                throw new ForbiddenAccessException();
+
             var room = _context.Rooms.FirstOrDefault(r => r.RoomId == request.RoomId);
             if (room == null)
             {

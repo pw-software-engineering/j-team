@@ -70,12 +70,12 @@ export class OffersListComponent implements AfterViewInit {
     }
 
     const isActive = (this.showActive && this.showInactive) ? null: this.showActive;
-    const offersRequest = this.offerClient.getOffersWithPagination(this.displayedPage + 1, this.pageSize, isActive, this.hotelToken);
+    const offersRequest = this.offerClient.getOffersWithPagination(isActive,this.displayedPage +1,this.pageSize, this.hotelToken);
     offersRequest.subscribe({
       next: (value) => {
         console.log(value);
-        this.length = value.totalCount!;
-        this.setData(value.items);
+        this.length = value.length!;
+        this.setData(value);
       },
     });
   }

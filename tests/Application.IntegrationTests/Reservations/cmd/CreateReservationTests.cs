@@ -45,7 +45,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
             });
             var offerId = await SendAsync(new CreateOfferCmd
             {
-                Title = "offer1",
+                OfferTitle = "offer1",
                 HotelId = hotelId,
                 IsActive = true
             });
@@ -72,7 +72,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
                 NumberOfChildren = 1,
                 NumberOfAdults = 2
             });
-           result.Should().BePositive();
+            result.Should().BePositive();
         }
     }
 }

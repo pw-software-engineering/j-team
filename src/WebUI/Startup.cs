@@ -72,6 +72,15 @@ namespace HotelReservationSystem.WebUI
             services.AddOpenApiDocument(configure =>
             {
                 configure.Title = "HotelReservationSystem API";
+                configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+
+                configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
         }
 
@@ -87,13 +96,15 @@ namespace HotelReservationSystem.WebUI
             }
             else
             {
+                //app.UseDeveloperExceptionPage();
+                //app.UseMigrationsEndPoint();
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHealthChecks("/health");
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             // Commented out due to authorization errors in browsers
             app.UseStaticFiles();
             if (!env.IsDevelopment())

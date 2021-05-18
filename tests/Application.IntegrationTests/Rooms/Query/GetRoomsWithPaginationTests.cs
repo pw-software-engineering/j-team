@@ -37,7 +37,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             });
             var offerid = await SendAsync(new CreateOfferCmd
             {
-                Title = "offer1",
+                OfferTitle = "offer1",
                 HotelId = hotelId
             });
             var room1id = await SendAsync(new CreateRoomCmd
@@ -76,7 +76,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             });
             var offerid = await SendAsync(new CreateOfferCmd
             {
-                Title = "offer1",
+                OfferTitle = "offer1",
                 HotelId = hotelId
             });
             var room1id = await SendAsync(new CreateRoomCmd
@@ -115,7 +115,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             });
             var offerid = await SendAsync(new CreateOfferCmd
             {
-                Title = "offer1",
+                OfferTitle = "offer1",
                 HotelId = hotelId
             });
             var room1id = await SendAsync(new CreateRoomCmd

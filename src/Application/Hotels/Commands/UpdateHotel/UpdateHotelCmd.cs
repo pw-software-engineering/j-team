@@ -10,11 +10,11 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
 {
     public class UpdateHotelCmd : IRequest
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string City { get; set; }
-        public string Country { get; set; }
+        public int Id;
+        public string hotelName { get; set; }
+        public string hotelDesc { get; set; }
+        public File hotelPreviewPicture { get; set; }
+        public List<File> hotelPictures { get; set; }
     }
 
     public class UpdateHotelCommandHandler : IRequestHandler<UpdateHotelCmd>
@@ -35,10 +35,10 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
                 throw new NotFoundException(nameof(Hotel), request.Id);
             }
 
-            entity.Name = request.Name ?? entity.Name;
-            entity.Description = request.Description ?? entity.Description;
-            entity.City = request.City ?? entity.City;
-            entity.Country = request.Country ?? entity.Country;
+            entity.Name = request.hotelName ?? entity.Name;
+            entity.Description = request.hotelDesc ?? entity.Description;
+            entity.HotelPreviewPicture = request.hotelPreviewPicture ?? entity.HotelPreviewPicture;
+            entity.Pictures = request.hotelPictures ?? entity.Pictures;
 
             await _context.SaveChangesAsync(cancellationToken);
 

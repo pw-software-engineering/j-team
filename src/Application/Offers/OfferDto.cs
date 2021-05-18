@@ -6,8 +6,8 @@ namespace Application.Offers
 {
     public class OfferDto
     {
-        public int OfferId { get; set; }
-        public string Title { get; set; }
+        public int OfferID { get; set; }
+        public string OfferTitle { get; set; }
         public string Description { get; set; }
         // public byte[] OfferPreviewPicture { get; set; }
         // public List<byte[]> Pictures { get; set; }

@@ -18,13 +18,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
+using Application.Hotels.Queries.GetHotelInfo;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
+    [Route("api")]
     public class HotelController : ApiControllerBase
     {
-        [HttpGet]
+        [HttpGet("hotels")]
         public async Task<ActionResult<List<HotelListedDto>>> GetHotelsWithPagination([FromQuery] GetHotelsWithPaginationQuery query)
         {
             var paginated = await Mediator.Send(query);
@@ -36,17 +38,25 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             return await Mediator.Send(command);
         }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateHotelCmd command)
+        
+        [HttpGet("hotelInfo")]
+        public async Task<ActionResult<HotelDto>> GetHotelInfo()
         {
-            command.Id = id;
+            var query = new GetHotelInfoQuery();
+            query.hotelId = await GetHotelIdFromToken();
+            return await Mediator.Send(query);
+        }
+        
+        [HttpPut("hotelInfo")]
+        public async Task<ActionResult> Update(UpdateHotelCmd command)
+        {
+            command.Id = await GetHotelIdFromToken();
 
             await Mediator.Send(command);
 
-            return NoContent();
+            return Ok();
         }
-
+        
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {

@@ -11,13 +11,16 @@ namespace HotelReservationSystem.Application.Offers.Commands.UpdateOffer
     public class UpdateOfferCmd : IRequest
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string OfferTitle { get; set; }
         public string Description { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
         public double? CostPerChild { get; set; }
         public double? CostPerAdult { get; set; }
         public uint? MaxGuests { get; set; }
+        public byte[] OfferPreviewPicture { get; set; }
+        public List<byte[]> OfferPictures { get; set; }
+        public int HotelId { get; set; }
     }
 
     public class UpdateOfferCommandHandler : IRequestHandler<UpdateOfferCmd>
@@ -37,8 +40,10 @@ namespace HotelReservationSystem.Application.Offers.Commands.UpdateOffer
             {
                 throw new NotFoundException(nameof(Offer), request.Id);
             }
+            if (entity.HotelId != request.HotelId)
+                throw new ForbiddenAccessException();
 
-            entity.Title = request.Title ?? entity.Title;
+            entity.Title = request.OfferTitle ?? entity.Title;
             entity.Description = request.Description ?? entity.Description;
 
             if (request.IsActive != null)

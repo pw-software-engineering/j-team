@@ -101,7 +101,11 @@ export interface IHotelClient {
     /**
      * @param x_client_token (optional) client authorization token
      */
-    update(id: number, x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse>;
+    getHotelInfo(x_client_token: string | undefined): Observable<HotelDto>;
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    update(x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse>;
     /**
      * @param x_client_token (optional) client authorization token
      */
@@ -140,7 +144,7 @@ export class HotelClient implements IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]> {
-        let url_ = this.baseUrl + "/api/Hotel?";
+        let url_ = this.baseUrl + "/api/hotels?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -210,7 +214,7 @@ export class HotelClient implements IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     create(x_client_token: string | undefined, command: CreateHotelCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api/Hotel";
+        let url_ = this.baseUrl + "/api";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -265,11 +269,60 @@ export class HotelClient implements IHotelClient {
     /**
      * @param x_client_token (optional) client authorization token
      */
-    update(id: number, x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Hotel/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    getHotelInfo(x_client_token: string | undefined): Observable<HotelDto> {
+        let url_ = this.baseUrl + "/api/hotelInfo";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetHotelInfo(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetHotelInfo(<any>response_);
+                } catch (e) {
+                    return <Observable<HotelDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<HotelDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetHotelInfo(response: HttpResponseBase): Observable<HotelDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HotelDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<HotelDto>(<any>null);
+    }
+
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    update(x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/hotelInfo";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -323,7 +376,7 @@ export class HotelClient implements IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     delete(id: number, x_client_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Hotel/{id}";
+        let url_ = this.baseUrl + "/api/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -382,7 +435,7 @@ export class HotelClient implements IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMin: number | null | undefined, costMax: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]> {
-        let url_ = this.baseUrl + "/api/Hotel/{id}/offers?";
+        let url_ = this.baseUrl + "/api/{id}/offers?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -454,43 +507,43 @@ export class HotelClient implements IHotelClient {
 
 export interface IOfferClient {
     /**
+     * @param roomNumber (optional) 
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto>;
+    rooms(offerId: number, roomNumber: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<RoomDto[]>;
     /**
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    addRoom(offerID: number, x_hotel_token: string | undefined, roomID: number): Observable<FileResponse>;
+    /**
      * @param isActive (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfOfferDto>;
+    getOffersWithPagination(isActive: boolean | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<OfferDto[]>;
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    create(x_hotel_token: string | undefined, command: CreateOfferCmd): Observable<number>;
+    create(x_hotel_token: string | undefined, command: CreateOfferCmd): Observable<CreateOfferResponse>;
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getOffer(id: number, x_hotel_token: string | undefined): Observable<OfferDto>;
+    getOffer(offerID: number, x_hotel_token: string | undefined): Observable<OfferDto>;
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    update(id: number, x_hotel_token: string | undefined, command: UpdateOfferCmd): Observable<FileResponse>;
+    update(offerID: number, x_hotel_token: string | undefined, command: UpdateOfferCmd): Observable<FileResponse>;
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse>;
-    /**
-     * @param roomId (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
-     */
-    addRoom(offerId: number, roomId: number | undefined, x_hotel_token: string | undefined): Observable<FileResponse>;
+    delete(offerID: number, x_hotel_token: string | undefined): Observable<FileResponse>;
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    deleteRoom(offerId: number, roomId: number, x_hotel_token: string | undefined): Observable<FileResponse>;
+    deleteRoom(offerID: number, roomID: number, x_hotel_token: string | undefined): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -507,15 +560,18 @@ export class OfferClient implements IOfferClient {
     }
 
     /**
+     * @param roomNumber (optional) 
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    rooms(id: number, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfRoomDto> {
-        let url_ = this.baseUrl + "/api/Offer/{id}/rooms?";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    rooms(offerId: number, roomNumber: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<RoomDto[]> {
+        let url_ = this.baseUrl + "/api/offers/{offerID}/rooms?";
+        if (offerId === undefined || offerId === null)
+            throw new Error("The parameter 'offerId' must be defined.");
+        url_ = url_.replace("{offerId}", encodeURIComponent("" + offerId));
+        if (roomNumber !== undefined && roomNumber !== null)
+            url_ += "RoomNumber=" + encodeURIComponent("" + roomNumber) + "&";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -542,14 +598,14 @@ export class OfferClient implements IOfferClient {
                 try {
                     return this.processRooms(<any>response_);
                 } catch (e) {
-                    return <Observable<PaginatedListOfRoomDto>><any>_observableThrow(e);
+                    return <Observable<RoomDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PaginatedListOfRoomDto>><any>_observableThrow(response_);
+                return <Observable<RoomDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processRooms(response: HttpResponseBase): Observable<PaginatedListOfRoomDto> {
+    protected processRooms(response: HttpResponseBase): Observable<RoomDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -560,7 +616,11 @@ export class OfferClient implements IOfferClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedListOfRoomDto.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(RoomDto.fromJS(item));
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -568,17 +628,76 @@ export class OfferClient implements IOfferClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PaginatedListOfRoomDto>(<any>null);
+        return _observableOf<RoomDto[]>(<any>null);
     }
 
     /**
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param isActive (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getOffersWithPagination(pageNumber: number | undefined, pageSize: number | undefined, isActive: boolean | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfOfferDto> {
-        let url_ = this.baseUrl + "/api/Offer?";
+    addRoom(offerID: number, x_hotel_token: string | undefined, roomID: number): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/offers/{offerID}/rooms";
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(roomID);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddRoom(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddRoom(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddRoom(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+
+    /**
+     * @param isActive (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param x_hotel_token (optional) hotel authorization token
+     */
+    getOffersWithPagination(isActive: boolean | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<OfferDto[]> {
+        let url_ = this.baseUrl + "/api/offers?";
+        if (isActive !== undefined && isActive !== null)
+            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -587,8 +706,6 @@ export class OfferClient implements IOfferClient {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (isActive !== undefined && isActive !== null)
-            url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -607,14 +724,14 @@ export class OfferClient implements IOfferClient {
                 try {
                     return this.processGetOffersWithPagination(<any>response_);
                 } catch (e) {
-                    return <Observable<PaginatedListOfOfferDto>><any>_observableThrow(e);
+                    return <Observable<OfferDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PaginatedListOfOfferDto>><any>_observableThrow(response_);
+                return <Observable<OfferDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetOffersWithPagination(response: HttpResponseBase): Observable<PaginatedListOfOfferDto> {
+    protected processGetOffersWithPagination(response: HttpResponseBase): Observable<OfferDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -625,7 +742,11 @@ export class OfferClient implements IOfferClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedListOfOfferDto.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(OfferDto.fromJS(item));
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -633,14 +754,14 @@ export class OfferClient implements IOfferClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PaginatedListOfOfferDto>(<any>null);
+        return _observableOf<OfferDto[]>(<any>null);
     }
 
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    create(x_hotel_token: string | undefined, command: CreateOfferCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api/Offer";
+    create(x_hotel_token: string | undefined, command: CreateOfferCmd): Observable<CreateOfferResponse> {
+        let url_ = this.baseUrl + "/api/offers";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -663,14 +784,14 @@ export class OfferClient implements IOfferClient {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<number>><any>_observableThrow(e);
+                    return <Observable<CreateOfferResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<number>><any>_observableThrow(response_);
+                return <Observable<CreateOfferResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<number> {
+    protected processCreate(response: HttpResponseBase): Observable<CreateOfferResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -681,7 +802,7 @@ export class OfferClient implements IOfferClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            result200 = CreateOfferResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -689,17 +810,17 @@ export class OfferClient implements IOfferClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<number>(<any>null);
+        return _observableOf<CreateOfferResponse>(<any>null);
     }
 
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getOffer(id: number, x_hotel_token: string | undefined): Observable<OfferDto> {
-        let url_ = this.baseUrl + "/api/Offer/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    getOffer(offerID: number, x_hotel_token: string | undefined): Observable<OfferDto> {
+        let url_ = this.baseUrl + "/api/offers/{offerID}";
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -750,11 +871,11 @@ export class OfferClient implements IOfferClient {
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    update(id: number, x_hotel_token: string | undefined, command: UpdateOfferCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Offer/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    update(offerID: number, x_hotel_token: string | undefined, command: UpdateOfferCmd): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/offers/{offerID}";
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -770,7 +891,7 @@ export class OfferClient implements IOfferClient {
             })
         };
 
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
             return this.processUpdate(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
@@ -807,11 +928,11 @@ export class OfferClient implements IOfferClient {
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Offer/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+    delete(offerID: number, x_hotel_token: string | undefined): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/offers/{offerID}";
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -858,74 +979,16 @@ export class OfferClient implements IOfferClient {
     }
 
     /**
-     * @param roomId (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    addRoom(offerId: number, roomId: number | undefined, x_hotel_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Offer/{offerId}/rooms?";
-        if (offerId === undefined || offerId === null)
-            throw new Error("The parameter 'offerId' must be defined.");
-        url_ = url_.replace("{offerId}", encodeURIComponent("" + offerId));
-        if (roomId === null)
-            throw new Error("The parameter 'roomId' cannot be null.");
-        else if (roomId !== undefined)
-            url_ += "roomId=" + encodeURIComponent("" + roomId) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddRoom(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddRoom(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processAddRoom(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(<any>null);
-    }
-
-    /**
-     * @param x_hotel_token (optional) hotel authorization token
-     */
-    deleteRoom(offerId: number, roomId: number, x_hotel_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/Offer/{offerId}/rooms/{roomId}";
-        if (offerId === undefined || offerId === null)
-            throw new Error("The parameter 'offerId' must be defined.");
-        url_ = url_.replace("{offerId}", encodeURIComponent("" + offerId));
-        if (roomId === undefined || roomId === null)
-            throw new Error("The parameter 'roomId' must be defined.");
-        url_ = url_.replace("{roomId}", encodeURIComponent("" + roomId));
+    deleteRoom(offerID: number, roomID: number, x_hotel_token: string | undefined): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/offers/{offerID}/rooms/{roomID}";
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
+        if (roomID === undefined || roomID === null)
+            throw new Error("The parameter 'roomID' must be defined.");
+        url_ = url_.replace("{roomID}", encodeURIComponent("" + roomID));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1045,99 +1108,6 @@ export class ReservationClient implements IReservationClient {
             }));
         }
         return _observableOf<number>(<any>null);
-    }
-}
-
-export interface IReservationsClient {
-    /**
-     * @param page_num (optional) 
-     * @param page_siz (optional) 
-     * @param roomID (optional) 
-     * @param currentOnly (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
-     */
-    getReservationsWithPagination(page_num: number | undefined, page_siz: number | undefined, roomID: number | null | undefined, currentOnly: boolean | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfReservationDto>;
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class ReservationsClient implements IReservationsClient {
-    private http: HttpClient;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
-        this.http = http;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
-
-    /**
-     * @param page_num (optional) 
-     * @param page_siz (optional) 
-     * @param roomID (optional) 
-     * @param currentOnly (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
-     */
-    getReservationsWithPagination(page_num: number | undefined, page_siz: number | undefined, roomID: number | null | undefined, currentOnly: boolean | null | undefined, x_hotel_token: string | undefined): Observable<PaginatedListOfReservationDto> {
-        let url_ = this.baseUrl + "/api/reservations?";
-        if (page_num === null)
-            throw new Error("The parameter 'page_num' cannot be null.");
-        else if (page_num !== undefined)
-            url_ += "page_num=" + encodeURIComponent("" + page_num) + "&";
-        if (page_siz === null)
-            throw new Error("The parameter 'page_siz' cannot be null.");
-        else if (page_siz !== undefined)
-            url_ += "page_siz=" + encodeURIComponent("" + page_siz) + "&";
-        if (roomID !== undefined && roomID !== null)
-            url_ += "roomID=" + encodeURIComponent("" + roomID) + "&";
-        if (currentOnly !== undefined && currentOnly !== null)
-            url_ += "currentOnly=" + encodeURIComponent("" + currentOnly) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetReservationsWithPagination(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetReservationsWithPagination(<any>response_);
-                } catch (e) {
-                    return <Observable<PaginatedListOfReservationDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<PaginatedListOfReservationDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetReservationsWithPagination(response: HttpResponseBase): Observable<PaginatedListOfReservationDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedListOfReservationDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<PaginatedListOfReservationDto>(<any>null);
     }
 }
 
@@ -1576,12 +1546,76 @@ export interface ICreateHotelCmd {
     password?: string | undefined;
 }
 
-export class UpdateHotelCmd implements IUpdateHotelCmd {
-    id?: number;
-    name?: string | undefined;
-    description?: string | undefined;
+export class HotelDto implements IHotelDto {
+    hotelName?: string | undefined;
+    hotelDesc?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
+    hotelPictures?: string[] | undefined;
+
+    constructor(data?: IHotelDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hotelName = _data["hotelName"];
+            this.hotelDesc = _data["hotelDesc"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+            this.hotelPreviewPicture = _data["hotelPreviewPicture"];
+            if (Array.isArray(_data["hotelPictures"])) {
+                this.hotelPictures = [] as any;
+                for (let item of _data["hotelPictures"])
+                    this.hotelPictures!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): HotelDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new HotelDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotelName"] = this.hotelName;
+        data["hotelDesc"] = this.hotelDesc;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        data["hotelPreviewPicture"] = this.hotelPreviewPicture;
+        if (Array.isArray(this.hotelPictures)) {
+            data["hotelPictures"] = [];
+            for (let item of this.hotelPictures)
+                data["hotelPictures"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IHotelDto {
+    hotelName?: string | undefined;
+    hotelDesc?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
+    hotelPictures?: string[] | undefined;
+}
+
+export class UpdateHotelCmd implements IUpdateHotelCmd {
+    id?: number;
+    hotelName?: string | undefined;
+    hotelDesc?: string | undefined;
+    hotelPreviewPicture?: File | undefined;
+    hotelPictures?: File[] | undefined;
 
     constructor(data?: IUpdateHotelCmd) {
         if (data) {
@@ -1595,10 +1629,14 @@ export class UpdateHotelCmd implements IUpdateHotelCmd {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.city = _data["city"];
-            this.country = _data["country"];
+            this.hotelName = _data["hotelName"];
+            this.hotelDesc = _data["hotelDesc"];
+            this.hotelPreviewPicture = _data["hotelPreviewPicture"] ? File.fromJS(_data["hotelPreviewPicture"]) : <any>undefined;
+            if (Array.isArray(_data["hotelPictures"])) {
+                this.hotelPictures = [] as any;
+                for (let item of _data["hotelPictures"])
+                    this.hotelPictures!.push(File.fromJS(item));
+            }
         }
     }
 
@@ -1612,25 +1650,640 @@ export class UpdateHotelCmd implements IUpdateHotelCmd {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["city"] = this.city;
-        data["country"] = this.country;
+        data["hotelName"] = this.hotelName;
+        data["hotelDesc"] = this.hotelDesc;
+        data["hotelPreviewPicture"] = this.hotelPreviewPicture ? this.hotelPreviewPicture.toJSON() : <any>undefined;
+        if (Array.isArray(this.hotelPictures)) {
+            data["hotelPictures"] = [];
+            for (let item of this.hotelPictures)
+                data["hotelPictures"].push(item.toJSON());
+        }
         return data; 
     }
 }
 
 export interface IUpdateHotelCmd {
     id?: number;
+    hotelName?: string | undefined;
+    hotelDesc?: string | undefined;
+    hotelPreviewPicture?: File | undefined;
+    hotelPictures?: File[] | undefined;
+}
+
+export abstract class AuditableEntity implements IAuditableEntity {
+    created?: Date;
+    createdBy?: string | undefined;
+    lastModified?: Date | undefined;
+    lastModifiedBy?: string | undefined;
+
+    constructor(data?: IAuditableEntity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.created = _data["created"] ? new Date(_data["created"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            this.lastModified = _data["lastModified"] ? new Date(_data["lastModified"].toString()) : <any>undefined;
+            this.lastModifiedBy = _data["lastModifiedBy"];
+        }
+    }
+
+    static fromJS(data: any): AuditableEntity {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'AuditableEntity' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["created"] = this.created ? this.created.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        data["lastModified"] = this.lastModified ? this.lastModified.toISOString() : <any>undefined;
+        data["lastModifiedBy"] = this.lastModifiedBy;
+        return data; 
+    }
+}
+
+export interface IAuditableEntity {
+    created?: Date;
+    createdBy?: string | undefined;
+    lastModified?: Date | undefined;
+    lastModifiedBy?: string | undefined;
+}
+
+export class File extends AuditableEntity implements IFile {
+    hotel?: Hotel | undefined;
+    offer?: Offer | undefined;
+    fileId?: number;
+    name?: string | undefined;
+    data?: string | undefined;
+    description?: string | undefined;
+    hotelId?: number | undefined;
+    offerId?: number | undefined;
+
+    constructor(data?: IFile) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.hotel = _data["hotel"] ? Hotel.fromJS(_data["hotel"]) : <any>undefined;
+            this.offer = _data["offer"] ? Offer.fromJS(_data["offer"]) : <any>undefined;
+            this.fileId = _data["fileId"];
+            this.name = _data["name"];
+            this.data = _data["data"];
+            this.description = _data["description"];
+            this.hotelId = _data["hotelId"];
+            this.offerId = _data["offerId"];
+        }
+    }
+
+    static fromJS(data: any): File {
+        data = typeof data === 'object' ? data : {};
+        let result = new File();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotel"] = this.hotel ? this.hotel.toJSON() : <any>undefined;
+        data["offer"] = this.offer ? this.offer.toJSON() : <any>undefined;
+        data["fileId"] = this.fileId;
+        data["name"] = this.name;
+        data["data"] = this.data;
+        data["description"] = this.description;
+        data["hotelId"] = this.hotelId;
+        data["offerId"] = this.offerId;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IFile extends IAuditableEntity {
+    hotel?: Hotel | undefined;
+    offer?: Offer | undefined;
+    fileId?: number;
+    name?: string | undefined;
+    data?: string | undefined;
+    description?: string | undefined;
+    hotelId?: number | undefined;
+    offerId?: number | undefined;
+}
+
+export class Hotel extends AuditableEntity implements IHotel {
+    hotelId?: number;
     name?: string | undefined;
     description?: string | undefined;
     city?: string | undefined;
     country?: string | undefined;
+    accessToken?: string | undefined;
+    password?: string | undefined;
+    hotelPreviewPictureId?: number | undefined;
+    hotelPreviewPicture?: File | undefined;
+    pictures?: File[] | undefined;
+    offers?: Offer[] | undefined;
+    rooms?: Room[] | undefined;
+
+    constructor(data?: IHotel) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.hotelId = _data["hotelId"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+            this.accessToken = _data["accessToken"];
+            this.password = _data["password"];
+            this.hotelPreviewPictureId = _data["hotelPreviewPictureId"];
+            this.hotelPreviewPicture = _data["hotelPreviewPicture"] ? File.fromJS(_data["hotelPreviewPicture"]) : <any>undefined;
+            if (Array.isArray(_data["pictures"])) {
+                this.pictures = [] as any;
+                for (let item of _data["pictures"])
+                    this.pictures!.push(File.fromJS(item));
+            }
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+            if (Array.isArray(_data["rooms"])) {
+                this.rooms = [] as any;
+                for (let item of _data["rooms"])
+                    this.rooms!.push(Room.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Hotel {
+        data = typeof data === 'object' ? data : {};
+        let result = new Hotel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotelId"] = this.hotelId;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        data["accessToken"] = this.accessToken;
+        data["password"] = this.password;
+        data["hotelPreviewPictureId"] = this.hotelPreviewPictureId;
+        data["hotelPreviewPicture"] = this.hotelPreviewPicture ? this.hotelPreviewPicture.toJSON() : <any>undefined;
+        if (Array.isArray(this.pictures)) {
+            data["pictures"] = [];
+            for (let item of this.pictures)
+                data["pictures"].push(item.toJSON());
+        }
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        if (Array.isArray(this.rooms)) {
+            data["rooms"] = [];
+            for (let item of this.rooms)
+                data["rooms"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IHotel extends IAuditableEntity {
+    hotelId?: number;
+    name?: string | undefined;
+    description?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    accessToken?: string | undefined;
+    password?: string | undefined;
+    hotelPreviewPictureId?: number | undefined;
+    hotelPreviewPicture?: File | undefined;
+    pictures?: File[] | undefined;
+    offers?: Offer[] | undefined;
+    rooms?: Room[] | undefined;
+}
+
+export class Offer extends AuditableEntity implements IOffer {
+    offerId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
+    isActive?: boolean | undefined;
+    isDeleted?: boolean | undefined;
+    costPerChild?: number;
+    costPerAdult?: number;
+    maxGuests?: number;
+    offerPreviewPictureId?: number | undefined;
+    offerPreviewPicture?: File | undefined;
+    pictures?: File[] | undefined;
+    hotelId?: number;
+    hotel?: Hotel | undefined;
+    rooms?: Room[] | undefined;
+    reservations?: Reservation[] | undefined;
+    reviews?: Review[] | undefined;
+
+    constructor(data?: IOffer) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.offerId = _data["offerId"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+            this.isActive = _data["isActive"];
+            this.isDeleted = _data["isDeleted"];
+            this.costPerChild = _data["costPerChild"];
+            this.costPerAdult = _data["costPerAdult"];
+            this.maxGuests = _data["maxGuests"];
+            this.offerPreviewPictureId = _data["offerPreviewPictureId"];
+            this.offerPreviewPicture = _data["offerPreviewPicture"] ? File.fromJS(_data["offerPreviewPicture"]) : <any>undefined;
+            if (Array.isArray(_data["pictures"])) {
+                this.pictures = [] as any;
+                for (let item of _data["pictures"])
+                    this.pictures!.push(File.fromJS(item));
+            }
+            this.hotelId = _data["hotelId"];
+            this.hotel = _data["hotel"] ? Hotel.fromJS(_data["hotel"]) : <any>undefined;
+            if (Array.isArray(_data["rooms"])) {
+                this.rooms = [] as any;
+                for (let item of _data["rooms"])
+                    this.rooms!.push(Room.fromJS(item));
+            }
+            if (Array.isArray(_data["reservations"])) {
+                this.reservations = [] as any;
+                for (let item of _data["reservations"])
+                    this.reservations!.push(Reservation.fromJS(item));
+            }
+            if (Array.isArray(_data["reviews"])) {
+                this.reviews = [] as any;
+                for (let item of _data["reviews"])
+                    this.reviews!.push(Review.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Offer {
+        data = typeof data === 'object' ? data : {};
+        let result = new Offer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["offerId"] = this.offerId;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        data["isActive"] = this.isActive;
+        data["isDeleted"] = this.isDeleted;
+        data["costPerChild"] = this.costPerChild;
+        data["costPerAdult"] = this.costPerAdult;
+        data["maxGuests"] = this.maxGuests;
+        data["offerPreviewPictureId"] = this.offerPreviewPictureId;
+        data["offerPreviewPicture"] = this.offerPreviewPicture ? this.offerPreviewPicture.toJSON() : <any>undefined;
+        if (Array.isArray(this.pictures)) {
+            data["pictures"] = [];
+            for (let item of this.pictures)
+                data["pictures"].push(item.toJSON());
+        }
+        data["hotelId"] = this.hotelId;
+        data["hotel"] = this.hotel ? this.hotel.toJSON() : <any>undefined;
+        if (Array.isArray(this.rooms)) {
+            data["rooms"] = [];
+            for (let item of this.rooms)
+                data["rooms"].push(item.toJSON());
+        }
+        if (Array.isArray(this.reservations)) {
+            data["reservations"] = [];
+            for (let item of this.reservations)
+                data["reservations"].push(item.toJSON());
+        }
+        if (Array.isArray(this.reviews)) {
+            data["reviews"] = [];
+            for (let item of this.reviews)
+                data["reviews"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IOffer extends IAuditableEntity {
+    offerId?: number;
+    title?: string | undefined;
+    description?: string | undefined;
+    isActive?: boolean | undefined;
+    isDeleted?: boolean | undefined;
+    costPerChild?: number;
+    costPerAdult?: number;
+    maxGuests?: number;
+    offerPreviewPictureId?: number | undefined;
+    offerPreviewPicture?: File | undefined;
+    pictures?: File[] | undefined;
+    hotelId?: number;
+    hotel?: Hotel | undefined;
+    rooms?: Room[] | undefined;
+    reservations?: Reservation[] | undefined;
+    reviews?: Review[] | undefined;
+}
+
+export class Room implements IRoom {
+    roomId?: number;
+    hotelRoomNumber?: string | undefined;
+    hotelId?: number;
+    hotel?: Hotel | undefined;
+    offers?: Offer[] | undefined;
+    reservations?: Reservation[] | undefined;
+
+    constructor(data?: IRoom) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roomId = _data["roomId"];
+            this.hotelRoomNumber = _data["hotelRoomNumber"];
+            this.hotelId = _data["hotelId"];
+            this.hotel = _data["hotel"] ? Hotel.fromJS(_data["hotel"]) : <any>undefined;
+            if (Array.isArray(_data["offers"])) {
+                this.offers = [] as any;
+                for (let item of _data["offers"])
+                    this.offers!.push(Offer.fromJS(item));
+            }
+            if (Array.isArray(_data["reservations"])) {
+                this.reservations = [] as any;
+                for (let item of _data["reservations"])
+                    this.reservations!.push(Reservation.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Room {
+        data = typeof data === 'object' ? data : {};
+        let result = new Room();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roomId"] = this.roomId;
+        data["hotelRoomNumber"] = this.hotelRoomNumber;
+        data["hotelId"] = this.hotelId;
+        data["hotel"] = this.hotel ? this.hotel.toJSON() : <any>undefined;
+        if (Array.isArray(this.offers)) {
+            data["offers"] = [];
+            for (let item of this.offers)
+                data["offers"].push(item.toJSON());
+        }
+        if (Array.isArray(this.reservations)) {
+            data["reservations"] = [];
+            for (let item of this.reservations)
+                data["reservations"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface IRoom {
+    roomId?: number;
+    hotelRoomNumber?: string | undefined;
+    hotelId?: number;
+    hotel?: Hotel | undefined;
+    offers?: Offer[] | undefined;
+    reservations?: Reservation[] | undefined;
+}
+
+export class Reservation extends AuditableEntity implements IReservation {
+    reservationId?: number;
+    fromTime?: Date;
+    toTime?: Date;
+    childrenCount?: number;
+    adultsCount?: number;
+    roomId?: number | undefined;
+    room?: Room | undefined;
+    clientId?: number;
+    client?: Client | undefined;
+    offerId?: number;
+    offer?: Offer | undefined;
+
+    constructor(data?: IReservation) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.reservationId = _data["reservationId"];
+            this.fromTime = _data["fromTime"] ? new Date(_data["fromTime"].toString()) : <any>undefined;
+            this.toTime = _data["toTime"] ? new Date(_data["toTime"].toString()) : <any>undefined;
+            this.childrenCount = _data["childrenCount"];
+            this.adultsCount = _data["adultsCount"];
+            this.roomId = _data["roomId"];
+            this.room = _data["room"] ? Room.fromJS(_data["room"]) : <any>undefined;
+            this.clientId = _data["clientId"];
+            this.client = _data["client"] ? Client.fromJS(_data["client"]) : <any>undefined;
+            this.offerId = _data["offerId"];
+            this.offer = _data["offer"] ? Offer.fromJS(_data["offer"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Reservation {
+        data = typeof data === 'object' ? data : {};
+        let result = new Reservation();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["reservationId"] = this.reservationId;
+        data["fromTime"] = this.fromTime ? this.fromTime.toISOString() : <any>undefined;
+        data["toTime"] = this.toTime ? this.toTime.toISOString() : <any>undefined;
+        data["childrenCount"] = this.childrenCount;
+        data["adultsCount"] = this.adultsCount;
+        data["roomId"] = this.roomId;
+        data["room"] = this.room ? this.room.toJSON() : <any>undefined;
+        data["clientId"] = this.clientId;
+        data["client"] = this.client ? this.client.toJSON() : <any>undefined;
+        data["offerId"] = this.offerId;
+        data["offer"] = this.offer ? this.offer.toJSON() : <any>undefined;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IReservation extends IAuditableEntity {
+    reservationId?: number;
+    fromTime?: Date;
+    toTime?: Date;
+    childrenCount?: number;
+    adultsCount?: number;
+    roomId?: number | undefined;
+    room?: Room | undefined;
+    clientId?: number;
+    client?: Client | undefined;
+    offerId?: number;
+    offer?: Offer | undefined;
+}
+
+export class Client extends AuditableEntity implements IClient {
+    clientId?: number;
+    name?: string | undefined;
+    surname?: string | undefined;
+    username?: string | undefined;
+    email?: string | undefined;
+    reservations?: Reservation[] | undefined;
+    reviews?: Review[] | undefined;
+
+    constructor(data?: IClient) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.clientId = _data["clientId"];
+            this.name = _data["name"];
+            this.surname = _data["surname"];
+            this.username = _data["username"];
+            this.email = _data["email"];
+            if (Array.isArray(_data["reservations"])) {
+                this.reservations = [] as any;
+                for (let item of _data["reservations"])
+                    this.reservations!.push(Reservation.fromJS(item));
+            }
+            if (Array.isArray(_data["reviews"])) {
+                this.reviews = [] as any;
+                for (let item of _data["reviews"])
+                    this.reviews!.push(Review.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): Client {
+        data = typeof data === 'object' ? data : {};
+        let result = new Client();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["clientId"] = this.clientId;
+        data["name"] = this.name;
+        data["surname"] = this.surname;
+        data["username"] = this.username;
+        data["email"] = this.email;
+        if (Array.isArray(this.reservations)) {
+            data["reservations"] = [];
+            for (let item of this.reservations)
+                data["reservations"].push(item.toJSON());
+        }
+        if (Array.isArray(this.reviews)) {
+            data["reviews"] = [];
+            for (let item of this.reviews)
+                data["reviews"].push(item.toJSON());
+        }
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IClient extends IAuditableEntity {
+    clientId?: number;
+    name?: string | undefined;
+    surname?: string | undefined;
+    username?: string | undefined;
+    email?: string | undefined;
+    reservations?: Reservation[] | undefined;
+    reviews?: Review[] | undefined;
+}
+
+export class Review implements IReview {
+    reviewId?: number;
+    content?: string | undefined;
+    rating?: number;
+    clientId?: number;
+    client?: Client | undefined;
+    offerId?: number;
+    offer?: Offer | undefined;
+
+    constructor(data?: IReview) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.reviewId = _data["reviewId"];
+            this.content = _data["content"];
+            this.rating = _data["rating"];
+            this.clientId = _data["clientId"];
+            this.client = _data["client"] ? Client.fromJS(_data["client"]) : <any>undefined;
+            this.offerId = _data["offerId"];
+            this.offer = _data["offer"] ? Offer.fromJS(_data["offer"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Review {
+        data = typeof data === 'object' ? data : {};
+        let result = new Review();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["reviewId"] = this.reviewId;
+        data["content"] = this.content;
+        data["rating"] = this.rating;
+        data["clientId"] = this.clientId;
+        data["client"] = this.client ? this.client.toJSON() : <any>undefined;
+        data["offerId"] = this.offerId;
+        data["offer"] = this.offer ? this.offer.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IReview {
+    reviewId?: number;
+    content?: string | undefined;
+    rating?: number;
+    clientId?: number;
+    client?: Client | undefined;
+    offerId?: number;
+    offer?: Offer | undefined;
 }
 
 export class OfferDto implements IOfferDto {
-    offerId?: number;
-    title?: string | undefined;
+    offerID?: number;
+    offerTitle?: string | undefined;
     description?: string | undefined;
     isActive?: boolean;
     isDeleted?: boolean;
@@ -1651,8 +2304,8 @@ export class OfferDto implements IOfferDto {
 
     init(_data?: any) {
         if (_data) {
-            this.offerId = _data["offerId"];
-            this.title = _data["title"];
+            this.offerID = _data["offerID"];
+            this.offerTitle = _data["offerTitle"];
             this.description = _data["description"];
             this.isActive = _data["isActive"];
             this.isDeleted = _data["isDeleted"];
@@ -1677,8 +2330,8 @@ export class OfferDto implements IOfferDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["offerId"] = this.offerId;
-        data["title"] = this.title;
+        data["offerID"] = this.offerID;
+        data["offerTitle"] = this.offerTitle;
         data["description"] = this.description;
         data["isActive"] = this.isActive;
         data["isDeleted"] = this.isDeleted;
@@ -1696,8 +2349,8 @@ export class OfferDto implements IOfferDto {
 }
 
 export interface IOfferDto {
-    offerId?: number;
-    title?: string | undefined;
+    offerID?: number;
+    offerTitle?: string | undefined;
     description?: string | undefined;
     isActive?: boolean;
     isDeleted?: boolean;
@@ -1706,6 +2359,322 @@ export interface IOfferDto {
     maxGuests?: number;
     offerPreviewPicture?: string | undefined;
     pictures?: string[] | undefined;
+}
+
+export class RoomDto implements IRoomDto {
+    roomId?: number;
+    hotelRoomNumber?: string | undefined;
+    offerID?: number[] | undefined;
+
+    constructor(data?: IRoomDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roomId = _data["roomId"];
+            this.hotelRoomNumber = _data["hotelRoomNumber"];
+            if (Array.isArray(_data["offerID"])) {
+                this.offerID = [] as any;
+                for (let item of _data["offerID"])
+                    this.offerID!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): RoomDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoomDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roomId"] = this.roomId;
+        data["hotelRoomNumber"] = this.hotelRoomNumber;
+        if (Array.isArray(this.offerID)) {
+            data["offerID"] = [];
+            for (let item of this.offerID)
+                data["offerID"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IRoomDto {
+    roomId?: number;
+    hotelRoomNumber?: string | undefined;
+    offerID?: number[] | undefined;
+}
+
+export class CreateOfferResponse implements ICreateOfferResponse {
+    offerID?: number;
+    error?: string | undefined;
+
+    constructor(data?: ICreateOfferResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.offerID = _data["offerID"];
+            this.error = _data["error"];
+        }
+    }
+
+    static fromJS(data: any): CreateOfferResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOfferResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["offerID"] = this.offerID;
+        data["error"] = this.error;
+        return data; 
+    }
+}
+
+export interface ICreateOfferResponse {
+    offerID?: number;
+    error?: string | undefined;
+}
+
+export class CreateOfferCmd implements ICreateOfferCmd {
+    hotelId?: number;
+    offerTitle?: string | undefined;
+    description?: string | undefined;
+    offerPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
+    isActive?: boolean;
+    isDeleted?: boolean;
+    costPerChild?: number;
+    costPerAdult?: number;
+    maxGuests?: number;
+
+    constructor(data?: ICreateOfferCmd) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hotelId = _data["hotelId"];
+            this.offerTitle = _data["offerTitle"];
+            this.description = _data["description"];
+            this.offerPreviewPicture = _data["offerPreviewPicture"];
+            if (Array.isArray(_data["pictures"])) {
+                this.pictures = [] as any;
+                for (let item of _data["pictures"])
+                    this.pictures!.push(item);
+            }
+            this.isActive = _data["isActive"];
+            this.isDeleted = _data["isDeleted"];
+            this.costPerChild = _data["costPerChild"];
+            this.costPerAdult = _data["costPerAdult"];
+            this.maxGuests = _data["maxGuests"];
+        }
+    }
+
+    static fromJS(data: any): CreateOfferCmd {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOfferCmd();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotelId"] = this.hotelId;
+        data["offerTitle"] = this.offerTitle;
+        data["description"] = this.description;
+        data["offerPreviewPicture"] = this.offerPreviewPicture;
+        if (Array.isArray(this.pictures)) {
+            data["pictures"] = [];
+            for (let item of this.pictures)
+                data["pictures"].push(item);
+        }
+        data["isActive"] = this.isActive;
+        data["isDeleted"] = this.isDeleted;
+        data["costPerChild"] = this.costPerChild;
+        data["costPerAdult"] = this.costPerAdult;
+        data["maxGuests"] = this.maxGuests;
+        return data; 
+    }
+}
+
+export interface ICreateOfferCmd {
+    hotelId?: number;
+    offerTitle?: string | undefined;
+    description?: string | undefined;
+    offerPreviewPicture?: string | undefined;
+    pictures?: string[] | undefined;
+    isActive?: boolean;
+    isDeleted?: boolean;
+    costPerChild?: number;
+    costPerAdult?: number;
+    maxGuests?: number;
+}
+
+export class UpdateOfferCmd implements IUpdateOfferCmd {
+    id?: number;
+    offerTitle?: string | undefined;
+    description?: string | undefined;
+    isActive?: boolean | undefined;
+    isDeleted?: boolean | undefined;
+    costPerChild?: number | undefined;
+    costPerAdult?: number | undefined;
+    maxGuests?: number | undefined;
+    offerPreviewPicture?: string | undefined;
+    offerPictures?: string[] | undefined;
+    hotelId?: number;
+
+    constructor(data?: IUpdateOfferCmd) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.offerTitle = _data["offerTitle"];
+            this.description = _data["description"];
+            this.isActive = _data["isActive"];
+            this.isDeleted = _data["isDeleted"];
+            this.costPerChild = _data["costPerChild"];
+            this.costPerAdult = _data["costPerAdult"];
+            this.maxGuests = _data["maxGuests"];
+            this.offerPreviewPicture = _data["offerPreviewPicture"];
+            if (Array.isArray(_data["offerPictures"])) {
+                this.offerPictures = [] as any;
+                for (let item of _data["offerPictures"])
+                    this.offerPictures!.push(item);
+            }
+            this.hotelId = _data["hotelId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateOfferCmd {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateOfferCmd();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["offerTitle"] = this.offerTitle;
+        data["description"] = this.description;
+        data["isActive"] = this.isActive;
+        data["isDeleted"] = this.isDeleted;
+        data["costPerChild"] = this.costPerChild;
+        data["costPerAdult"] = this.costPerAdult;
+        data["maxGuests"] = this.maxGuests;
+        data["offerPreviewPicture"] = this.offerPreviewPicture;
+        if (Array.isArray(this.offerPictures)) {
+            data["offerPictures"] = [];
+            for (let item of this.offerPictures)
+                data["offerPictures"].push(item);
+        }
+        data["hotelId"] = this.hotelId;
+        return data; 
+    }
+}
+
+export interface IUpdateOfferCmd {
+    id?: number;
+    offerTitle?: string | undefined;
+    description?: string | undefined;
+    isActive?: boolean | undefined;
+    isDeleted?: boolean | undefined;
+    costPerChild?: number | undefined;
+    costPerAdult?: number | undefined;
+    maxGuests?: number | undefined;
+    offerPreviewPicture?: string | undefined;
+    offerPictures?: string[] | undefined;
+    hotelId?: number;
+}
+
+export class CreateReservationCmd implements ICreateReservationCmd {
+    clientId?: number | undefined;
+    hotelId?: number;
+    offerId?: number;
+    from?: Date;
+    to?: Date;
+    numberOfChildren?: number;
+    numberOfAdults?: number;
+
+    constructor(data?: ICreateReservationCmd) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.clientId = _data["clientId"];
+            this.hotelId = _data["hotelId"];
+            this.offerId = _data["offerId"];
+            this.from = _data["from"] ? new Date(_data["from"].toString()) : <any>undefined;
+            this.to = _data["to"] ? new Date(_data["to"].toString()) : <any>undefined;
+            this.numberOfChildren = _data["numberOfChildren"];
+            this.numberOfAdults = _data["numberOfAdults"];
+        }
+    }
+
+    static fromJS(data: any): CreateReservationCmd {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateReservationCmd();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["clientId"] = this.clientId;
+        data["hotelId"] = this.hotelId;
+        data["offerId"] = this.offerId;
+        data["from"] = this.from ? this.from.toISOString() : <any>undefined;
+        data["to"] = this.to ? this.to.toISOString() : <any>undefined;
+        data["numberOfChildren"] = this.numberOfChildren;
+        data["numberOfAdults"] = this.numberOfAdults;
+        return data; 
+    }
+}
+
+export interface ICreateReservationCmd {
+    clientId?: number | undefined;
+    hotelId?: number;
+    offerId?: number;
+    from?: Date;
+    to?: Date;
+    numberOfChildren?: number;
+    numberOfAdults?: number;
 }
 
 export class PaginatedListOfRoomDto implements IPaginatedListOfRoomDto {
@@ -1770,462 +2739,6 @@ export interface IPaginatedListOfRoomDto {
     totalCount?: number;
     hasPreviousPage?: boolean;
     hasNextPage?: boolean;
-}
-
-export class RoomDto implements IRoomDto {
-    roomId?: number;
-    hotelRoomNumber?: string | undefined;
-    offerID?: number[] | undefined;
-
-    constructor(data?: IRoomDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.roomId = _data["roomId"];
-            this.hotelRoomNumber = _data["hotelRoomNumber"];
-            if (Array.isArray(_data["offerID"])) {
-                this.offerID = [] as any;
-                for (let item of _data["offerID"])
-                    this.offerID!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): RoomDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new RoomDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["roomId"] = this.roomId;
-        data["hotelRoomNumber"] = this.hotelRoomNumber;
-        if (Array.isArray(this.offerID)) {
-            data["offerID"] = [];
-            for (let item of this.offerID)
-                data["offerID"].push(item);
-        }
-        return data; 
-    }
-}
-
-export interface IRoomDto {
-    roomId?: number;
-    hotelRoomNumber?: string | undefined;
-    offerID?: number[] | undefined;
-}
-
-export class PaginatedListOfOfferDto implements IPaginatedListOfOfferDto {
-    items?: OfferDto[] | undefined;
-    pageIndex?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-
-    constructor(data?: IPaginatedListOfOfferDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(OfferDto.fromJS(item));
-            }
-            this.pageIndex = _data["pageIndex"];
-            this.totalPages = _data["totalPages"];
-            this.totalCount = _data["totalCount"];
-            this.hasPreviousPage = _data["hasPreviousPage"];
-            this.hasNextPage = _data["hasNextPage"];
-        }
-    }
-
-    static fromJS(data: any): PaginatedListOfOfferDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedListOfOfferDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["pageIndex"] = this.pageIndex;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        return data; 
-    }
-}
-
-export interface IPaginatedListOfOfferDto {
-    items?: OfferDto[] | undefined;
-    pageIndex?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-}
-
-export class CreateOfferCmd implements ICreateOfferCmd {
-    hotelId?: number;
-    title?: string | undefined;
-    description?: string | undefined;
-    offerPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
-    isActive?: boolean;
-    isDeleted?: boolean;
-    costPerChild?: number;
-    costPerAdult?: number;
-    maxGuests?: number;
-
-    constructor(data?: ICreateOfferCmd) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.hotelId = _data["hotelId"];
-            this.title = _data["title"];
-            this.description = _data["description"];
-            this.offerPreviewPicture = _data["offerPreviewPicture"];
-            if (Array.isArray(_data["pictures"])) {
-                this.pictures = [] as any;
-                for (let item of _data["pictures"])
-                    this.pictures!.push(item);
-            }
-            this.isActive = _data["isActive"];
-            this.isDeleted = _data["isDeleted"];
-            this.costPerChild = _data["costPerChild"];
-            this.costPerAdult = _data["costPerAdult"];
-            this.maxGuests = _data["maxGuests"];
-        }
-    }
-
-    static fromJS(data: any): CreateOfferCmd {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateOfferCmd();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["hotelId"] = this.hotelId;
-        data["title"] = this.title;
-        data["description"] = this.description;
-        data["offerPreviewPicture"] = this.offerPreviewPicture;
-        if (Array.isArray(this.pictures)) {
-            data["pictures"] = [];
-            for (let item of this.pictures)
-                data["pictures"].push(item);
-        }
-        data["isActive"] = this.isActive;
-        data["isDeleted"] = this.isDeleted;
-        data["costPerChild"] = this.costPerChild;
-        data["costPerAdult"] = this.costPerAdult;
-        data["maxGuests"] = this.maxGuests;
-        return data; 
-    }
-}
-
-export interface ICreateOfferCmd {
-    hotelId?: number;
-    title?: string | undefined;
-    description?: string | undefined;
-    offerPreviewPicture?: string | undefined;
-    pictures?: string[] | undefined;
-    isActive?: boolean;
-    isDeleted?: boolean;
-    costPerChild?: number;
-    costPerAdult?: number;
-    maxGuests?: number;
-}
-
-export class UpdateOfferCmd implements IUpdateOfferCmd {
-    id?: number;
-    title?: string | undefined;
-    description?: string | undefined;
-    isActive?: boolean | undefined;
-    isDeleted?: boolean | undefined;
-    costPerChild?: number | undefined;
-    costPerAdult?: number | undefined;
-    maxGuests?: number | undefined;
-
-    constructor(data?: IUpdateOfferCmd) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.title = _data["title"];
-            this.description = _data["description"];
-            this.isActive = _data["isActive"];
-            this.isDeleted = _data["isDeleted"];
-            this.costPerChild = _data["costPerChild"];
-            this.costPerAdult = _data["costPerAdult"];
-            this.maxGuests = _data["maxGuests"];
-        }
-    }
-
-    static fromJS(data: any): UpdateOfferCmd {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateOfferCmd();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["title"] = this.title;
-        data["description"] = this.description;
-        data["isActive"] = this.isActive;
-        data["isDeleted"] = this.isDeleted;
-        data["costPerChild"] = this.costPerChild;
-        data["costPerAdult"] = this.costPerAdult;
-        data["maxGuests"] = this.maxGuests;
-        return data; 
-    }
-}
-
-export interface IUpdateOfferCmd {
-    id?: number;
-    title?: string | undefined;
-    description?: string | undefined;
-    isActive?: boolean | undefined;
-    isDeleted?: boolean | undefined;
-    costPerChild?: number | undefined;
-    costPerAdult?: number | undefined;
-    maxGuests?: number | undefined;
-}
-
-export class CreateReservationCmd implements ICreateReservationCmd {
-    clientId?: number | undefined;
-    hotelId?: number;
-    offerId?: number;
-    from?: Date;
-    to?: Date;
-    numberOfChildren?: number;
-    numberOfAdults?: number;
-
-    constructor(data?: ICreateReservationCmd) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.clientId = _data["clientId"];
-            this.hotelId = _data["hotelId"];
-            this.offerId = _data["offerId"];
-            this.from = _data["from"] ? new Date(_data["from"].toString()) : <any>undefined;
-            this.to = _data["to"] ? new Date(_data["to"].toString()) : <any>undefined;
-            this.numberOfChildren = _data["numberOfChildren"];
-            this.numberOfAdults = _data["numberOfAdults"];
-        }
-    }
-
-    static fromJS(data: any): CreateReservationCmd {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateReservationCmd();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["clientId"] = this.clientId;
-        data["hotelId"] = this.hotelId;
-        data["offerId"] = this.offerId;
-        data["from"] = this.from ? this.from.toISOString() : <any>undefined;
-        data["to"] = this.to ? this.to.toISOString() : <any>undefined;
-        data["numberOfChildren"] = this.numberOfChildren;
-        data["numberOfAdults"] = this.numberOfAdults;
-        return data; 
-    }
-}
-
-export interface ICreateReservationCmd {
-    clientId?: number | undefined;
-    hotelId?: number;
-    offerId?: number;
-    from?: Date;
-    to?: Date;
-    numberOfChildren?: number;
-    numberOfAdults?: number;
-}
-
-export class PaginatedListOfReservationDto implements IPaginatedListOfReservationDto {
-    items?: ReservationDto[] | undefined;
-    pageIndex?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-
-    constructor(data?: IPaginatedListOfReservationDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(ReservationDto.fromJS(item));
-            }
-            this.pageIndex = _data["pageIndex"];
-            this.totalPages = _data["totalPages"];
-            this.totalCount = _data["totalCount"];
-            this.hasPreviousPage = _data["hasPreviousPage"];
-            this.hasNextPage = _data["hasNextPage"];
-        }
-    }
-
-    static fromJS(data: any): PaginatedListOfReservationDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedListOfReservationDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["pageIndex"] = this.pageIndex;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        return data; 
-    }
-}
-
-export interface IPaginatedListOfReservationDto {
-    items?: ReservationDto[] | undefined;
-    pageIndex?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-}
-
-export class ReservationDto implements IReservationDto {
-    reservationId?: number;
-    fromTime?: Date;
-    toTime?: Date;
-    childrenCount?: number;
-    adultsCount?: number;
-    roomId?: number | undefined;
-    name?: string | undefined;
-    surname?: string | undefined;
-    username?: string | undefined;
-    email?: string | undefined;
-
-    constructor(data?: IReservationDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.reservationId = _data["reservationId"];
-            this.fromTime = _data["fromTime"] ? new Date(_data["fromTime"].toString()) : <any>undefined;
-            this.toTime = _data["toTime"] ? new Date(_data["toTime"].toString()) : <any>undefined;
-            this.childrenCount = _data["childrenCount"];
-            this.adultsCount = _data["adultsCount"];
-            this.roomId = _data["roomId"];
-            this.name = _data["name"];
-            this.surname = _data["surname"];
-            this.username = _data["username"];
-            this.email = _data["email"];
-        }
-    }
-
-    static fromJS(data: any): ReservationDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ReservationDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["reservationId"] = this.reservationId;
-        data["fromTime"] = this.fromTime ? this.fromTime.toISOString() : <any>undefined;
-        data["toTime"] = this.toTime ? this.toTime.toISOString() : <any>undefined;
-        data["childrenCount"] = this.childrenCount;
-        data["adultsCount"] = this.adultsCount;
-        data["roomId"] = this.roomId;
-        data["name"] = this.name;
-        data["surname"] = this.surname;
-        data["username"] = this.username;
-        data["email"] = this.email;
-        return data; 
-    }
-}
-
-export interface IReservationDto {
-    reservationId?: number;
-    fromTime?: Date;
-    toTime?: Date;
-    childrenCount?: number;
-    adultsCount?: number;
-    roomId?: number | undefined;
-    name?: string | undefined;
-    surname?: string | undefined;
-    username?: string | undefined;
-    email?: string | undefined;
 }
 
 export class CreateRoomCmd implements ICreateRoomCmd {
