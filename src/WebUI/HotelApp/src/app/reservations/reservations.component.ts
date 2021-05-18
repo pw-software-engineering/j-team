@@ -34,8 +34,8 @@ export class ReservationsComponent implements AfterViewInit {
     reservationsRequest.subscribe({
       next: (value) => {
         console.log(value);
-        this.length = value.totalCount!;
-        this.setData(value.items);
+        this.length = value.length;
+        this.setData(value);
       },
       error: (error) => {
         console.log(error);

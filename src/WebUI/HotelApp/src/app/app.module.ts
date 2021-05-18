@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { ReservationsComponent } from './reservations/reservations.component'; 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent, HOTEL_TOKEN } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,6 +20,7 @@ import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offer-room-dialog/add-offer-room-dialog.component';
 import { environment } from './../environments/environment';
+
 
 export const imports = [
     BrowserModule,
@@ -47,7 +48,8 @@ export const providers = [
     RoomsAddComponent,
     OffersAddEditComponent,
     OfferRoomsListComponent,
-    AddOfferRoomDialogComponent
+    AddOfferRoomDialogComponent,
+    ReservationsComponent,
   ],
   imports: imports,
     providers: providers,
