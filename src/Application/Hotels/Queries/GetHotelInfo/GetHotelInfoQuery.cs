@@ -36,7 +36,7 @@ namespace Application.Hotels.Queries.GetHotelInfo
                 HotelDesc = hotel.Description,
                 HotelName = hotel.Name,
                 HotelPreviewPictureData = hotel.HotelPreviewPicture,
-                PicturesData = hotel.Pictures
+                HotelPicturesData = hotel.Pictures
             };
             return hotelDto;
         }

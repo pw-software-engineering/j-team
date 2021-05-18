@@ -17,8 +17,8 @@ namespace Application.Hotels
         {
             return file.Data;
         }
-        public List<byte[]> HotelPictures => PicturesData?.ConvertAll(new System.Converter<File, byte[]>(FileToBytes));
+        public List<byte[]> HotelPictures => HotelPicturesData?.ConvertAll(new System.Converter<File, byte[]>(FileToBytes));
         [JsonIgnore]
-        public List<File> PicturesData { get; set; }
+        public List<File> HotelPicturesData { get; set; }
     }
 }
