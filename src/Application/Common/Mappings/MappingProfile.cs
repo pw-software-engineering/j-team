@@ -26,6 +26,8 @@ namespace HotelReservationSystem.Application.Common.Mappings
             CreateMap<File, byte[]>()
                 .ConstructUsing(src => src.Data);
             CreateMap<Offer, OfferDto>()
+                .ForMember(dest => dest.OfferID, opt => opt.MapFrom(src => src.OfferId))
+                .ForMember(dest => dest.OfferTitle, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.OfferPreviewPictureData, opt => opt.MapFrom(src => src.OfferPreviewPicture))
                 .ForMember(dest => dest.PicturesData, opt => opt.MapFrom(src => src.Pictures));
             CreateMap<Room, RoomDto>()

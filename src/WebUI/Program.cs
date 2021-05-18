@@ -52,20 +52,9 @@ namespace HotelReservationSystem.WebUI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-               .ConfigureAppConfiguration((hostingContext, configuration) =>
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    configuration.Sources.Clear();
-
-                    IHostEnvironment env = hostingContext.HostingEnvironment;
-
-                    configuration
-                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true);
-
-                    IConfigurationRoot configurationRoot = configuration.Build();
-
-                }).ConfigureWebHostDefaults(webBuilder =>
-                {
+                    webBuilder.ConfigureKestrel(options => options.ListenAnyIP(80));
                     webBuilder.UseStartup<Startup>();
                 });
     }

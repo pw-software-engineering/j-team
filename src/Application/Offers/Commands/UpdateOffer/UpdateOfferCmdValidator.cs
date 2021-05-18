@@ -6,7 +6,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.UpdateOffer
     {
         public UpdateOfferCmdValidator()
         {
-            RuleFor(v => v.Title)
+            RuleFor(v => v.OfferTitle)
                 .MaximumLength(200)
                 .NotEmpty();
         }

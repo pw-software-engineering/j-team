@@ -19,6 +19,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddOfferRoomDialogComponent } from './offers/offers-rooms-list/add-offer-room-dialog/add-offer-room-dialog.component';
+import { environment } from './../environments/environment';
 
 export const imports = [
     BrowserModule,
@@ -34,8 +35,8 @@ export const imports = [
     HttpClientModule,
 ]
 export const providers = [
-      { provide: API_BASE_URL, useValue: 'http://localhost:5000' },
-     {provide: HOTEL_TOKEN, useValue: '$2a$11$M3hY1eNjsXD4PDEuoJGrSOJLLdvfBvTOo3M0SFurlni7GiQVoHMRS'}
+      { provide: API_BASE_URL, useValue: environment.apiUrl },
+     {provide: HOTEL_TOKEN, useValue: '99999999'}
 ]
 
 @NgModule({

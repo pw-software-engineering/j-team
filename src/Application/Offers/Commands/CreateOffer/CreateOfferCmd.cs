@@ -12,7 +12,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
     public class CreateOfferCmd : IRequest<int>
     {
         public int HotelId { get; set; }
-        public string Title { get; set; }
+        public string OfferTitle { get; set; }
         public string Description { get; set; }
         public byte[] OfferPreviewPicture { get; set; }
         public List<byte[]> Pictures { get; set; }
@@ -21,6 +21,11 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
         public double CostPerChild { get; set; }
         public double CostPerAdult { get; set; }
         public uint MaxGuests { get; set; }
+    }
+    public class CreateOfferResponse
+    {
+        public int OfferID { get; set; }
+        public string Error { get; set; }
     }
 
     public class CreateOfferCmdHandler : IRequestHandler<CreateOfferCmd, int>
@@ -45,7 +50,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.CreateOffer
             {
                 HotelId = request.HotelId,
                 Hotel = hotel,
-                Title = request.Title,
+                Title = request.OfferTitle,
                 Description = request.Description,
                 IsActive = request.IsActive,
                 IsDeleted = request.IsDeleted,
