@@ -9,6 +9,7 @@ using Application.Reservations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HotelReservationSystem.Application.Common.Exceptions;
 
 namespace HotelReservationSystem.Application.Rooms.Queries.GetReservationsWithPagination
 {
@@ -38,7 +39,15 @@ namespace HotelReservationSystem.Application.Rooms.Queries.GetReservationsWithPa
 
         public async Task<PaginatedList<ReservationDto>> Handle(GetReservationsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            
+            if (request.RoomID != null)
+            {
+                var reservation = _context.Rooms.FirstOrDefault(x => x.RoomId == request.RoomID);
+                if (reservation.HotelId != request.HotelId)
+                {
+                    throw new ForbiddenAccessException();
+                }
+            }
+
             return await _context.Reservations
                 .OrderBy(x => x.ReservationId)
                  .Where(x => request.RoomID == null || request.RoomID == x.RoomId)

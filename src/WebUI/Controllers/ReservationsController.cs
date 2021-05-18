@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using NSwag.Annotations;
+using System.Collections.Generic;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
@@ -21,20 +22,34 @@ namespace HotelReservationSystem.WebUI.Controllers
     public class ReservationsController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<ReservationDto>>> GetReservationsWithPagination(int page_num, int page_siz, int? roomID, bool? currentOnly)
+        public async Task<ActionResult<List<ReservationDto>>> GetReservationsWithPagination(int page_num, int page_siz, int? roomID, bool? currentOnly)
         {
             var hotelId =  await GetHotelIdFromToken();
-            var result = await Mediator.Send(new GetReservationsWithPaginationQuery {PageNumber=page_num, PageSize=page_siz,
-                HotelId=hotelId,RoomID=roomID,CurrentOnly=currentOnly});
-            if (roomID==null && !result.Items.Any())
+            try
             {
-                return NotFound();
+                var response = await Mediator.Send(new GetReservationsWithPaginationQuery
+                {
+                    PageNumber = page_num,
+                    PageSize = page_siz,
+                    HotelId = hotelId,
+                    RoomID = roomID,
+                    CurrentOnly = currentOnly
+                });
+                if (roomID == null && !response.Items.Any())
+                {
+                    return new StatusCodeResult(404);
+                }
+                return response.Items;
             }
-            foreach(var item in result.Items)
+            catch (NotFoundException)
             {
-                Console.WriteLine(item.AdultsCount + " " + item.RoomId + " " + item.Surname);
+                return new StatusCodeResult(404);
             }
-            return result;
+            catch (ForbiddenAccessException)
+            {
+                return new StatusCodeResult(403);
+            }
+            
         }
 
        
