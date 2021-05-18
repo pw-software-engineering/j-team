@@ -10,13 +10,6 @@ namespace Application.Hotels
         public string HotelName { get; set; }
         public string Description { get; set; }
         public string City { get; set; }
-        public string a
-        {
-            get
-            {
-                return Client?.Name;
-            }
-        }
         public string Country { get; set; }
         public byte[] HotelPreviewPicture => HotelPreviewPictureData?.Data;
         [JsonIgnore]
