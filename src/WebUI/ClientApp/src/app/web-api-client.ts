@@ -512,7 +512,7 @@ export interface IOfferClient {
      * @param pageSize (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    rooms(offerId: number, roomNumber: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<RoomDto[]>;
+    rooms(offerID: number, roomNumber: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<RoomDto[]>;
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
@@ -565,11 +565,11 @@ export class OfferClient implements IOfferClient {
      * @param pageSize (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    rooms(offerId: number, roomNumber: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<RoomDto[]> {
+    rooms(offerID: number, roomNumber: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<RoomDto[]> {
         let url_ = this.baseUrl + "/api/offers/{offerID}/rooms?";
-        if (offerId === undefined || offerId === null)
-            throw new Error("The parameter 'offerId' must be defined.");
-        url_ = url_.replace("{offerId}", encodeURIComponent("" + offerId));
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
         if (roomNumber !== undefined && roomNumber !== null)
             url_ += "RoomNumber=" + encodeURIComponent("" + roomNumber) + "&";
         if (pageNumber === null)

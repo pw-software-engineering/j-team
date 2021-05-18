@@ -376,7 +376,7 @@
         "operationId": "Offer_rooms",
         "parameters": [
           {
-            "name": "offerId",
+            "name": "offerID",
             "in": "path",
             "required": true,
             "schema": {
