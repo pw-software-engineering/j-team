@@ -5,12 +5,12 @@ import { OffersListComponent } from './offers/offers-list/offers-list.component'
 import { RoomsListComponent } from './rooms/rooms-list.component';
 import { OfferRoomsListComponent } from './offers/offers-rooms-list/offers-rooms-list.component';
 import { RoomsAddComponent } from './rooms/rooms-add/rooms-add.component';
-
+import { ReservationsComponent } from './reservations/reservations.component'; 
 
 const routes: Routes = [
   { path: 'offers', component: OffersListComponent },
 
-
+{ path: 'reservations', component: ReservationsComponent },
   { path: 'rooms', component: RoomsListComponent },
   { path: 'rooms/add', component: RoomsAddComponent },
     { path: 'offers/add', component: OffersAddEditComponent },
