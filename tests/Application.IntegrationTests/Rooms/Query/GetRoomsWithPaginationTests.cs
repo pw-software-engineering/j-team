@@ -53,7 +53,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             var result = await SendAsync(new GetRoomsWithPaginationQuery
             {
                 PageNumber = 1,
-                PageSize = 1
+                PageSize = 1,
+                HotelId = hotelId
             });
             result.Should().NotBeNull();
             result.TotalPages.Should().Be(2);
@@ -91,6 +92,7 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Commands
             {
                 PageNumber = 1,
                 PageSize = 1,
+                HotelId = hotelId,
                 RoomNumber = "420"
             });
             result.Should().NotBeNull();
