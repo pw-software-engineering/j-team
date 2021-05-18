@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HotelReservationSystem.Application.Common.Exceptions;
 
-namespace HotelReservationSystem.Application.Rooms.Queries.GetReservationsWithPagination
+namespace HotelReservationSystem.Application.Reservations.Queries.GetReservationsWithPagination
 {
 
     public class GetReservationsWithPaginationQuery : IRequest<PaginatedList<ReservationDto>>
