@@ -25,9 +25,9 @@ namespace HotelReservationSystem.WebUI.Controllers
     public class OfferController : ApiControllerBase
     {
         [HttpGet("{offerID}/rooms")]
-        public async Task<ActionResult<List<RoomDto>>> rooms(int offerId, [FromQuery] RoomsQuery query)
+        public async Task<ActionResult<List<RoomDto>>> rooms(int offerID, [FromQuery] RoomsQuery query)
         {
-            query.OfferId = offerId;
+            query.OfferId = offerID;
             query.HotelId = await GetHotelIdFromToken();
             try
             {

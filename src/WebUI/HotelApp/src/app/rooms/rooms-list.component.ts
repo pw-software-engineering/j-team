@@ -45,12 +45,12 @@ export class RoomsListComponent implements AfterViewInit {
   }
 
   fetchData = () => {
-    const roomsRequest = this.roomClient.getRoomsWithPagination(this.displayedPage + 1, this.pageSize, this.roomfilter, this.token);
+    const roomsRequest = this.roomClient.getRoomsWithPagination(this.roomfilter, this.displayedPage + 1, this.pageSize, this.token);
     roomsRequest.subscribe({
       next: (value) => {
         console.log(value);
-        this.length = value.totalCount!;
-        this.setData(value.items);
+        this.length = value.length!;
+        this.setData(value);
       },
 error: (error) => {
   console.log(error);

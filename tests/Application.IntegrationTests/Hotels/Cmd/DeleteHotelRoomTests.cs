@@ -27,7 +27,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
                {
                    Id = 65,
                    HotelId = 123321
-               })).Should().Throw<ValidationException>();
+               })).Should().Throw<NotFoundException>();
         }
         [Test]
         public async Task ShouldNotDeleteRoomWithReservation()
@@ -56,7 +56,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
             });
             var rooms = await SendAsync(new GetRoomsWithPaginationQuery()
             {
-                RoomNumber = room.HotelRoomNumber
+                RoomNumber = room.HotelRoomNumber,
+                HotelId = room.HotelId
             });
             rooms.Items.Any(x => x.RoomId == room.RoomId).Should().BeFalse();
 
@@ -75,7 +76,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
             });
             var rooms = await SendAsync(new GetRoomsWithPaginationQuery()
             {
-                RoomNumber = room.HotelRoomNumber
+                RoomNumber = room.HotelRoomNumber,
+                HotelId = room.HotelId
             });
             rooms.Items.Any(x => x.RoomId == room.RoomId).Should().BeFalse();
         }

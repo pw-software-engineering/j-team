@@ -9,11 +9,13 @@ using HotelReservationSystem.Application.Rooms.Commands.UpdateRoom;
 using HotelReservationSystem.Application.Rooms.Queries.GetRoomsWithPagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using NSwag.Annotations;
 using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using WebUI;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
@@ -24,32 +26,39 @@ namespace HotelReservationSystem.WebUI.Controllers
     public class RoomController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<RoomDto>>> GetRoomsWithPagination([FromQuery] GetRoomsWithPaginationQuery query)
+        public async Task<ActionResult<List<RoomDto>>> GetRoomsWithPagination([FromQuery] GetRoomsWithPaginationQuery query)
         {
+            query.HotelId = await GetHotelIdFromToken();
             var result = await Mediator.Send(query);
             if (!string.IsNullOrEmpty(query.RoomNumber) && !result.Items.Any())
             {
-                return NotFound();
+                return new StatusCodeResult(404);
             }
-            return result;
+            return result.Items;
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Create(CreateRoomCmd command)
+        public async Task<ActionResult<int>> Create([FromBody] string hotel_room_number)
         {
-            var hotelId = await GetHotelIdFromToken();
-            command.HotelID = hotelId;
+
             try
             {
-                return await Mediator.Send(command);
+                var hotelId = await GetHotelIdFromToken();
+                await Mediator.Send(new CreateRoomCmd
+                {
+                    HotelRoomNumber = hotel_room_number,
+                    HotelID = hotelId
+                });
+                return Ok();
             }
-            catch (ValidationException)
+
+            catch (ForbiddenAccessException)
             {
-                return new StatusCodeResult((int)HttpStatusCode.Conflict);
+                return new StatusCodeResult(401);
             }
-            catch (Exception)
+            catch (ValidationException ex)
             {
-                return new StatusCodeResult((int)HttpStatusCode.BadRequest);
+                return new ApiResponse(ex.Message, 409);
             }
         }
 
@@ -72,13 +81,14 @@ namespace HotelReservationSystem.WebUI.Controllers
                 var result = await Mediator.Send(new DeleteRoomCmd { Id = id, HotelId = hotelId });
                 return Ok();
             }
-            catch (ValidationException)
+            catch (InvalidOperationException ex)
             {
-                return new StatusCodeResult((int)HttpStatusCode.NotFound);
+                var response = new DeleteRoomResponse() { Error = ex.Message };
+                return new ApiResponse<DeleteRoomResponse>(response, 409);
             }
-            catch (Exception)
+            catch (NotFoundException)
             {
-                return new StatusCodeResult((int)HttpStatusCode.BadRequest);
+                return new StatusCodeResult(404);
             }
         }
     }
