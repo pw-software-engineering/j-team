@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CreateOfferCmd, CreateRoomCmd, OfferClient, CreateReservationCmd, RoomClient, ReservationClient } from 'src/app/web-api-client';
+import { CreateOfferCmd, OfferClient, CreateReservationCmd, RoomClient, ReservationClient } from 'src/app/web-api-client';
 import {HttpErrorResponse} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";

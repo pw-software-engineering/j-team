@@ -38,7 +38,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             return await Mediator.Send(command);
         }
-        
+
         [HttpGet("hotelInfo")]
         public async Task<ActionResult<HotelDto>> GetHotelInfo()
         {
@@ -46,8 +46,8 @@ namespace HotelReservationSystem.WebUI.Controllers
             query.hotelId = await GetHotelIdFromToken();
             return await Mediator.Send(query);
         }
-        
-        [HttpPut("hotelInfo")]
+
+        [HttpPatch("hotelInfo")]
         public async Task<ActionResult> Update(UpdateHotelCmd command)
         {
             command.Id = await GetHotelIdFromToken();
@@ -56,7 +56,7 @@ namespace HotelReservationSystem.WebUI.Controllers
 
             return Ok();
         }
-        
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -65,7 +65,7 @@ namespace HotelReservationSystem.WebUI.Controllers
             return NoContent();
         }
 
-        [HttpGet("{id}/offers")]
+        [HttpGet("hotels/{id}/offers")]
         public async Task<ActionResult<List<OfferDto>>> GetFilteredHotelOffersWithPagination(int id, [FromQuery] GetFilteredHotelOffersQuery query)
         {
             query.HotelId = id;

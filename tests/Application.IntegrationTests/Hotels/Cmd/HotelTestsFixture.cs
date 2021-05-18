@@ -23,15 +23,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
             this.context = context;
 
         }
-        private async Task<Room> CreateRoom(string number)
+        private async Task<Room> CreateRoom(string number, int hotelId)
         {
-            var hotelId = await SendAsync(new CreateHotelCmd
-            {
-                Name = "hotel1",
-                City = "city",
-                Country = "country",
-                Password = "hotel1"
-            });
 
             var roomId = await SendAsync(new CreateRoomCmd
             {
@@ -79,7 +72,14 @@ namespace HotelReservationSystem.Application.IntegrationTests
         public async Task<RoomDto> CreateRoom(bool withOffer = false, bool withReservation = false, bool isReplaceableInOffer = true)
         {
             DateTime now = DateTime.Now;
-            var room = await CreateRoom("R01");
+            var hotelId = await SendAsync(new CreateHotelCmd
+            {
+                Name = "hotel1",
+                City = "city",
+                Country = "country",
+                Password = "hotel1"
+            });
+            var room = await CreateRoom("R01", hotelId);
             if (withOffer)
             {
                 var offer = await CreateOffer(room.HotelId);
@@ -91,7 +91,7 @@ namespace HotelReservationSystem.Application.IntegrationTests
                 {
                     var reservation = await CreateReservation(room.RoomId, offer, now.AddDays(-1), now.AddDays(1));
 
-                    var room2 = await CreateRoom("R02");
+                    var room2 = await CreateRoom("R02", hotelId);
 
                     offer.Rooms.Add(room2);
                     await context.SaveChangesAsync(CancellationToken.None);
@@ -111,7 +111,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
             }
             var rooms = await SendAsync(new GetRoomsWithPaginationQuery()
             {
-                RoomNumber = "R01"
+                RoomNumber = "R01",
+                HotelId = hotelId
             });
 
             return rooms.Items.First();

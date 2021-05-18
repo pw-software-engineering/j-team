@@ -14,7 +14,7 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
     public class CreateRoomCmd : IRequest<int>
     {
         public string HotelRoomNumber { get; set; }
-        public int? OfferID { get; set; }
+
         public int HotelID { get; set; }
     }
 
@@ -29,6 +29,17 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
 
         public async Task<int> Handle(CreateRoomCmd request, CancellationToken cancellationToken)
         {
+
+            var rooms = _context.Rooms.Where(x => x.HotelId == request.HotelID);
+
+            foreach (var room_ in rooms)
+            {
+                if (room_.HotelRoomNumber == request.HotelRoomNumber)
+                {
+                    throw new System.InvalidOperationException("Room with given number already exists");
+                }
+            }
+
             var entity = new Room
             {
                 HotelRoomNumber = request.HotelRoomNumber,
@@ -38,13 +49,7 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
             _context.Rooms.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
-            if (request.OfferID.HasValue)
-            {
-                var offer = _context.Offers.Include(x => x.Rooms)
-                .FirstOrDefault(x => x.OfferId == request.OfferID);
-                offer.Rooms.Add(entity);
-                await _context.SaveChangesAsync(cancellationToken);
-            }
+
 
             return entity.RoomId;
         }

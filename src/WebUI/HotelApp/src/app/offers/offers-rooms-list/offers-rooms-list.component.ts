@@ -56,6 +56,7 @@ export class OfferRoomsListComponent implements AfterViewInit {
       this.length = 0;
       return;
     }
+    console.log("offer id " + (+this.offerId))
     const roomsRequest = this.offerClient.rooms(+this.offerId,null, this.displayedPage + 1, this.pageSize, this.hotelToken);
     roomsRequest.subscribe({
       next: (value) => {
@@ -100,12 +101,12 @@ export class OfferRoomsListComponent implements AfterViewInit {
   }
 
   loadAllRooms(): void {
-    this.roomClient.getRoomsWithPagination(1, 100, null, this.hotelToken)
+    this.roomClient.getRoomsWithPagination(null, 1, 100, this.hotelToken)
       .pipe(first())
       .subscribe(data => {
         this.allRooms = [];
-        if(data.items) {
-          data.items.forEach(x => {
+        if(data) {
+          data.forEach(x => {
             if(this.myDataArray.data.find(room => room.roomId == x.roomId) == undefined) {
               this.allRooms.push(x);
             }

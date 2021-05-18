@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HOTEL_TOKEN } from 'src/app/app.component';
 
-import { CreateOfferCmd, CreateRoomCmd, OfferClient, RoomClient } from 'src/app/web-api-client';
+import { CreateOfferCmd, OfferClient, RoomClient } from 'src/app/web-api-client';
 
 @Component({
   selector: 'app-rooms-add',
@@ -39,7 +39,7 @@ export class RoomsAddComponent implements OnInit {
             return;
         }
 
-        const addRequest = this.roomClient.create(this.hotelToken, new CreateRoomCmd(this.form.value));
+        const addRequest = this.roomClient.create(this.hotelToken, this.form.value.hotelRoomNumber);
         addRequest.subscribe({
           next: (value) => {
             console.log(value);

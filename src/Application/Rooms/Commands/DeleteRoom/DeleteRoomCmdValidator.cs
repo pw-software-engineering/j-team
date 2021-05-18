@@ -10,16 +10,6 @@ namespace HotelReservationSystem.Application.Rooms.Commands.DeleteRoom
         {
             RuleFor(v => v.Id)
                 .GreaterThan(0);
-
-            RuleFor(cmd => cmd).Custom((cmd, context) =>
-            {
-                if (!dbContext.Rooms
-                .Where(x => x.HotelId == cmd.HotelId)
-                .Any(x => x.RoomId == cmd.Id))
-                {
-                    context.AddFailure($"Hotel room with id {cmd.Id} was not found.");
-                }
-            });
         }
     }
 }

@@ -30,7 +30,7 @@ export class OffersAddEditComponent implements OnInit {
 
     this.form = this.formBuilder.group({
         hotelId: [1],
-        title: ['', Validators.required],
+        offerTitle: ['', Validators.required],
         costPerChild: ['', Validators.required],
         costPerAdult: ['', Validators.required],
         maxGuests: ['', [Validators.required]],
