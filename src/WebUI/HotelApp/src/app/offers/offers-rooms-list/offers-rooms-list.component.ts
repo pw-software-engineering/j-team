@@ -100,12 +100,12 @@ export class OfferRoomsListComponent implements AfterViewInit {
   }
 
   loadAllRooms(): void {
-    this.roomClient.getRoomsWithPagination(1, 100, null, this.hotelToken)
+    this.roomClient.getRoomsWithPagination(null, 1, 100, this.hotelToken)
       .pipe(first())
       .subscribe(data => {
         this.allRooms = [];
-        if(data.items) {
-          data.items.forEach(x => {
+        if(data) {
+          data.forEach(x => {
             if(this.myDataArray.data.find(room => room.roomId == x.roomId) == undefined) {
               this.allRooms.push(x);
             }

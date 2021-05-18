@@ -46,8 +46,13 @@ namespace HotelReservationSystem.Application.IntegrationTests
             {
                 HotelRoomNumber = "509A",
                 HotelID = hotelId,
-                OfferID = offerId
             });
+            await SendAsync(new AddOfferRoomCmd
+            {
+                OfferId = offerId,
+                RoomId = roomId
+            });
+
             var result = await SendAsync(new RoomsQuery
             {
                 PageNumber = 1,

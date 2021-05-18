@@ -38,7 +38,7 @@ namespace HotelReservationSystem.Application.Offers.Commands.DeleteOffer
             if (entity.HotelId != request.HotelId)
                 throw new ForbiddenAccessException();
 
-            if (entity.Rooms == null)
+            if (entity.Rooms == null || !entity.Rooms.Any(x => x.RoomId == request.RoomId))
             {
                 throw new NotFoundException(nameof(Room), request.RoomId);
             }

@@ -3,6 +3,7 @@ using HotelReservationSystem.Application.Common.Interfaces;
 using HotelReservationSystem.Domain.Entities;
 using MediatR;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,8 +14,8 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
         public int Id;
         public string hotelName { get; set; }
         public string hotelDesc { get; set; }
-        public File hotelPreviewPicture { get; set; }
-        public List<File> hotelPictures { get; set; }
+        public byte[] hotelPreviewPicture { get; set; }
+        public List<byte[]> hotelPictures { get; set; }
     }
 
     public class UpdateHotelCommandHandler : IRequestHandler<UpdateHotelCmd>
@@ -37,12 +38,30 @@ namespace HotelReservationSystem.Application.Hotels.Commands.UpdateHotel
 
             entity.Name = request.hotelName ?? entity.Name;
             entity.Description = request.hotelDesc ?? entity.Description;
-            entity.HotelPreviewPicture = request.hotelPreviewPicture ?? entity.HotelPreviewPicture;
-            entity.Pictures = request.hotelPictures ?? entity.Pictures;
+
+            if (request.hotelPreviewPicture != null)
+            {
+                entity.HotelPreviewPicture = addPicture(request.hotelPreviewPicture, entity);
+                entity.HotelPreviewPictureId = entity.HotelPreviewPicture?.FileId;
+            }
+            if (request.hotelPictures != null)
+            {
+                entity.Pictures = request.hotelPictures.Select(x => addPicture(x, entity)).ToList();
+            }
 
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
+        }
+        File addPicture(byte[] file, Hotel entity)
+        {
+            var previewPicture = new File
+            {
+                Data = file,
+                HotelId = entity.HotelId
+            };
+            _context.Files.Add(previewPicture);
+            return previewPicture;
         }
     }
 }

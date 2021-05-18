@@ -28,7 +28,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<RoomDto>>> GetRoomsWithPagination([FromQuery] GetRoomsWithPaginationQuery query)
         {
-            query.HotelId= await GetHotelIdFromToken();
+            query.HotelId = await GetHotelIdFromToken();
             var result = await Mediator.Send(query);
             if (!string.IsNullOrEmpty(query.RoomNumber) && !result.Items.Any())
             {
@@ -38,27 +38,27 @@ namespace HotelReservationSystem.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Create(string hotel_room_number)
+        public async Task<ActionResult<int>> Create([FromBody] string hotel_room_number)
         {
-          
+
             try
             {
                 var hotelId = await GetHotelIdFromToken();
                 await Mediator.Send(new CreateRoomCmd
                 {
-                    HotelRoomNumber=hotel_room_number,
-                    HotelId = hotelId
+                    HotelRoomNumber = hotel_room_number,
+                    HotelID = hotelId
                 });
                 return Ok();
             }
-            
+
             catch (ForbiddenAccessException)
             {
                 return new StatusCodeResult(401);
             }
             catch (ValidationException ex)
             {
-                return new ApiResponse(ex.Message, 400);
+                return new ApiResponse(ex.Message, 409);
             }
         }
 
