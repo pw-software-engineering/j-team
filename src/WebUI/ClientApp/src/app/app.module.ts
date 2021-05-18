@@ -15,7 +15,11 @@ import { HotelsListComponent } from './hotels/hotels-list/hotels-list.component'
 import { OffersListComponent } from './hotels/hotels-list/hotel-offers-list/offers-list.component';
 import {MakeReservationComponent} from "./hotels/hotels-list/hotel-offers-list/make-reservation/make-reservation.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from './../environments/environment';
 
+export const providers = [
+  { provide: API_BASE_URL, useValue: environment.apiUrl }
+]
 
 @NgModule({
   declarations: [
@@ -37,7 +41,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatDialogModule,
     HttpClientModule,
   ],
-    providers: [{ provide: API_BASE_URL, useValue: 'http://localhost:5000' }],
+    providers: providers,
     bootstrap: [AppComponent]
 })
 export class AppModule { }

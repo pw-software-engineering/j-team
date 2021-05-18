@@ -1,4 +1,4 @@
-name: HotelDeploy
+name: ClientDeploy
 
 on:
   push:
@@ -14,11 +14,11 @@ env:
 
   ACR_URL: 'powoeuwacr.azurecr.io'
   NAMESPACE: 'j'                         # Name of your team {b, j, n}
-  APP_NAME: 'hotel'                      # Name of your application {client, server, hotel}
+  APP_NAME: 'client'                      # Name of your application {client, server, hotel}
   DEPLOYMENT_DIRECTORY: 'deployment'          # Path to directory where DEPLOYMENT_FILE_NAME is located
-  DEPLOYMENT_FILE_NAME: 'hotel.yml'      # Name of deployment file for application in deployment location
-  PATH_TO_DOCKER_FILE: 'src/WebUI/HotelApp/Dockerfile' # Location of Dockerfile for app
-  PATH_TO_APP_SRC: 'src/WebUI/HotelApp'          # Path to App sources
+  DEPLOYMENT_FILE_NAME: 'client.yml'      # Name of deployment file for application in deployment location
+  PATH_TO_DOCKER_FILE: 'src/WebUI/ClientApp/Dockerfile' # Location of Dockerfile for app
+  PATH_TO_APP_SRC: 'src/WebUI/ClientApp'          # Path to App sources
 
 jobs:
   test:
