@@ -15,8 +15,10 @@ namespace HotelReservationSystem.Application.Common.Mappings
         {
             ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
             CreateMap<Hotel, HotelDto>()
+                .IgnoreAllPropertiesWithAnInaccessibleSetter()
                 .ForMember(dest => dest.HotelPreviewPictureData, opt => opt.MapFrom(src => src.HotelPreviewPicture))
-                .ForMember(dest => dest.PicturesData, opt => opt.MapFrom(src => src.Pictures))
+                .ForMember(dest => dest.HotelPicturesData, opt => opt.MapFrom(src => src.Pictures))
+                .ForMember(dest => dest.HotelDesc, opt => opt.MapFrom(src => src.Description))
                 .ForMember(dest => dest.HotelName, opt => opt.MapFrom(src => src.Name));
             CreateMap<Hotel, HotelListedDto>()
                 .ForMember(dest => dest.HotelPreviewPictureData, opt => opt.MapFrom(src => src.HotelPreviewPicture))
