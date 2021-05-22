@@ -20,6 +20,7 @@ using Application.Reviews;
 using HotelReservationSystem.Application.Reviews.Queries.GetReviewsWithPaginationQuery;
 using HotelReservationSystem.Application.Reviews.Cmd.CreateRevewCmd;
 using Application.Reviews.Commands;
+using HotelReservationSystem.Application.Reviews.Cmd.UpdateRevewCmd;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
@@ -29,10 +30,15 @@ namespace HotelReservationSystem.WebUI.Controllers
     public class ReviewsController : ApiControllerBase
     {
         [HttpGet("{hotelID}/offers/{offerID}/reviews")]
-        public async Task<ActionResult<List<ReviewDto>>> GetOffersWithPagination([FromQuery] GetReviewsWithPaginationQuery query)
+        public async Task<ActionResult<List<ReviewDto>>> GetReviewsWithPagination([FromQuery] int hotelID, [FromQuery] int offerID)
         {
             try
             {
+                var query = new GetReviewsWithPaginationQuery()
+                {
+                    HotelID = hotelID,
+                    OfferID = offerID
+                };
                 var response = await Mediator.Send(query);
                 return response.Items;
             }

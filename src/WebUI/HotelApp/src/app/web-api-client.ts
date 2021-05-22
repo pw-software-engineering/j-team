@@ -1210,13 +1210,11 @@ export class ReservationsClient implements IReservationsClient {
 
 export interface IReviewsClient {
     /**
-     * @param hotelID (optional) 
-     * @param offerID (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
+     * @param hotelIDQuery (optional) 
+     * @param offerIDQuery (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getOffersWithPagination(hotelID: number | undefined, offerID: number | undefined, pageNumber: number | undefined, pageSize: number | undefined, hotelID: string, offerID: string, x_hotel_token: string | undefined): Observable<ReviewDto[]>;
+    getReviewsWithPagination(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, x_hotel_token: string | undefined): Observable<ReviewDto[]>;
     /**
      * @param hotelIDQuery (optional) 
      * @param offerIDQuery (optional) 
@@ -1252,36 +1250,26 @@ export class ReviewsClient implements IReviewsClient {
     }
 
     /**
-     * @param hotelID (optional) 
-     * @param offerID (optional) 
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
+     * @param hotelIDQuery (optional) 
+     * @param offerIDQuery (optional) 
      * @param x_hotel_token (optional) hotel authorization token
      */
-    getOffersWithPagination(hotelID: number | undefined, offerID: number | undefined, pageNumber: number | undefined, pageSize: number | undefined, hotelID: string, offerID: string, x_hotel_token: string | undefined): Observable<ReviewDto[]> {
+    getReviewsWithPagination(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, x_hotel_token: string | undefined): Observable<ReviewDto[]> {
         let url_ = this.baseUrl + "/client-api/hotels/{hotelID}/offers/{offerID}/reviews?";
-        if (hotelID === undefined || hotelID === null)
-            throw new Error("The parameter 'hotelID' must be defined.");
-        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
-        if (offerID === undefined || offerID === null)
-            throw new Error("The parameter 'offerID' must be defined.");
-        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
-        if (hotelID === null)
-            throw new Error("The parameter 'hotelID' cannot be null.");
-        else if (hotelID !== undefined)
-            url_ += "HotelID=" + encodeURIComponent("" + hotelID) + "&";
-        if (offerID === null)
-            throw new Error("The parameter 'offerID' cannot be null.");
-        else if (offerID !== undefined)
-            url_ += "OfferID=" + encodeURIComponent("" + offerID) + "&";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
-            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
-            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (hotelIDPath === undefined || hotelIDPath === null)
+            throw new Error("The parameter 'hotelIDPath' must be defined.");
+        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelIDPath));
+        if (offerIDPath === undefined || offerIDPath === null)
+            throw new Error("The parameter 'offerIDPath' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerIDPath));
+        if (hotelIDQuery === null)
+            throw new Error("The parameter 'hotelIDQuery' cannot be null.");
+        else if (hotelIDQuery !== undefined)
+            url_ += "hotelID=" + encodeURIComponent("" + hotelIDQuery) + "&";
+        if (offerIDQuery === null)
+            throw new Error("The parameter 'offerIDQuery' cannot be null.");
+        else if (offerIDQuery !== undefined)
+            url_ += "offerID=" + encodeURIComponent("" + offerIDQuery) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1294,11 +1282,11 @@ export class ReviewsClient implements IReviewsClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetOffersWithPagination(response_);
+            return this.processGetReviewsWithPagination(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetOffersWithPagination(<any>response_);
+                    return this.processGetReviewsWithPagination(<any>response_);
                 } catch (e) {
                     return <Observable<ReviewDto[]>><any>_observableThrow(e);
                 }
@@ -1307,7 +1295,7 @@ export class ReviewsClient implements IReviewsClient {
         }));
     }
 
-    protected processGetOffersWithPagination(response: HttpResponseBase): Observable<ReviewDto[]> {
+    protected processGetReviewsWithPagination(response: HttpResponseBase): Observable<ReviewDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

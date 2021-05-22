@@ -892,10 +892,10 @@
         "tags": [
           "Reviews"
         ],
-        "operationId": "Reviews_GetOffersWithPagination",
+        "operationId": "Reviews_GetReviewsWithPagination",
         "parameters": [
           {
-            "name": "HotelID",
+            "name": "hotelID",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -904,7 +904,7 @@
             "x-position": 1
           },
           {
-            "name": "OfferID",
+            "name": "offerID",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -913,31 +913,13 @@
             "x-position": 2
           },
           {
-            "name": "PageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 3
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 4
-          },
-          {
             "name": "hotelID",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "x-position": 5
+            "x-position": 3
           },
           {
             "name": "offerID",
@@ -946,7 +928,7 @@
             "schema": {
               "type": "string"
             },
-            "x-position": 6
+            "x-position": 4
           },
           {
             "type": "string",
