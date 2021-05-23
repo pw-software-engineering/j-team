@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using Application.Offers;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Application.Hotels;
 using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Interfaces;
 using MediatR;
 
-namespace Application.Hotels.Queries.GetHotelInfo
-{
+namespace HotelReservationSystem.Application.Hotels.Queries.GetHotelInfo
+{ 
     public class GetHotelInfoQuery : IRequest<HotelDto>
     {
         public int hotelId;
