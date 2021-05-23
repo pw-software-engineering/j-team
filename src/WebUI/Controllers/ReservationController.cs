@@ -10,7 +10,7 @@ namespace HotelReservationSystem.WebUI.Controllers
 {
     public class ReservationController : ApiControllerBase
     {
-        [HttpPost("/api/hotels/{hotelID}/offers/{offerID}/reservations")]
+        [HttpPost("/api-client/hotels/{hotelID}/offers/{offerID}/reservations")]
         public async Task<ActionResult<int>> Create(int hotelID, int offerID, CreateReservationCmd command)
         {
             Console.WriteLine("----HotelID: {0}", hotelID);
@@ -31,7 +31,7 @@ namespace HotelReservationSystem.WebUI.Controllers
                 return BadRequest(validationException.Errors);
             }
         }
-        [HttpDelete("/{reservationID}")]
+        [HttpDelete("/api-client/reservations/{reservationID}")]
         public async Task<ActionResult<int>> Delete(int reservationID)
         {
             DeleteReservationCmd command = new DeleteReservationCmd

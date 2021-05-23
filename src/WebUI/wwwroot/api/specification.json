@@ -763,7 +763,7 @@
         }
       }
     },
-    "/api/hotels/{hotelID}/offers/{offerID}/reservations": {
+    "/api-client/hotels/{hotelID}/offers/{offerID}/reservations": {
       "post": {
         "tags": [
           "Reservation"
@@ -803,6 +803,39 @@
           "required": true,
           "x-position": 3
         },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-client/reservations/{reservationID}": {
+      "delete": {
+        "tags": [
+          "Reservation"
+        ],
+        "operationId": "Reservation_Delete",
+        "parameters": [
+          {
+            "name": "reservationID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -880,46 +913,6 @@
                   "items": {
                     "$ref": "#/components/schemas/ReservationDto"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/{reservationID}": {
-      "delete": {
-        "tags": [
-          "Reservations"
-        ],
-        "operationId": "Reservations_Delete",
-        "parameters": [
-          {
-            "name": "reservationID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "type": "string",
-            "name": "x-hotel-token",
-            "in": "header",
-            "description": "hotel authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
                 }
               }
             }
