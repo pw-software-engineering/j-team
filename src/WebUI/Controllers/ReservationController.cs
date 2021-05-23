@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Reservations.Commands.CreateReservation;
 using HotelReservationSystem.Application.Reservations.Commands.DeleteReservation;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservationSystem.WebUI.Controllers
@@ -34,7 +32,6 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpDelete("/api-client/reservations/{reservationID}")]
         public async Task<ActionResult<int>> Delete(int reservationID)
         {
-            Console.WriteLine("!!!OK");
             DeleteReservationCmd command = new DeleteReservationCmd
             {
                 ReservationId = reservationID,
@@ -55,7 +52,6 @@ namespace HotelReservationSystem.WebUI.Controllers
             }
             catch (ValidationException validationException)
             {
-                Console.WriteLine("BAD request");
                 return BadRequest(validationException.Errors);
             }
         }
