@@ -1,17 +1,12 @@
-﻿using Application.Auth;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Application.Reservations;
 using HotelReservationSystem.Application.Common.Exceptions;
-using HotelReservationSystem.Application.Common.Models;
 using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Rooms.Queries.GetReservationsWithPagination;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using NSwag.Annotations;
-using System.Collections.Generic;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
@@ -51,9 +46,5 @@ namespace HotelReservationSystem.WebUI.Controllers
             }
             
         }
-
-       
-
-        
     }
 }
