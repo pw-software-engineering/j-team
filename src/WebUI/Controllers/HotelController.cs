@@ -23,7 +23,7 @@ using Application.Hotels.Queries.GetHotelInfo;
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
-    [Route("api")]
+    [Route("api-hotel")]
     public class HotelController : ApiControllerBase
     {
         [HttpGet("hotels")]

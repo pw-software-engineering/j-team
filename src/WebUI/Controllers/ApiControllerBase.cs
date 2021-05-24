@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api-hotel/[controller]")]
     public abstract class ApiControllerBase : ControllerBase
     {
         private ISender _mediator;
