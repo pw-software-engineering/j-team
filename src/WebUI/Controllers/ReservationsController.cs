@@ -3,7 +3,7 @@ using Application.Reservations;
 using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Models;
 using HotelReservationSystem.Application.Common.Security;
-using HotelReservationSystem.Application.Rooms.Queries.GetReservationsWithPagination;
+using HotelReservationSystem.Application.Reservations.Queries.GetReservationsWithPagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace HotelReservationSystem.Application.Rooms.Queries.GetReservationsWithPagination
+namespace HotelReservationSystem.Application.Reservations.Queries.GetReservationsWithPagination
 {
     public class GetReservationsWithPaginationQueryValidator : AbstractValidator<GetReservationsWithPaginationQuery>
     {
