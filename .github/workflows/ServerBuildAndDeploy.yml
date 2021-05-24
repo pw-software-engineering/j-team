@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
 
 env:
   registry: my_registry_name
