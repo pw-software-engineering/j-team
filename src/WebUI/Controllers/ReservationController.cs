@@ -13,7 +13,6 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpPost("/api-client/hotels/{hotelID}/offers/{offerID}/reservations")]
         public async Task<ActionResult<int>> Create(int hotelID, int offerID, CreateReservationCmd command)
         {
-            Console.WriteLine("----HotelID: {0}", hotelID);
             command.HotelId = hotelID;
             command.OfferId = offerID;
             try
