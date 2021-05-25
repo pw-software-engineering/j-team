@@ -1,4 +1,5 @@
-﻿using Application.Auth;
+﻿
+using Application.Auth;
 using Application.Reservations;
 using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Models;
@@ -51,9 +52,5 @@ namespace HotelReservationSystem.WebUI.Controllers
             }
             
         }
-
-       
-
-        
     }
 }

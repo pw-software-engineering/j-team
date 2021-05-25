@@ -1037,6 +1037,7 @@ export class OfferClient implements IOfferClient {
 
 export interface IReservationClient {
     create(hotelID: number, offerID: number, command: CreateReservationCmd): Observable<number>;
+    delete(reservationID: number): Observable<number>;
 }
 
 @Injectable({
@@ -1053,7 +1054,7 @@ export class ReservationClient implements IReservationClient {
     }
 
     create(hotelID: number, offerID: number, command: CreateReservationCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api/hotels/{hotelID}/offers/{offerID}/reservations";
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reservations";
         if (hotelID === undefined || hotelID === null)
             throw new Error("The parameter 'hotelID' must be defined.");
         url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
@@ -1089,6 +1090,57 @@ export class ReservationClient implements IReservationClient {
     }
 
     protected processCreate(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    delete(reservationID: number): Observable<number> {
+        let url_ = this.baseUrl + "/api-client/reservations/{reservationID}";
+        if (reservationID === undefined || reservationID === null)
+            throw new Error("The parameter 'reservationID' must be defined.");
+        url_ = url_.replace("{reservationID}", encodeURIComponent("" + reservationID));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<number> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
