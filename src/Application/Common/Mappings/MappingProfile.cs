@@ -7,6 +7,7 @@ using HotelReservationSystem.Domain.Entities;
 using System;
 using System.Linq;
 using System.Reflection;
+using Application.Reviews;
 
 namespace HotelReservationSystem.Application.Common.Mappings
 {
@@ -41,6 +42,9 @@ namespace HotelReservationSystem.Application.Common.Mappings
               .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Client.Surname))
               .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Client.Username))
               .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Client.Email));
+            CreateMap<Review, ReviewDto>()
+                .ForMember(d => d.OfferID, o => o.MapFrom(s => s.OfferId))
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.ReviewId));
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {
