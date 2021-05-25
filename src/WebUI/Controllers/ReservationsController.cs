@@ -7,6 +7,7 @@ using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Reservations.Queries.GetReservationsWithPagination;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
