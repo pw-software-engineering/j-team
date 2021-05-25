@@ -1,0 +1,56 @@
+<h1 *ngIf="isAddMode">Add offer</h1>
+<h1 *ngIf="!isAddMode">Edit offer</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <div class="form-group col-5">
+      <label>Title</label>
+      <input type="text" formControlName="offerTitle" class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.offerTitle.errors }" />
+      <div *ngIf="submitted && f.offerTitle.errors" class="invalid-feedback">
+        <div *ngIf="f.offerTitle.errors.required">Title is required</div>
+      </div>
+    </div>
+    <div class="form-group col-5">
+      <label>Cost per child</label>
+      <input type="text" formControlName="costPerChild" class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.costPerChild.errors }" />
+      <div *ngIf="submitted && f.costPerChild.errors" class="invalid-feedback">
+        <div *ngIf="f.costPerChild.errors.required">Cost per child is required</div>
+      </div>
+    </div>
+    <div class="form-group col-5">
+      <label>Cost per adult</label>
+      <input type="text" formControlName="costPerAdult" class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.costPerAdult.errors }" />
+      <div *ngIf="submitted && f.costPerAdult.errors" class="invalid-feedback">
+        <div *ngIf="f.costPerAdult.errors.required">Cost per adult is required</div>
+      </div>
+    </div>
+    <div class="form-group col-5">
+      <label>Max number of guests</label>
+      <input type="text" formControlName="maxGuests" class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.maxGuests.errors }" />
+      <div *ngIf="submitted && f.maxGuests.errors" class="invalid-feedback">
+        <div *ngIf="f.maxGuests.errors.required">Max number of guests is required</div>
+      </div>
+    </div>
+    <div class="form-group col-5">
+      <label>Description</label>
+      <input type="text" formControlName="description" class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.description.errors }" />
+      <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
+        <div *ngIf="f.description.errors.required">Description is required</div>
+      </div>
+    </div>
+    <div class="form-group col-2" *ngIf="!isAddMode">
+      <label>Active</label>
+      <input type="checkbox" formControlName="isActive" class="form-control" />
+    </div>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary">
+      Save
+    </button>
+    <a routerLink="/offers" class="btn btn-link">Cancel</a>
+  </div>
+</form>

@@ -1,0 +1,966 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Hotel API",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://hotelservices.com/api-hotel/"
+        }
+    ],
+    "paths": {
+        "/offers": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": "[\n  {\n    \"offerID\": 1,\n    \"isActive\": true,\n    \"offerTitle\": \"Great Offer\",\n    \"costPerChild\": 120.0,\n    \"costPerAdult\": 150.0,\n    \"maxGuests\": 4,\n    \"offerPreviewPicture\": \"kBKuB875JH5VJkhu\",\n  },\n  {\n    \"offerID\": 17,\n    \"isActive\": false,\n    \"offerTitle\": \"Bad Offer\",\n    \"costPerChild\": 130.0,\n    \"costPerAdult\": 130.0,\n    \"maxGuests\": 2,\n    \"offerPreviewPicture\": \"kjdsf328KB53JVT9jk\",\n  }\n]\n",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/offerPreview"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "List all offers related to hotel",
+                "operationId": "GET_offers",
+                "parameters": [
+                    {
+                        "name": "isActive",
+                        "in": "query",
+                        "description": "Optional parameter deciding what type of offers should be returned |",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/trait_pageable_pageNumber"
+                    },
+                    {
+                        "$ref": "#/components/parameters/trait_pageable_pageSize"
+                    }
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Succesfully added. Return offerID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "offerID": 3
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unable to add offer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "error": "Unable to add offer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Add new offer",
+                "operationId": "POST_offers",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "isActive": true,
+                                "offerTitle": "Awesome offer",
+                                "costPerChild": 50,
+                                "costPerAdult": 80,
+                                "maxGuests": 5,
+                                "description": "Apartment overlooking the sea",
+                                "offerPreviewPicture": "hbUbkjd86jhVG7JFjh",
+                                "pictures": [],
+                                "rooms": [
+                                    "12A",
+                                    "14B"
+                                ]
+                            },
+                            "schema": {
+                                "$ref": "#/components/schemas/offer"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/offers/{offerID}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "isActive": false,
+                                    "offerTitle": "Rich Offer",
+                                    "costPerChild": 50,
+                                    "costPerAdult": 60,
+                                    "maxGuests": 5,
+                                    "description": "Offer description",
+                                    "offerPreviewPicture": "hbUbkjd86jhVG7JFjh",
+                                    "pictures": []
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/offer"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Offer does not belong to this hotel"
+                    },
+                    "404": {
+                        "description": "Offer not found"
+                    }
+                },
+                "description": "Gets information related to a specific offer with ID equal to offerID",
+                "operationId": "GET_offers-offerID"
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Offer does not belong to this hotel"
+                    },
+                    "404": {
+                        "description": "Offer not found"
+                    },
+                    "409": {
+                        "description": "Unable to delete offer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "error": "There are still pending reservations for this offer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Server marks the offer as deleted.",
+                "operationId": "DELETE_offers-offerID"
+            },
+            "patch": {
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Unable to edit offer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "error": "Unable to edit offer"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Offer does not belong to this hotel"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "description": "Server modifies offer",
+                "operationId": "PATCH_offers-offerID",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "isActive": true,
+                                "offerTitle": "Not so great Offer",
+                                "offerPreviewPicture": "hbUbkjd86jhVG7JFjh",
+                                "description": "",
+                                "offerPictures": []
+                            },
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "isActive": {
+                                        "type": "boolean"
+                                    },
+                                    "offerTitle": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "offerPreviewPicture": {
+                                        "type": "string"
+                                    },
+                                    "offerPictures": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "isActive",
+                                    "offerTitle",
+                                    "description",
+                                    "offerPreviewPicture",
+                                    "offerPictures"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "parameters": [
+                {
+                    "name": "offerID",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ]
+        },
+        "/offers/{offerID}/rooms": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": [
+                                        {
+                                            "roomID": 5,
+                                            "hotelRoomNumber": "13A",
+                                            "offerID": [
+                                                1,
+                                                15
+                                            ]
+                                        },
+                                        {
+                                            "roomID": 7,
+                                            "hotelRoomNumber": "16",
+                                            "offerID": [
+                                                2,
+                                                4,
+                                                5
+                                            ]
+                                        }
+                                    ],
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "roomID": {
+                                                "type": "integer"
+                                            },
+                                            "hotelRoomNumber": {
+                                                "type": "string"
+                                            },
+                                            "offerID": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "roomID",
+                                            "hotelRoomNumber",
+                                            "offerID"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Offer does not belong to this hotel"
+                    },
+                    "404": {
+                        "description": "Offer not found / Room with given roomNumber not found"
+                    }
+                },
+                "description": "Lists all rooms related to the hotel offer",
+                "operationId": "GET_offers-offerID-rooms",
+                "parameters": [
+                    {
+                        "name": "roomNumber",
+                        "in": "query",
+                        "description": "Optional filter on room number that is applied after the query has finished",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/trait_pageable_pageNumber"
+                    },
+                    {
+                        "$ref": "#/components/parameters/trait_pageable_pageSize"
+                    }
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Unable to add room",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "error": "Unable to add room"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Offer or room with given ID does not belong to this hotel"
+                    },
+                    "404": {
+                        "description": "Offer or room with given ID not found"
+                    }
+                },
+                "description": "Add a room associated with hotel offer",
+                "operationId": "POST_offers-offerID-rooms",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "example": 21,
+                            "schema": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            },
+            "parameters": [
+                {
+                    "name": "offerID",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ]
+        },
+        "/offers/{offerID}/rooms/{roomID}": {
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Offer or room with given ID does not belong to this hotel"
+                    },
+                    "404": {
+                        "description": "Offer or room not found"
+                    }
+                },
+                "description": "Removes room from the offer",
+                "operationId": "DELETE_offers-offerID-rooms-roomID"
+            },
+            "parameters": [
+                {
+                    "name": "roomID",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "offerID",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ]
+        },
+        "/rooms": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": [
+                                        {
+                                            "roomID": 5,
+                                            "hotelRoomNumber": "13A",
+                                            "offerID": [
+                                                1,
+                                                15,
+                                                28
+                                            ]
+                                        },
+                                        {
+                                            "roomID": 7,
+                                            "hotelRoomNumber": "16",
+                                            "offerID": [
+                                                3,
+                                                4,
+                                                7
+                                            ]
+                                        }
+                                    ],
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "roomID": {
+                                                "type": "integer"
+                                            },
+                                            "hotelRoomNumber": {
+                                                "type": "string"
+                                            },
+                                            "offerID": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "roomID",
+                                            "hotelRoomNumber",
+                                            "offerID"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Room with given roomNumber not found"
+                    }
+                },
+                "description": "Lists all rooms",
+                "operationId": "GET_rooms",
+                "parameters": [
+                    {
+                        "name": "roomNumber",
+                        "in": "query",
+                        "description": "Optional filter on room number that is applied after the query has finished",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/trait_pageable_pageNumber"
+                    },
+                    {
+                        "$ref": "#/components/parameters/trait_pageable_pageSize"
+                    }
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Room added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": 14,
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unable to add room",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "error": "Unable to add room"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Room with given number already exists"
+                    }
+                },
+                "description": "Add a room not associated with any offer (HotelRoom table)",
+                "operationId": "POST_rooms",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "example": "12F",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/rooms/{roomID}": {
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "401": {
+                        "description": "Room does not belong to this hotel"
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    },
+                    "409": {
+                        "description": "Unable to delete room",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "error": "There are still pending reservations for this room that cannot be moved"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Deletes room with given ID. (entry in HotelRoom table is deleted)",
+                "operationId": "DELETE_rooms-roomID"
+            },
+            "parameters": [
+                {
+                    "name": "roomID",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ]
+        },
+        "/reservations": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Returns an array of objects containing reservation and client information related to a hotel room reservation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/reservationObject"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Room with ID equal to roomID does not belong to the hotel"
+                    },
+                    "404": {
+                        "description": "An error containing message describing the type of error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "error": "Room with ID equal to roomID parameter does not exist"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "fetches current (and future) reservations made by clients and information regarding these clients",
+                "operationId": "GET_reservations",
+                "parameters": [
+                    {
+                        "name": "currentOnly",
+                        "in": "query",
+                        "description": "get reservations that are currently underway or all reservations (including ones that begin in the future)",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "roomID",
+                        "in": "query",
+                        "description": "get reservations connected with room with ID equal to roomID parameter",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/trait_pageable_pageNumber"
+                    },
+                    {
+                        "$ref": "#/components/parameters/trait_pageable_pageSize"
+                    }
+                ]
+            }
+        },
+        "/hotelInfo": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "country": "Poland",
+                                        "city": "Warsaw",
+                                        "hotelName": "Novotel",
+                                        "hotelDesc": "Live Limitless",
+                                        "hotelPreviewPicture": "",
+                                        "hotelPictures": []
+                                    },
+                                    "type": "object",
+                                    "properties": {
+                                        "country": {
+                                            "type": "string"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        },
+                                        "hotelName": {
+                                            "type": "string"
+                                        },
+                                        "hotelDesc": {
+                                            "type": "string"
+                                        },
+                                        "hotelPreviewPicture": {
+                                            "type": "string"
+                                        },
+                                        "hotelPictures": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "country",
+                                        "city",
+                                        "hotelName",
+                                        "hotelDesc",
+                                        "hotelPreviewPicture",
+                                        "hotelPictures"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Show info about hotel",
+                "operationId": "GET_hotelInfo"
+            },
+            "patch": {
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Unable to add offer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "example": {
+                                        "error": "Unable to add offer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "Update info about hotel",
+                "operationId": "PATCH_hotelInfo",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "hotelName": "Novotel",
+                                "hotelDesc": "Live Limitless",
+                                "hotelPreviewPicture": "",
+                                "hotelPictures": []
+                            },
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "hotelName": {
+                                        "type": "string"
+                                    },
+                                    "hotelDesc": {
+                                        "type": "string"
+                                    },
+                                    "hotelPreviewPicture": {
+                                        "type": "string"
+                                    },
+                                    "hotelPictures": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "hotelName",
+                                    "hotelDesc",
+                                    "hotelPreviewPicture",
+                                    "hotelPictures"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "authenticationError": {
+                "type": "object",
+                "properties": {
+                    "desc": {
+                        "description": "A description of the type of the authentication error.",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "desc"
+                ]
+            },
+            "offerPreview": {
+                "type": "object",
+                "properties": {
+                    "offerID": {
+                        "type": "integer"
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "offerTitle": {
+                        "type": "string"
+                    },
+                    "costPerChild": {
+                        "multipleOf": 0.01,
+                        "type": "number"
+                    },
+                    "costPerAdult": {
+                        "multipleOf": 0.01,
+                        "type": "number"
+                    },
+                    "maxGuests": {
+                        "minimum": 1,
+                        "type": "integer"
+                    },
+                    "offerPreviewPicture": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "offerID",
+                    "isActive",
+                    "offerTitle",
+                    "costPerChild",
+                    "costPerAdult",
+                    "maxGuests",
+                    "offerPreviewPicture"
+                ]
+            },
+            "offer": {
+                "type": "object",
+                "properties": {
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "offerTitle": {
+                        "type": "string"
+                    },
+                    "costPerChild": {
+                        "multipleOf": 0.01,
+                        "type": "number"
+                    },
+                    "costPerAdult": {
+                        "multipleOf": 0.01,
+                        "type": "number"
+                    },
+                    "maxGuests": {
+                        "minimum": 1,
+                        "type": "integer"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "offerPreviewPicture": {
+                        "type": "string"
+                    },
+                    "pictures": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "rooms": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "isActive",
+                    "offerTitle",
+                    "costPerChild",
+                    "costPerAdult",
+                    "maxGuests",
+                    "description",
+                    "offerPreviewPicture",
+                    "pictures"
+                ]
+            },
+            "reservationObject": {
+                "type": "object",
+                "properties": {
+                    "reservation": {
+                        "type": "object",
+                        "properties": {
+                            "reservationID": {
+                                "type": "integer"
+                            },
+                            "offerID": {
+                                "type": "integer"
+                            },
+                            "fromTime": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "toTime": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "childrenCount": {
+                                "type": "integer"
+                            },
+                            "adultsCount": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "reservationID",
+                            "offerID",
+                            "fromTime",
+                            "toTime",
+                            "childrenCount",
+                            "adultsCount"
+                        ]
+                    },
+                    "client": {
+                        "type": "object",
+                        "properties": {
+                            "clientID": {
+                                "type": "integer"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "surname": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "clientID",
+                            "name",
+                            "surname"
+                        ]
+                    },
+                    "room": {
+                        "type": "object",
+                        "properties": {
+                            "roomID": {
+                                "$ref": "#/components/schemas/int"
+                            },
+                            "hotelRoomNumber": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "roomID",
+                            "hotelRoomNumber"
+                        ]
+                    }
+                },
+                "required": [
+                    "reservation",
+                    "client",
+                    "room"
+                ]
+            }
+        },
+        "responses": {},
+        "parameters": {
+            "trait_pageable_pageNumber": {
+                "name": "pageNumber",
+                "in": "query",
+                "description": "Number of page to show results",
+                "schema": {
+                    "default": 1,
+                    "type": "integer"
+                }
+            },
+            "trait_pageable_pageSize": {
+                "name": "pageSize",
+                "in": "query",
+                "description": "Number of show results",
+                "schema": {
+                    "default": 10,
+                    "type": "integer"
+                }
+            }
+        },
+        "examples": {},
+        "requestBodies": {},
+        "headers": {},
+        "securitySchemes": {
+            "customTokenSecurity": {
+                "description": "Custom security token given by the server administrator.",
+                "type": "apiKey",
+                "in": "header",
+                "name": "x-hotel-token"
+            }
+        },
+        "links": {},
+        "callbacks": {}
+    }
+}

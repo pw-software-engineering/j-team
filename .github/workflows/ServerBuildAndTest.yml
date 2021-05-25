@@ -1,0 +1,66 @@
+name: BuildTestServer
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  registry: my_registry_name
+  DB_HOST: localhost
+  DB_USERNAME: test_user
+  DB_PASSWORD: test
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+        working-directory: src/WebUI/
+      - name: Build UnitTests proj
+        run: dotnet build --no-restore
+        working-directory: tests/Application.UnitTests/
+      - name: UnitTests
+        run: dotnet test  --verbosity Normal --no-build /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+        working-directory: tests/Application.UnitTests/
+      - name: Build IntegrationTests proj
+        run: dotnet build --no-restore
+        working-directory: tests/Application.IntegrationTests/
+      - name: IntegrationTests
+        run: dotnet test --verbosity Normal --no-build /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+        working-directory: tests/Application.IntegrationTests/
+      - name: Publish coverage report to coveralls.io
+        uses: coverallsapp/github-action@master
+        with:
+         github-token: ${{ secrets.GITHUB_TOKEN }}
+         path-to-lcov: tests/Application.IntegrationTests/TestResults/coverage.info
+
+   

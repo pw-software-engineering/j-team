@@ -1,0 +1,36 @@
+name: BuildTestHotelApp
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1 #this will install Node and npm on Ubuntu
+        with:
+          node-version: "12.x"
+      - name: Install dependencies
+        run: npm install
+        working-directory: src/WebUI/ClientApp/
+      - run: sudo apt-get install xvfb
+      - name: Run Tests
+        run: xvfb-run --auto-servernum npm run test -- --no-watch --no-progress
+        working-directory: src/WebUI/ClientApp/
