@@ -21,6 +21,8 @@ using System.Threading.Tasks;
 using HotelReservationSystem.Application.Hotels.Queries.GetHotelInfo;
 using HotelReservationSystem.Application.Common.Exceptions;
 using ValidationException = HotelReservationSystem.Application.Common.Exceptions.ValidationException;
+using HotelReservationSystem.Application.Hotels;
+using HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
@@ -48,6 +50,21 @@ namespace HotelReservationSystem.WebUI.Controllers
             {
                 var query = new GetHotelInfoQuery();
                 query.hotelId = await GetHotelIdFromToken();
+                return await Mediator.Send(query);
+            }
+            catch (NotFoundException)
+            {
+                return new StatusCodeResult(404);
+            }
+        }
+        [HttpGet("offerInfo")]
+        public async Task<ActionResult<DetailedOfferDto>> GetOfferInfo(int id)
+        {
+            try
+            {
+                var query = new GetOfferInfoQuery();
+                query.hotelId = await GetHotelIdFromToken();
+                query.offerId = id;
                 return await Mediator.Send(query);
             }
             catch (NotFoundException)
