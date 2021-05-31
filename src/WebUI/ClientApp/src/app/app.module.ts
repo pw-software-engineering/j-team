@@ -16,6 +16,8 @@ import { OffersListComponent } from './hotels/hotels-list/hotel-offers-list/offe
 import {MakeReservationComponent} from "./hotels/hotels-list/hotel-offers-list/make-reservation/make-reservation.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from './../environments/environment';
+import { ReviewsListComponent } from './reviews/reviews-list.component';
+import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
 
 export const providers = [
   { provide: API_BASE_URL, useValue: environment.apiUrl }
@@ -26,7 +28,9 @@ export const providers = [
     AppComponent,
     HotelsListComponent,
     OffersListComponent,
-    MakeReservationComponent
+    MakeReservationComponent,
+    ReviewsListComponent,
+    ReviewsAddEditComponent
   ],
   imports: [
     BrowserModule,
