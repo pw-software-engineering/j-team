@@ -1,6 +1,7 @@
 ﻿using HotelReservationSystem.Domain.Entities;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System;
 
 namespace HotelReservationSystem.Application.Hotels
 {
@@ -25,6 +26,7 @@ namespace HotelReservationSystem.Application.Hotels
         [JsonIgnore]
         public List<File> OfferPicturesData { get; set; }
 
+        public List<(DateTime, DateTime) > AvailabilityTimeIntervals { get; set; }
 
     }
 }
