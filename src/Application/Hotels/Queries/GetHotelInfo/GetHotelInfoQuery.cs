@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using Application.Offers;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Application.Hotels;
+using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Interfaces;
-using HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffers;
 using MediatR;
 
-namespace Application.Hotels.Queries.GetHotelInfo
-{
+namespace HotelReservationSystem.Application.Hotels.Queries.GetHotelInfo
+{ 
     public class GetHotelInfoQuery : IRequest<HotelDto>
     {
         public int hotelId;
@@ -29,6 +30,7 @@ namespace Application.Hotels.Queries.GetHotelInfo
         public async Task<HotelDto> Handle(GetHotelInfoQuery request, CancellationToken cancellationToken)
         {
             var hotel = await _context.Hotels.FindAsync(request.hotelId);
+            if (hotel == null) throw new NotFoundException();
             var hotelDto = new HotelDto
             {
                 City = hotel.City,

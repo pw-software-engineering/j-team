@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
+using HotelReservationSystem.Application.Reviews.Queries.GetReviewsWithPaginationQuery;
 
-namespace HotelReservationSystem.Application.Reservations.Queries.GetReservationsWithPagination
+namespace HotelReservationSystem.Application.Offers.Queries.GetOffersWithPagination
 {
-    public class GetReservationsWithPaginationQueryValidator : AbstractValidator<GetReservationsWithPaginationQuery>
+    public class GetReviewsWithPaginationQueryValidator : AbstractValidator<GetReviewsWithPaginationQuery>
     {
-        public GetReservationsWithPaginationQueryValidator()
+        public GetReviewsWithPaginationQueryValidator()
         {
             RuleFor(x => x.PageNumber)
                 .GreaterThanOrEqualTo(1).WithMessage("PageNumber at least greater than or equal to 1.");

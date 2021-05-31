@@ -18,7 +18,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
-using Application.Hotels.Queries.GetHotelInfo;
+using HotelReservationSystem.Application.Hotels.Queries.GetHotelInfo;
+using HotelReservationSystem.Application.Common.Exceptions;
+using ValidationException = HotelReservationSystem.Application.Common.Exceptions.ValidationException;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
@@ -42,9 +44,16 @@ namespace HotelReservationSystem.WebUI.Controllers
         [HttpGet("hotelInfo")]
         public async Task<ActionResult<HotelDto>> GetHotelInfo()
         {
-            var query = new GetHotelInfoQuery();
-            query.hotelId = await GetHotelIdFromToken();
-            return await Mediator.Send(query);
+            try
+            {
+                var query = new GetHotelInfoQuery();
+                query.hotelId = await GetHotelIdFromToken();
+                return await Mediator.Send(query);
+            }
+            catch (NotFoundException)
+            {
+                return new StatusCodeResult(404);
+            }
         }
 
         [HttpPatch("hotelInfo")]

@@ -13,6 +13,10 @@ namespace HotelReservationSystem.Application.Common.Exceptions
             Errors = new Dictionary<string, string[]>();
         }
 
+        public ValidationException(string message) : this()
+        {
+            Errors.Add("Exception", new string[] { message });
+        }
         public ValidationException(IEnumerable<ValidationFailure> failures)
             : this()
         {
