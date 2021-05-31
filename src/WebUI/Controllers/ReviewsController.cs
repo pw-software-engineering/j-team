@@ -22,6 +22,7 @@ using HotelReservationSystem.Application.Reviews.Cmd.CreateRevewCmd;
 using Application.Reviews.Commands;
 using HotelReservationSystem.Application.Reviews.Cmd.UpdateRevewCmd;
 using HotelReservationSystem.Application.Reviews.Queries;
+using System;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
@@ -77,6 +78,10 @@ namespace HotelReservationSystem.WebUI.Controllers
             {
                 response.Error = "Validation error";
                 return new ApiResponse<CreateReviewResponse>(response, 400);
+            }
+            catch (Exception e)
+            {
+                return new ApiResponse<CreateReviewResponse>(response, 500);
             }
         }
         [HttpPut("{hotelID}/offers/{offerID}/reviews/{reviewID}")]
