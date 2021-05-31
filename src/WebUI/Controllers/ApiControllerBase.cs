@@ -24,5 +24,14 @@ namespace HotelReservationSystem.WebUI.Controllers
             var hotelId = await Mediator.Send(new GetHotelIdFromTokenQuery() { Token = GetHotelToken() });
             return hotelId.Value;
         }
+        protected string GetClientToken()
+        {
+            return Request.Headers["x-client-token"];
+        }
+        protected async Task<int> GetClientIdFromToken()
+        {
+            var clientId = await Mediator.Send(new GetClientIdFromTokenQuery() { Token = GetClientToken() });
+            return clientId.Value;
+        }
     }
 }

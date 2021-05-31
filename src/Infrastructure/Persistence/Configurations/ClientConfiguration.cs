@@ -21,6 +21,9 @@ namespace HotelReservationSystem.Infrastructure.Persistence.Configurations
             builder.Property(t => t.Email)
                 .HasMaxLength(200)
                 .IsRequired();
+            builder.Property(t => t.AccessToken)
+                .HasMaxLength(300)
+                .IsRequired();
             builder.HasMany(t => t.Reservations).WithOne(t => t.Client);
             builder.HasMany(t => t.Reviews).WithOne(t => t.Client);
         }

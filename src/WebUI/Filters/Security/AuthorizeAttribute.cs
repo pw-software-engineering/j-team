@@ -39,6 +39,32 @@ namespace HotelReservationSystem.Application.Common.Security
             }
         }
     }
+    public class AuthorizeClientAttribute : TypeFilterAttribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorizeAttribute"/> class. 
+        /// </summary>
+        public AuthorizeClientAttribute() : base(typeof(ClientTokenFilter))
+        { }
+    }
+    public class ClientTokenFilter : IAsyncAuthorizationFilter
+    {
+        public ClientTokenFilter()
+        {
+        }
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        {
+            var token = context.HttpContext.Request.Headers["x-client-token"];
+            var mediator = context.HttpContext.RequestServices.GetService<ISender>();
+            var clientId = await mediator.Send(new GetClientIdFromTokenQuery() { Token = token });
+            if (clientId is null)
+            {
+                var result = new ObjectResult(new AuthFailedResult() { Desc = "Authentication failed" });
+                result.StatusCode = 401;
+                context.Result = result;
+            }
+        }
+    }
     public class AuthFailedResult
     {
         public string Desc { get; set; }
