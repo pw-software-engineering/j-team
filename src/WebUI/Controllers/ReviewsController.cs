@@ -21,23 +21,32 @@ using HotelReservationSystem.Application.Reviews.Queries.GetReviewsWithPaginatio
 using HotelReservationSystem.Application.Reviews.Cmd.CreateRevewCmd;
 using Application.Reviews.Commands;
 using HotelReservationSystem.Application.Reviews.Cmd.UpdateRevewCmd;
+using HotelReservationSystem.Application.Reviews.Queries;
+using System;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [AuthorizeHotel]
-    [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
+    [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
     [Route("client-api/hotels")]
     public class ReviewsController : ApiControllerBase
     {
+        [HttpGet("{hotelID}/offers/{offerID}/reviews/{reviewID}")]
+        public async Task<ActionResult<ReviewDto>> GetReview(int hotelID, int offerID, int reviewID)
+        {
+            var query = new GetReviewQuery() { ReviewID = reviewID };
+            return await Mediator.Send(query);
+        }
         [HttpGet("{hotelID}/offers/{offerID}/reviews")]
-        public async Task<ActionResult<List<ReviewDto>>> GetReviewsWithPagination([FromQuery] int hotelID, [FromQuery] int offerID)
+        public async Task<ActionResult<List<ReviewDto>>> GetReviewsWithPagination(int hotelID, int offerID)
         {
             try
             {
                 var query = new GetReviewsWithPaginationQuery()
                 {
                     HotelID = hotelID,
-                    OfferID = offerID
+                    OfferID = offerID,
+                    PageNumber = 1,
+                    PageSize = 1000
                 };
                 var response = await Mediator.Send(query);
                 return response.Items;
@@ -48,13 +57,13 @@ namespace HotelReservationSystem.WebUI.Controllers
             }
         }
         [HttpPost("{hotelID}/offers/{offerID}/reviews")]
-        public async Task<ApiResponse<CreateReviewResponse>> CreateReview([FromQuery] int hotelID, [FromQuery] int offerID, CreateReviewCmd cmd)
+        public async Task<ApiResponse<CreateReviewResponse>> CreateReview(int hotelID, int offerID, CreateReviewCmd cmd)
         {
             var response = new CreateReviewResponse();
             try
             {
-                cmd.HotelId = hotelID;
-                cmd.OfferId = offerID;
+                cmd.HotelID = hotelID;
+                cmd.OfferID = offerID;
                 cmd.ClientId = await GetClientIdFromToken();
                 var id = await Mediator.Send(cmd);
                 response.ReviewID = id;
@@ -70,15 +79,20 @@ namespace HotelReservationSystem.WebUI.Controllers
                 response.Error = "Validation error";
                 return new ApiResponse<CreateReviewResponse>(response, 400);
             }
+            catch (Exception e)
+            {
+                return new ApiResponse<CreateReviewResponse>(response, 500);
+            }
         }
-        [HttpPut("{hotelID}/offers/{offerID}/reviews")]
-        public async Task<ActionResult> UpdateReview([FromQuery] int hotelID, [FromQuery] int offerID, UpdateReviewCmd cmd)
+        [HttpPut("{hotelID}/offers/{offerID}/reviews/{reviewID}")]
+        public async Task<ActionResult> UpdateReview(int hotelID, int offerID, int reviewID, UpdateReviewCmd cmd)
         {
             try
             {
                 cmd.ClientId = await GetClientIdFromToken();
                 cmd.HotelId = hotelID;
                 cmd.OfferId = offerID;
+                cmd.ReviewID = reviewID;
                 var id = await Mediator.Send(cmd);
                 return new StatusCodeResult(200);
             }
@@ -92,7 +106,7 @@ namespace HotelReservationSystem.WebUI.Controllers
             }
         }
         [HttpDelete("{hotelID}/offers/{offerID}/reviews/{reviewID}")]
-        public async Task<ActionResult> DeleteReview([FromQuery] int hotelID, [FromQuery] int offerID, [FromQuery] int reviewID)
+        public async Task<ActionResult> DeleteReview(int hotelID, int offerID, int reviewID)
         {
             var cmd = new DeleteReviewCmd()
             {

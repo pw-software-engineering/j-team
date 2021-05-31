@@ -13,8 +13,8 @@ namespace HotelReservationSystem.Application.Reviews.Cmd.CreateRevewCmd
     {
         public string Content { get; set; }
         public int Rating { get; set; }
-        public int HotelId { get; set; }
-        public int OfferId { get; set; }
+        public int HotelID { get; set; }
+        public int OfferID { get; set; }
         public int ClientId { get; set; }
     }
     public class CreateReviewResponse
@@ -41,15 +41,15 @@ namespace HotelReservationSystem.Application.Reviews.Cmd.CreateRevewCmd
             if (request.Rating > 5 || request.Rating < 1)
                 throw new ValidationException("Rating must be from 1 to 5");
 
-            var offer = _context.Offers.Find(request.OfferId);
-            if (offer is null || offer.HotelId != request.HotelId)
+            var offer = _context.Offers.Find(request.OfferID);
+            if (offer is null || offer.HotelId != request.HotelID)
                 throw new NotFoundException();
 
             var review = new Review()
             {
                 Content = request.Content,
                 Rating = request.Rating,
-                OfferId = request.OfferId,
+                OfferId = request.OfferID,
                 ClientId = request.ClientId
             };
             _context.Reviews.Add(review);

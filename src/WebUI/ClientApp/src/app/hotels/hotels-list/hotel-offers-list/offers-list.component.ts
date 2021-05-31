@@ -11,7 +11,7 @@ import { HotelClient, OfferDto } from '../../../web-api-client';
   styleUrls: ['offers-list.component.scss'],
 })
 export class OffersListComponent implements AfterViewInit {
-  columnsToDisplay = ['title', 'costPerChild', 'costPerAdult', 'maxGuests', 'reservationButton'];
+  columnsToDisplay = ['title', 'costPerChild', 'costPerAdult', 'maxGuests', 'reservationButton', 'reviewsButton'];
   dataSource = new MatTableDataSource<OfferDto>();
   hotelId: number = 0;
   fromTime: Date | null = null;
