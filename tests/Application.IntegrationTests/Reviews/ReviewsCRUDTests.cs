@@ -49,8 +49,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Reviews
             (int offerId, int hotelId, int clientId) = await CreateHotelAndOffer();
             var createCmd = new CreateReviewCmd()
             {
-                HotelId = hotelId,
-                OfferId = offerId,
+                HotelID = hotelId,
+                OfferID = offerId,
                 ClientId = clientId,
                 Content = "Good offer",
                 Rating = 5
@@ -149,8 +149,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Reviews
 
             var createCmd = new CreateReviewCmd()
             {
-                HotelId = hotelId,
-                OfferId = offerId,
+                HotelID = hotelId,
+                OfferID = offerId,
                 ClientId = clientId,
                 Content = "",
                 Rating = 12
@@ -165,8 +165,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Reviews
 
             var createCmd = new CreateReviewCmd()
             {
-                HotelId = hotelId,
-                OfferId = 12312312,
+                HotelID = hotelId,
+                OfferID = 12312312,
                 ClientId = clientId,
                 Content = "",
                 Rating = 12
@@ -223,8 +223,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Reviews
 
             var reviewId = await SendAsync(new CreateReviewCmd()
             {
-                HotelId = hotelId,
-                OfferId = offerId,
+                HotelID = hotelId,
+                OfferID = offerId,
                 ClientId = clientId,
                 Content = "Cool offer",
                 Rating = 5
