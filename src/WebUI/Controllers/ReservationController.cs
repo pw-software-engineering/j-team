@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [Route("api-hotel")]
+    //[Route("api-hotel")]
     public class ReservationController : ApiControllerBase
     {
         [HttpPost("/api-client/hotels/{hotelID}/offers/{offerID}/reservations")]

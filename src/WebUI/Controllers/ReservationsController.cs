@@ -16,10 +16,10 @@ using System.Collections.Generic;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [ApiController]
-    [Route("api/reservations")]
+    //[ApiController]
     [AuthorizeHotel]
     [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
+    [Route("api-hotel/reservations")]
     public class ReservationsController : ApiControllerBase
     {
         [HttpGet]

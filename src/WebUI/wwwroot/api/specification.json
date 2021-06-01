@@ -851,7 +851,7 @@
         }
       }
     },
-    "/api/reservations": {
+    "/api-hotel/reservations": {
       "get": {
         "tags": [
           "Reservations"
@@ -920,7 +920,7 @@
         }
       }
     },
-    "/client-api/hotels/{hotelID}/offers/{offerID}/reviews/{reviewID}": {
+    "/api-client/hotels/{hotelID}/offers/{offerID}/reviews/{reviewID}": {
       "get": {
         "tags": [
           "Reviews"
@@ -1107,7 +1107,7 @@
         }
       }
     },
-    "/client-api/hotels/{hotelID}/offers/{offerID}/reviews": {
+    "/api-client/hotels/{hotelID}/offers/{offerID}/reviews": {
       "get": {
         "tags": [
           "Reviews"
@@ -1219,7 +1219,7 @@
         }
       }
     },
-    "/api/rooms": {
+    "/api-hotel/rooms": {
       "get": {
         "tags": [
           "Room"
@@ -1309,8 +1309,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/CreateRoomResponse"
                 }
               }
             }
@@ -1318,7 +1317,7 @@
         }
       }
     },
-    "/api/rooms/{id}": {
+    "/api-hotel/rooms/{id}": {
       "put": {
         "tags": [
           "Room"
@@ -1923,6 +1922,20 @@
           "clientId": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "CreateRoomResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "roomID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
