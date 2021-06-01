@@ -3,7 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { HotelClient, OfferDto } from '../../../web-api-client';
+import { HotelClient, HotelsClient, OfferDto } from '../../../web-api-client';
 
 @Component({
   selector: 'app-offers-list',
@@ -11,7 +11,7 @@ import { HotelClient, OfferDto } from '../../../web-api-client';
   styleUrls: ['offers-list.component.scss'],
 })
 export class OffersListComponent implements AfterViewInit {
-  columnsToDisplay = ['title', 'costPerChild', 'costPerAdult', 'maxGuests', 'reservationButton'];
+  columnsToDisplay = ['title', 'costPerChild', 'costPerAdult', 'maxGuests', 'reservationButton', 'reviewsButton'];
   dataSource = new MatTableDataSource<OfferDto>();
   hotelId: number = 0;
   fromTime: Date | null = null;
@@ -23,7 +23,7 @@ export class OffersListComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   constructor(
-      private hotelClient: HotelClient,
+      private hotelClient: HotelsClient,
       private route: ActivatedRoute,
       private router: Router
     ) {}

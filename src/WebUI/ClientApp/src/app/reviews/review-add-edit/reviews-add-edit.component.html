@@ -1,0 +1,30 @@
+<h1 *ngIf="!isEdit()">Add review</h1>
+<h1 *ngIf="isEdit()">Edit review</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <div class="form-group col-5">
+      <label>Review content</label>
+      <input type="text" formControlName="content" class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.content.errors }" />
+      <div *ngIf="submitted && f.content.errors" class="invalid-feedback">
+        <div *ngIf="f.content.errors.required">Content is required</div>
+      </div>
+    </div>
+    <div class="form-group col-5">
+      <label></label>
+      <input type="number" formControlName="rating" class="form-control" min='1' max='5'
+        [ngClass]="{ 'is-invalid': submitted && f.rating.errors }" />
+      <div *ngIf="submitted && f.rating.errors" class="invalid-feedback">
+        <div *ngIf="f.rating.errors.required">Rating is required</div>
+        <div *ngIf="f.rating.errors.min">Rating must be greater than 0</div>
+        <div *ngIf="f.rating.errors.max">Rating must be less than 6</div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-primary">
+      Save
+    </button>
+    <a class="btn btn-link" (click)="backToList()">Cancel</a>
+  </div>
+</form>
