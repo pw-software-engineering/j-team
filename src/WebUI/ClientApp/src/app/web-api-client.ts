@@ -86,15 +86,6 @@ export class ClientClient implements IClientClient {
 
 export interface IHotelClient {
     /**
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param country (optional) 
-     * @param city (optional) 
-     * @param hotelName (optional) 
-     * @param x_client_token (optional) client authorization token
-     */
-    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]>;
-    /**
      * @param x_client_token (optional) client authorization token
      */
     create(x_client_token: string | undefined, command: CreateHotelCmd): Observable<number>;
@@ -110,16 +101,6 @@ export interface IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     delete(id: number, x_client_token: string | undefined): Observable<FileResponse>;
-    /**
-     * @param hotelId (optional) 
-     * @param fromTime (optional) 
-     * @param toTime (optional) 
-     * @param minGuest (optional) 
-     * @param costMin (optional) 
-     * @param costMax (optional) 
-     * @param x_client_token (optional) client authorization token
-     */
-    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMin: number | null | undefined, costMax: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]>;
 }
 
 @Injectable({
@@ -133,81 +114,6 @@ export class HotelClient implements IHotelClient {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
-
-    /**
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param country (optional) 
-     * @param city (optional) 
-     * @param hotelName (optional) 
-     * @param x_client_token (optional) client authorization token
-     */
-    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]> {
-        let url_ = this.baseUrl + "/api-hotel/hotels?";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
-            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
-            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (country !== undefined && country !== null)
-            url_ += "Country=" + encodeURIComponent("" + country) + "&";
-        if (city !== undefined && city !== null)
-            url_ += "City=" + encodeURIComponent("" + city) + "&";
-        if (hotelName !== undefined && hotelName !== null)
-            url_ += "HotelName=" + encodeURIComponent("" + hotelName) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetHotelsWithPagination(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetHotelsWithPagination(<any>response_);
-                } catch (e) {
-                    return <Observable<HotelListedDto[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<HotelListedDto[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetHotelsWithPagination(response: HttpResponseBase): Observable<HotelListedDto[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(HotelListedDto.fromJS(item));
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<HotelListedDto[]>(<any>null);
     }
 
     /**
@@ -424,85 +330,6 @@ export class HotelClient implements IHotelClient {
         }
         return _observableOf<FileResponse>(<any>null);
     }
-
-    /**
-     * @param hotelId (optional) 
-     * @param fromTime (optional) 
-     * @param toTime (optional) 
-     * @param minGuest (optional) 
-     * @param costMin (optional) 
-     * @param costMax (optional) 
-     * @param x_client_token (optional) client authorization token
-     */
-    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMin: number | null | undefined, costMax: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]> {
-        let url_ = this.baseUrl + "/api-hotel/hotels/{id}/offers?";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (hotelId === null)
-            throw new Error("The parameter 'hotelId' cannot be null.");
-        else if (hotelId !== undefined)
-            url_ += "HotelId=" + encodeURIComponent("" + hotelId) + "&";
-        if (fromTime !== undefined && fromTime !== null)
-            url_ += "FromTime=" + encodeURIComponent(fromTime ? "" + fromTime.toJSON() : "") + "&";
-        if (toTime !== undefined && toTime !== null)
-            url_ += "ToTime=" + encodeURIComponent(toTime ? "" + toTime.toJSON() : "") + "&";
-        if (minGuest !== undefined && minGuest !== null)
-            url_ += "MinGuest=" + encodeURIComponent("" + minGuest) + "&";
-        if (costMin !== undefined && costMin !== null)
-            url_ += "CostMin=" + encodeURIComponent("" + costMin) + "&";
-        if (costMax !== undefined && costMax !== null)
-            url_ += "CostMax=" + encodeURIComponent("" + costMax) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetFilteredHotelOffersWithPagination(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetFilteredHotelOffersWithPagination(<any>response_);
-                } catch (e) {
-                    return <Observable<OfferDto[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<OfferDto[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetFilteredHotelOffersWithPagination(response: HttpResponseBase): Observable<OfferDto[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(OfferDto.fromJS(item));
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<OfferDto[]>(<any>null);
-    }
 }
 
 export interface IHotelsClient {
@@ -515,22 +342,6 @@ export interface IHotelsClient {
      * @param x_client_token (optional) client authorization token
      */
     getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]>;
-    /**
-     * @param x_client_token (optional) client authorization token
-     */
-    create(x_client_token: string | undefined, command: CreateHotelCmd): Observable<number>;
-    /**
-     * @param x_client_token (optional) client authorization token
-     */
-    getHotelInfo(x_client_token: string | undefined): Observable<HotelDto>;
-    /**
-     * @param x_client_token (optional) client authorization token
-     */
-    update(x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse>;
-    /**
-     * @param x_client_token (optional) client authorization token
-     */
-    delete(id: number, x_client_token: string | undefined): Observable<FileResponse>;
     /**
      * @param hotelId (optional) 
      * @param fromTime (optional) 
@@ -629,221 +440,6 @@ export class HotelsClient implements IHotelsClient {
             }));
         }
         return _observableOf<HotelListedDto[]>(<any>null);
-    }
-
-    /**
-     * @param x_client_token (optional) client authorization token
-     */
-    create(x_client_token: string | undefined, command: CreateHotelCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api-client";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(<any>response_);
-                } catch (e) {
-                    return <Observable<number>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<number>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<number> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<number>(<any>null);
-    }
-
-    /**
-     * @param x_client_token (optional) client authorization token
-     */
-    getHotelInfo(x_client_token: string | undefined): Observable<HotelDto> {
-        let url_ = this.baseUrl + "/api-client/api-hotel/hotelInfo";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetHotelInfo(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetHotelInfo(<any>response_);
-                } catch (e) {
-                    return <Observable<HotelDto>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<HotelDto>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetHotelInfo(response: HttpResponseBase): Observable<HotelDto> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = HotelDto.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<HotelDto>(<any>null);
-    }
-
-    /**
-     * @param x_client_token (optional) client authorization token
-     */
-    update(x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api-client/api-hotel/hotelInfo";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdate(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processUpdate(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(<any>null);
-    }
-
-    /**
-     * @param x_client_token (optional) client authorization token
-     */
-    delete(id: number, x_client_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api-client/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(<any>null);
     }
 
     /**
@@ -2348,58 +1944,6 @@ export interface ICreateClientCmd {
     email?: string | undefined;
 }
 
-export class HotelListedDto implements IHotelListedDto {
-    hotelID?: number;
-    hotelName?: string | undefined;
-    city?: string | undefined;
-    country?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-
-    constructor(data?: IHotelListedDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.hotelID = _data["hotelID"];
-            this.hotelName = _data["hotelName"];
-            this.city = _data["city"];
-            this.country = _data["country"];
-            this.hotelPreviewPicture = _data["hotelPreviewPicture"];
-        }
-    }
-
-    static fromJS(data: any): HotelListedDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new HotelListedDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["hotelID"] = this.hotelID;
-        data["hotelName"] = this.hotelName;
-        data["city"] = this.city;
-        data["country"] = this.country;
-        data["hotelPreviewPicture"] = this.hotelPreviewPicture;
-        return data; 
-    }
-}
-
-export interface IHotelListedDto {
-    hotelID?: number;
-    hotelName?: string | undefined;
-    city?: string | undefined;
-    country?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-}
-
 export class CreateHotelCmd implements ICreateHotelCmd {
     name?: string | undefined;
     hotelPreviewPicture?: string | undefined;
@@ -2590,6 +2134,58 @@ export interface IUpdateHotelCmd {
     hotelDesc?: string | undefined;
     hotelPreviewPicture?: string | undefined;
     hotelPictures?: string[] | undefined;
+}
+
+export class HotelListedDto implements IHotelListedDto {
+    hotelID?: number;
+    hotelName?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
+
+    constructor(data?: IHotelListedDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hotelID = _data["hotelID"];
+            this.hotelName = _data["hotelName"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+            this.hotelPreviewPicture = _data["hotelPreviewPicture"];
+        }
+    }
+
+    static fromJS(data: any): HotelListedDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new HotelListedDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotelID"] = this.hotelID;
+        data["hotelName"] = this.hotelName;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        data["hotelPreviewPicture"] = this.hotelPreviewPicture;
+        return data; 
+    }
+}
+
+export interface IHotelListedDto {
+    hotelID?: number;
+    hotelName?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
 }
 
 export class OfferDto implements IOfferDto {
