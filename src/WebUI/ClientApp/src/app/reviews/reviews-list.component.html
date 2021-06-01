@@ -1,0 +1,41 @@
+<section>
+  <h2>Reviews</h2>
+  <a routerLink="add" class="btn btn-sm btn-success mb-2">Add review</a>
+  <button class="btn btn-sm btn-success mb-2" (click)="backToList()">Go back</button>
+</section>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="rating">
+      <th mat-header-cell *matHeaderCellDef>Rating</th>
+      <td mat-cell *matCellDef="let review">{{ review.rating }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="content">
+      <th mat-header-cell *matHeaderCellDef>Content</th>
+      <td mat-cell *matCellDef="let review">{{ review.content }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="reviewDate">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let review">{{ review.reviewDate }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="editButton">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let review">
+        <a class="btn btn-primary" routerLink="{{ review.id}}">Edit
+          review</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deleteButton">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let review"><button class="btn btn-primary" (click)="Delete(review.id)">Delete
+          review</button></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+  </table>
+</div>

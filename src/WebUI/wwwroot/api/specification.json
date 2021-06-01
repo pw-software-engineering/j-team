@@ -920,6 +920,193 @@
         }
       }
     },
+    "/client-api/hotels/{hotelID}/offers/{offerID}/reviews/{reviewID}": {
+      "get": {
+        "tags": [
+          "Reviews"
+        ],
+        "operationId": "Reviews_GetReview",
+        "parameters": [
+          {
+            "name": "hotelID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "offerID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "reviewID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Reviews"
+        ],
+        "operationId": "Reviews_UpdateReview",
+        "parameters": [
+          {
+            "name": "hotelID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "offerID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "reviewID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "requestBody": {
+          "x-name": "cmd",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReviewCmd"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 4
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Reviews"
+        ],
+        "operationId": "Reviews_DeleteReview",
+        "parameters": [
+          {
+            "name": "hotelID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "offerID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "reviewID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/client-api/hotels/{hotelID}/offers/{offerID}/reviews": {
       "get": {
         "tags": [
@@ -929,7 +1116,8 @@
         "parameters": [
           {
             "name": "hotelID",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -938,7 +1126,8 @@
           },
           {
             "name": "offerID",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -946,28 +1135,10 @@
             "x-position": 2
           },
           {
-            "name": "hotelID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 3
-          },
-          {
-            "name": "offerID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 4
-          },
-          {
             "type": "string",
-            "name": "x-hotel-token",
+            "name": "x-client-token",
             "in": "header",
-            "description": "hotel authorization token",
+            "description": "client authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -995,7 +1166,8 @@
         "parameters": [
           {
             "name": "hotelID",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1004,7 +1176,8 @@
           },
           {
             "name": "offerID",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1012,28 +1185,10 @@
             "x-position": 2
           },
           {
-            "name": "hotelID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 4
-          },
-          {
-            "name": "offerID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 5
-          },
-          {
             "type": "string",
-            "name": "x-hotel-token",
+            "name": "x-client-token",
             "in": "header",
-            "description": "hotel authorization token",
+            "description": "client authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -1049,166 +1204,6 @@
           "required": true,
           "x-position": 3
         },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Reviews"
-        ],
-        "operationId": "Reviews_UpdateReview",
-        "parameters": [
-          {
-            "name": "hotelID",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "offerID",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "hotelID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 4
-          },
-          {
-            "name": "offerID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 5
-          },
-          {
-            "type": "string",
-            "name": "x-hotel-token",
-            "in": "header",
-            "description": "hotel authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
-        "requestBody": {
-          "x-name": "cmd",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateReviewCmd"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 3
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/client-api/hotels/{hotelID}/offers/{offerID}/reviews/{reviewID}": {
-      "delete": {
-        "tags": [
-          "Reviews"
-        ],
-        "operationId": "Reviews_DeleteReview",
-        "parameters": [
-          {
-            "name": "hotelID",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "offerID",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "reviewID",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 3
-          },
-          {
-            "name": "hotelID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 4
-          },
-          {
-            "name": "offerID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 5
-          },
-          {
-            "name": "reviewID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 6
-          },
-          {
-            "type": "string",
-            "name": "x-hotel-token",
-            "in": "header",
-            "description": "hotel authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
         "responses": {
           "200": {
             "description": "",
@@ -1879,11 +1874,11 @@
             "type": "integer",
             "format": "int32"
           },
-          "hotelId": {
+          "hotelID": {
             "type": "integer",
             "format": "int32"
           },
-          "offerId": {
+          "offerID": {
             "type": "integer",
             "format": "int32"
           },
