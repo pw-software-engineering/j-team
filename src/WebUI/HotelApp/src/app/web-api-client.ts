@@ -1037,7 +1037,7 @@ export class OfferClient implements IOfferClient {
 
 export interface IReservationClient {
     create(hotelID: number, offerID: number, command: CreateReservationCmd): Observable<number>;
-    delete(reservationID: number): Observable<number>;
+    delete(reservationID: number, hotelID: string, offerID: string): Observable<number>;
 }
 
 @Injectable({
@@ -1111,11 +1111,17 @@ export class ReservationClient implements IReservationClient {
         return _observableOf<number>(<any>null);
     }
 
-    delete(reservationID: number): Observable<number> {
-        let url_ = this.baseUrl + "/api-client/reservations/{reservationID}";
+    delete(reservationID: number, hotelID: string, offerID: string): Observable<number> {
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}";
         if (reservationID === undefined || reservationID === null)
             throw new Error("The parameter 'reservationID' must be defined.");
         url_ = url_.replace("{reservationID}", encodeURIComponent("" + reservationID));
+        if (hotelID === undefined || hotelID === null)
+            throw new Error("The parameter 'hotelID' must be defined.");
+        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

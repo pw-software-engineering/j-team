@@ -818,7 +818,7 @@
         }
       }
     },
-    "/api-client/reservations/{reservationID}": {
+    "/api-client/hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}": {
       "delete": {
         "tags": [
           "Reservation"
@@ -834,6 +834,24 @@
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "name": "hotelID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "offerID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
           }
         ],
         "responses": {

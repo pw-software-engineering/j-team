@@ -7,6 +7,7 @@ using HotelReservationSystem.Application.Common.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace HotelReservationSystem.Application.Common.Security
 {
@@ -28,9 +29,10 @@ namespace HotelReservationSystem.Application.Common.Security
         }
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var token = context.HttpContext.Request.Headers["x-hotel-token"];
+            var rawToken = context.HttpContext.Request.Headers["x-hotel-token"];
+            var token = JsonConvert.DeserializeObject<HotelToken>(rawToken);
             var mediator = context.HttpContext.RequestServices.GetService<ISender>();
-            var hotelId = await mediator.Send(new GetHotelIdFromTokenQuery() { Token = token });
+            var hotelId = await mediator.Send(new GetHotelIdFromTokenQuery() { Token = token.Id.ToString() });
             if (hotelId is null)
             {
                 var result = new ObjectResult(new AuthFailedResult() { Desc = "Authentication failed" });
@@ -42,5 +44,10 @@ namespace HotelReservationSystem.Application.Common.Security
     public class AuthFailedResult
     {
         public string Desc { get; set; }
+    }
+    public class HotelToken
+    {
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

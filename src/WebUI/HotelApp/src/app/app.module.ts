@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReservationsComponent } from './reservations/reservations.component'; 
+import { ReservationsComponent } from './reservations/reservations.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent, HOTEL_TOKEN } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,7 +37,7 @@ export const imports = [
 ]
 export const providers = [
       { provide: API_BASE_URL, useValue: environment.apiUrl },
-     {provide: HOTEL_TOKEN, useValue: '99999999'}
+     {provide: HOTEL_TOKEN, useValue: '{"id": 99999999,"createdAt": "2021-05-11T18:21:50Z"}'}
 ]
 
 @NgModule({
