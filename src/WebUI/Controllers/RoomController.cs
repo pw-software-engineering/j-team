@@ -19,10 +19,10 @@ using WebUI;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [ApiController]
-    [Route("api/rooms")]
+    //[ApiController]
     [AuthorizeHotel]
     [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
+    [Route("api-hotel/rooms")]
     public class RoomController : ApiControllerBase
     {
         [HttpGet]
@@ -38,18 +38,20 @@ namespace HotelReservationSystem.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Create([FromBody] string hotel_room_number)
+        public async Task<ActionResult<CreateRoomResponse>> Create([FromBody] string hotel_room_number)
         {
 
             try
             {
                 var hotelId = await GetHotelIdFromToken();
-                await Mediator.Send(new CreateRoomCmd
+                var response = new CreateRoomResponse();
+                var id = await Mediator.Send(new CreateRoomCmd
                 {
                     HotelRoomNumber = hotel_room_number,
                     HotelID = hotelId
                 });
-                return Ok();
+                response.RoomID = id;
+                return new ActionResult<CreateRoomResponse>(response);
             }
 
             catch (ForbiddenAccessException)

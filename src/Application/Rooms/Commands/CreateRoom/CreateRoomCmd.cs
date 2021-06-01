@@ -18,6 +18,12 @@ namespace HotelReservationSystem.Application.Rooms.Commands.CreateRoom
         public int HotelID { get; set; }
     }
 
+    public class CreateRoomResponse
+    {
+        public int RoomID { get; set; }
+        public string Error { get; set; }
+    }
+
     public class CreateRoomCmdHandler : IRequestHandler<CreateRoomCmd, int>
     {
         private readonly IApplicationDbContext _context;

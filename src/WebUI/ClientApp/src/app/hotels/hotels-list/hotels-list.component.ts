@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/co
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { count } from 'rxjs/operators';
-import { HotelClient, HotelListedDto, OfferClient, OfferDto } from '../../web-api-client';
+import { HotelClient, HotelListedDto, HotelsClient, OfferClient, OfferDto } from '../../web-api-client';
 
 @Component({
   selector: 'app-hotels-list',
@@ -23,7 +23,7 @@ export class HotelsListComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   constructor(
-      private hotelClient: HotelClient,
+      private hotelClient: HotelsClient,
     ) {}
 
   ngAfterViewInit(): void {}

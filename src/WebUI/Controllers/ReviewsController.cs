@@ -27,7 +27,7 @@ using System;
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
-    [Route("client-api/hotels")]
+    [Route("api-client/hotels")]
     public class ReviewsController : ApiControllerBase
     {
         [HttpGet("{hotelID}/offers/{offerID}/reviews/{reviewID}")]
