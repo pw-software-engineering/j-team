@@ -17,6 +17,8 @@ import { environment } from './../environments/environment';
 import { AngularMaterialModule } from './angular-material.module';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {LoginComponent} from "./login/login.component";
+import { ReviewsListComponent } from './reviews/reviews-list.component';
+import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
 
 export const providers = [
   { provide: API_BASE_URL, useValue: environment.apiUrl }
@@ -28,6 +30,8 @@ export const providers = [
     HotelsListComponent,
     OffersListComponent,
     MakeReservationComponent,
+    ReviewsListComponent,
+    ReviewsAddEditComponent,
     LoginComponent
   ],
   imports: [

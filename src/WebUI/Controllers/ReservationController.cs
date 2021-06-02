@@ -11,6 +11,7 @@ namespace HotelReservationSystem.WebUI.Controllers
 {
     [AuthorizeClient]
     [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
+    //[Route("api-hotel")]
     public class ReservationController : ApiControllerBase
     {
         [HttpPost("/api-client/hotels/{hotelID}/offers/{offerID}/reservations")]
@@ -18,7 +19,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             command.HotelId = hotelID;
             command.OfferId = offerID;
-            command.ClientId = await GetClientIdFromToken();
+            command.ClientId = await GetClientId();
             Console.WriteLine("~~~ {0}", command.ClientId);
             try
             {
@@ -41,7 +42,7 @@ namespace HotelReservationSystem.WebUI.Controllers
             DeleteReservationCmd command = new DeleteReservationCmd
             {
                 ReservationId = reservationID,
-                ClientId = await GetClientIdFromToken()
+                ClientId = await GetClientId()
             };
             try
             {

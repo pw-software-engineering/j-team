@@ -4,6 +4,8 @@ import { HotelsListComponent } from './hotels/hotels-list/hotels-list.component'
 import { OffersListComponent } from './hotels/hotels-list/hotel-offers-list/offers-list.component';
 import {MakeReservationComponent} from "./hotels/hotels-list/hotel-offers-list/make-reservation/make-reservation.component";
 import { LoginComponent } from './login/login.component';
+import { ReviewsListComponent } from './reviews/reviews-list.component';
+import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
