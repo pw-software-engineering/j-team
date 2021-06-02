@@ -16,6 +16,7 @@ export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IClientClient {
     create(command: CreateClientCmd): Observable<number>;
+    login(command: LoginCmd): Observable<string>;
 }
 
 @Injectable({
@@ -32,7 +33,7 @@ export class ClientClient implements IClientClient {
     }
 
     create(command: CreateClientCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api/Client";
+        let url_ = this.baseUrl + "/api-client";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -81,6 +82,58 @@ export class ClientClient implements IClientClient {
             }));
         }
         return _observableOf<number>(<any>null);
+    }
+
+    login(command: LoginCmd): Observable<string> {
+        let url_ = this.baseUrl + "/api-client/login";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLogin(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLogin(<any>response_);
+                } catch (e) {
+                    return <Observable<string>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<string>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processLogin(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<string>(<any>null);
     }
 }
 
@@ -1036,8 +1089,14 @@ export class OfferClient implements IOfferClient {
 }
 
 export interface IReservationClient {
-    create(hotelID: number, offerID: number, command: CreateReservationCmd): Observable<number>;
-    delete(reservationID: number): Observable<number>;
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    create(hotelID: number, offerID: number, x_client_token: string | undefined, command: CreateReservationCmd): Observable<number>;
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    delete(reservationID: number, x_client_token: string | undefined): Observable<number>;
 }
 
 @Injectable({
@@ -1053,7 +1112,10 @@ export class ReservationClient implements IReservationClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    create(hotelID: number, offerID: number, command: CreateReservationCmd): Observable<number> {
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    create(hotelID: number, offerID: number, x_client_token: string | undefined, command: CreateReservationCmd): Observable<number> {
         let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reservations";
         if (hotelID === undefined || hotelID === null)
             throw new Error("The parameter 'hotelID' must be defined.");
@@ -1070,6 +1132,7 @@ export class ReservationClient implements IReservationClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -1111,7 +1174,10 @@ export class ReservationClient implements IReservationClient {
         return _observableOf<number>(<any>null);
     }
 
-    delete(reservationID: number): Observable<number> {
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    delete(reservationID: number, x_client_token: string | undefined): Observable<number> {
         let url_ = this.baseUrl + "/api-client/reservations/{reservationID}";
         if (reservationID === undefined || reservationID === null)
             throw new Error("The parameter 'reservationID' must be defined.");
@@ -1122,6 +1188,7 @@ export class ReservationClient implements IReservationClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Accept": "application/json"
             })
         };
@@ -1577,6 +1644,46 @@ export interface ICreateClientCmd {
     surname?: string | undefined;
     username?: string | undefined;
     email?: string | undefined;
+}
+
+export class LoginCmd implements ILoginCmd {
+    login?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: ILoginCmd) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.login = _data["login"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): LoginCmd {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginCmd();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["login"] = this.login;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export interface ILoginCmd {
+    login?: string | undefined;
+    password?: string | undefined;
 }
 
 export class HotelListedDto implements IHotelListedDto {

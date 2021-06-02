@@ -26,12 +26,10 @@ namespace HotelReservationSystem.Application.Reservations.Commands.CreateReserva
     public class CreateReservationCmdHandler : IRequestHandler<CreateReservationCmd, int>
     {
         private readonly IApplicationDbContext _context;
-
         public CreateReservationCmdHandler(IApplicationDbContext context)
         {
             _context = context;
         }
-
         public async Task<int> Handle(CreateReservationCmd request, CancellationToken cancellationToken)
         {
             var hotel = await _context.Hotels.FindAsync(request.HotelId);
@@ -57,7 +55,6 @@ namespace HotelReservationSystem.Application.Reservations.Commands.CreateReserva
             if (!availableRooms.Any())
                 validationFailures.Add(new ValidationFailure(nameof(offer), 
                     "Offer is not available - please refresh information related to the offer availability"));
-            
             
             if (validationFailures.Count > 0)
                 throw new ValidationException(validationFailures);

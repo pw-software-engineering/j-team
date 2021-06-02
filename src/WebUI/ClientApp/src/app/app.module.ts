@@ -1,6 +1,4 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +14,9 @@ import { OffersListComponent } from './hotels/hotels-list/hotel-offers-list/offe
 import {MakeReservationComponent} from "./hotels/hotels-list/hotel-offers-list/make-reservation/make-reservation.component";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from './../environments/environment';
+import { AngularMaterialModule } from './angular-material.module';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {LoginComponent} from "./login/login.component";
 
 export const providers = [
   { provide: API_BASE_URL, useValue: environment.apiUrl }
@@ -26,7 +27,8 @@ export const providers = [
     AppComponent,
     HotelsListComponent,
     OffersListComponent,
-    MakeReservationComponent
+    MakeReservationComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -40,8 +42,10 @@ export const providers = [
     NgbModule,
     MatDialogModule,
     HttpClientModule,
+    AngularMaterialModule
   ],
-    providers: providers,
-    bootstrap: [AppComponent]
+  providers: providers,
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

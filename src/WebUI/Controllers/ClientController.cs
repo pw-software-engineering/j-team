@@ -1,13 +1,12 @@
-using System.Security.Authentication;
 using System.Threading.Tasks;
 using Application.Auth;
 using HotelReservationSystem.Application.Clients.Commands.CreateClient;
 using HotelReservationSystem.Application.Common.Exceptions;
-using IdentityServer4.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
+    [Route("api-client")]
     public class ClientController : ApiControllerBase
     {
         [HttpPost]
@@ -16,12 +15,13 @@ namespace HotelReservationSystem.WebUI.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ClientSessionToken>> Login(LoginCmd command)
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login(LoginCmd command)
         {
             try
             {
-                return await Mediator.Send(command);
+                var token = await Mediator.Send(command);
+                return new ActionResult<string>(token);
             }
             catch (ForbiddenAccessException)
             {

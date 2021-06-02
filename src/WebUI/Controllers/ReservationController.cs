@@ -1,13 +1,16 @@
 using System;
 using System.Threading.Tasks;
 using HotelReservationSystem.Application.Common.Exceptions;
+using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Reservations.Commands.CreateReservation;
 using HotelReservationSystem.Application.Reservations.Commands.DeleteReservation;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
+    [AuthorizeClient]
+    [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
     public class ReservationController : ApiControllerBase
     {
         [HttpPost("/api-client/hotels/{hotelID}/offers/{offerID}/reservations")]
@@ -15,6 +18,8 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             command.HotelId = hotelID;
             command.OfferId = offerID;
+            command.ClientId = await GetClientIdFromToken();
+            Console.WriteLine("~~~ {0}", command.ClientId);
             try
             {
                 await Mediator.Send(command);
@@ -36,7 +41,7 @@ namespace HotelReservationSystem.WebUI.Controllers
             DeleteReservationCmd command = new DeleteReservationCmd
             {
                 ReservationId = reservationID,
-                ClientId = 1
+                ClientId = await GetClientIdFromToken()
             };
             try
             {
