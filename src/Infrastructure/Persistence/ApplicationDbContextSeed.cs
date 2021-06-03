@@ -51,7 +51,8 @@ namespace HotelReservationSystem.Infrastructure.Persistence
                     Name = "client",
                     Surname = "client",
                     Email = "email@email.com",
-                    Username = "client"
+                    Username = "client",
+                    Password = BCrypt.Net.BCrypt.HashPassword("client")
                 });
 
                 await context.SaveChangesAsync();

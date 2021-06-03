@@ -10,7 +10,7 @@ using HotelReservationSystem.Application.Common.Exceptions;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
+    [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
     [Route("api-hotel")]
     public class HotelController : ApiControllerBase
     {

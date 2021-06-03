@@ -5,8 +5,11 @@ import { OffersListComponent } from './hotels/hotels-list/hotel-offers-list/offe
 import {MakeReservationComponent} from "./hotels/hotels-list/hotel-offers-list/make-reservation/make-reservation.component";
 import { ReviewsListComponent } from './reviews/reviews-list.component';
 import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  { path: 'login', component: LoginComponent },
   { path: 'hotels', component: HotelsListComponent },
   { path: 'hotels/:id/offers', component: OffersListComponent},
   { path: 'hotels/:id/offers/:offerID/reviews', component: ReviewsListComponent},

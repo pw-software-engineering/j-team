@@ -1,21 +1,26 @@
 using System;
 using System.Threading.Tasks;
 using HotelReservationSystem.Application.Common.Exceptions;
+using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Reservations.Commands.CreateReservation;
 using HotelReservationSystem.Application.Reservations.Commands.DeleteReservation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using NSwag.Annotations;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    //[Route("api-hotel")]
+    [Route("api-client")]
+    [AuthorizeClient]
+    [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
     public class ReservationController : ApiControllerBase
     {
-        [HttpPost("/api-client/hotels/{hotelID}/offers/{offerID}/reservations")]
+        [HttpPost("hotels/{hotelID}/offers/{offerID}/reservations")]
         public async Task<ActionResult<int>> Create(int hotelID, int offerID, CreateReservationCmd command)
         {
             command.HotelId = hotelID;
             command.OfferId = offerID;
+            command.ClientId = await GetClientIdFromToken();
             try
             {
                 await Mediator.Send(command);
@@ -31,13 +36,13 @@ namespace HotelReservationSystem.WebUI.Controllers
                 return BadRequest(validationException.Errors);
             }
         }
-        [HttpDelete("/api-client/hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}")]
+        [HttpDelete("hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}")]
         public async Task<ActionResult<int>> Delete(int reservationID)
         {
             DeleteReservationCmd command = new DeleteReservationCmd
             {
                 ReservationId = reservationID,
-                ClientId = 1
+                ClientId = await GetClientIdFromToken()
             };
             try
             {
