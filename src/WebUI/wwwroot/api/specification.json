@@ -6,7 +6,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api-hotel/Client": {
+    "/api-client": {
       "post": {
         "tags": [
           "Client"
@@ -39,6 +39,38 @@
         }
       }
     },
+    "/api-client/login": {
+      "post": {
+        "tags": [
+          "Client"
+        ],
+        "operationId": "Client_Login",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientLoginCmd"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api-hotel": {
       "post": {
         "tags": [
@@ -48,9 +80,9 @@
         "parameters": [
           {
             "type": "string",
-            "name": "x-client-token",
+            "name": "x-hotel-token",
             "in": "header",
-            "description": "client authorization token",
+            "description": "hotel authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -90,9 +122,9 @@
         "parameters": [
           {
             "type": "string",
-            "name": "x-client-token",
+            "name": "x-hotel-token",
             "in": "header",
-            "description": "client authorization token",
+            "description": "hotel authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -117,9 +149,9 @@
         "parameters": [
           {
             "type": "string",
-            "name": "x-client-token",
+            "name": "x-hotel-token",
             "in": "header",
-            "description": "client authorization token",
+            "description": "hotel authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -169,9 +201,9 @@
           },
           {
             "type": "string",
-            "name": "x-client-token",
+            "name": "x-hotel-token",
             "in": "header",
-            "description": "client authorization token",
+            "description": "hotel authorization token",
             "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
@@ -789,6 +821,13 @@
               "format": "int32"
             },
             "x-position": 2
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "requestBody": {
@@ -852,6 +891,13 @@
               "type": "string"
             },
             "x-position": 3
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
           }
         ],
         "responses": {
@@ -1447,6 +1493,24 @@
           "email": {
             "type": "string",
             "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ClientLoginCmd": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "login": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1777,8 +1841,7 @@
         "properties": {
           "clientId": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "hotelId": {
             "type": "integer",

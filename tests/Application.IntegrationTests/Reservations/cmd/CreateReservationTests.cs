@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using HotelReservationSystem.Application.Common.Exceptions;
 using System.Linq;
+using Application.Auth;
 using HotelReservationSystem.Application.Clients.Commands.CreateClient;
 using HotelReservationSystem.Application.Reservations.Commands.CreateReservation;
 using HotelReservationSystem.Application.Rooms.Commands.CreateRoom;
@@ -67,7 +68,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
                 Name = "John",
                 Surname = "Kowalski",
                 Username = "johnkowalski",
-                Email = "john@kowalski.com"
+                Email = "john@kowalski.com",
+                Password = "pass"
             });
             var result = await SendAsync(new CreateReservationCmd
             {
@@ -77,7 +79,8 @@ namespace HotelReservationSystem.Application.IntegrationTests
                 From = new DateTime(2020, 1, 1),
                 To = new DateTime(2020, 1, 3),
                 NumberOfChildren = 1,
-                NumberOfAdults = 2
+                NumberOfAdults = 2,
+                
             });
             result.Should().BePositive();
         }

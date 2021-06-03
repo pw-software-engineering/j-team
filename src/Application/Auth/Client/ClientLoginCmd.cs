@@ -27,22 +27,11 @@ namespace Application.Auth
         }
         public async Task<string> Handle(ClientLoginCmd request, CancellationToken cancellationToken)
         {
-            var client = await context.Clients.FirstOrDefaultAsync(x => x.Email == request.Login);
+            var client = await context.Clients.FirstOrDefaultAsync(x => x.Username == request.Login);
             if (client == null)
                 throw new ForbiddenAccessException();
             if (BCrypt.Net.BCrypt.Verify(request.Password, client.Password))
             {
-                /*var token = new ClientSessionToken
-                {
-                    Id = client.ClientId,
-                    CreatedAt = DateTime.Now.ToLocalTime()
-                };*/
-                // generate token that is valid for 7 days
-                /*var tokenHandler = new JwtSecurityTokenHandler();
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(new[] { new Claim("id", client.ClientId.ToString()), new Claim("createdAt", DateTime.UtcNow.ToString()) })
-                };*/
                 var token = JsonSerializer.Serialize(new ClientToken
                 {
                     id = client.ClientId,
