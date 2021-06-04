@@ -9,6 +9,7 @@ using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Interfaces;
 using MediatR;
 using HotelReservationSystem.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo
 {
@@ -32,7 +33,7 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo
         public async Task<DetailedOfferDto> Handle(GetOfferInfoQuery request, CancellationToken cancellationToken)
         {
      
-            var offer = _context.Offers.Where(x => x.HotelId == request.hotelId && x.OfferId == request.offerId).FirstOrDefault();
+            var offer = _context.Offers.Include(x=> x.Rooms).Include("Rooms.Reservations").Where(x => x.HotelId == request.hotelId && x.OfferId == request.offerId).FirstOrDefault();
             if (offer == null) throw new NotFoundException();
             var avaibility = new List<(DateTime from, DateTime to)>();
 
@@ -43,14 +44,14 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo
                     avaibility.Add((DateTime.Now, DateTime.Today.AddDays(365)));
                     continue;
                 }
-                room.Reservations=room.Reservations.OrderBy(x => x.FromTime).ToList();
+                var reservations=room.Reservations.OrderBy(x => x.FromTime).ToList();
                 DateTime firstfree = DateTime.Today.AddDays(1);
-                for(int i = 0; i < room.Reservations.Count; i++)
+                for(int i = 0; i < reservations.Count; i++)
                 {
-                    if (room.Reservations[i].ToTime <= DateTime.Now) continue;
-                    if (room.Reservations[i].FromTime > firstfree) avaibility.Add((firstfree,room.Reservations[i].FromTime.AddDays(-1)));
-                    firstfree = room.Reservations[i].ToTime.AddDays(1);
-                    if (i == room.Reservations.Count - 1) avaibility.Add((firstfree, DateTime.Today.AddDays(365)));
+                    if (reservations[i].ToTime <= DateTime.Now) continue;
+                    if (room.Reservations[i].FromTime > firstfree) avaibility.Add((firstfree, reservations[i].FromTime.AddDays(-1)));
+                    firstfree = reservations[i].ToTime.AddDays(1);
+                    if (i == reservations.Count - 1) avaibility.Add((firstfree, DateTime.Today.AddDays(365)));
                 }
             }
             

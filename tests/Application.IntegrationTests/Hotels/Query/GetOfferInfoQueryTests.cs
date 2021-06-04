@@ -1,5 +1,7 @@
 ﻿using HotelReservationSystem.Application.Offers.Commands.CreateOffer;
 using HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo;
+using HotelReservationSystem.Application.Rooms.Commands.CreateRoom;
+using HotelReservationSystem.Application.Offers.Commands.DeleteOffer;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using HotelReservationSystem.Application.Hotels.Commands.CreateHotel;
@@ -41,7 +43,17 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Query
                 Description="Wakacje pod palmami"
 
             });
-
+            var room = await SendAsync(new CreateRoomCmd
+            {
+                HotelRoomNumber="420",
+                HotelID=hotelId
+            });
+            await SendAsync(new AddOfferRoomCmd
+            {
+                OfferId=offerId,
+                HotelId=hotelId,
+                RoomId=room
+            });
             var result = await SendAsync(new GetOfferInfoQuery
             {
                 hotelId = hotelId,
