@@ -81,13 +81,22 @@
         }
       }
     },
-    "/api-hotel/hotelInfo": {
+    "/api-hotel/offerInfo": {
       "get": {
         "tags": [
           "Hotel"
         ],
-        "operationId": "Hotel_GetHotelInfo",
+        "operationId": "Hotel_GetOfferInfo",
         "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
           {
             "type": "string",
             "name": "x-client-token",
@@ -102,13 +111,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HotelDto"
+                  "$ref": "#/components/schemas/DetailedOfferDto"
                 }
               }
             }
           }
         }
-      },
+      }
+    },
+    "/api-hotel/hotelInfo": {
       "patch": {
         "tags": [
           "Hotel"
@@ -260,6 +271,45 @@
                   "items": {
                     "$ref": "#/components/schemas/HotelListedDto"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-client/hotels/{id}": {
+      "get": {
+        "tags": [
+          "Hotels"
+        ],
+        "operationId": "Hotels_GetHotelInfo",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HotelDto"
                 }
               }
             }
@@ -1489,38 +1539,65 @@
           }
         }
       },
-      "HotelDto": {
+      "DetailedOfferDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "hotelName": {
+          "title": {
             "type": "string",
             "nullable": true
           },
-          "hotelDesc": {
+          "description": {
             "type": "string",
             "nullable": true
           },
-          "city": {
-            "type": "string",
+          "maxGuests": {
+            "type": "integer"
+          },
+          "costPerChild": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerAdult": {
+            "type": "number",
+            "format": "double"
+          },
+          "isActive": {
+            "type": "boolean",
             "nullable": true
           },
-          "country": {
-            "type": "string",
+          "isDeleted": {
+            "type": "boolean",
             "nullable": true
           },
-          "hotelPreviewPicture": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "hotelPictures": {
+          "offerPictures": {
             "type": "array",
             "nullable": true,
             "items": {
               "type": "string",
               "format": "byte"
             }
+          },
+          "availabilityTimeIntervals": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ValueTupleOfDateTimeAndDateTime"
+            }
+          }
+        }
+      },
+      "ValueTupleOfDateTimeAndDateTime": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "item1": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "item2": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -1579,6 +1656,41 @@
             "type": "string",
             "format": "byte",
             "nullable": true
+          }
+        }
+      },
+      "HotelDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "hotelName": {
+            "type": "string",
+            "nullable": true
+          },
+          "hotelDesc": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "hotelPreviewPicture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "hotelPictures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
           }
         }
       },

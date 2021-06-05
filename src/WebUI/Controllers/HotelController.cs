@@ -26,20 +26,7 @@ namespace HotelReservationSystem.WebUI.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpGet("hotelInfo")]
-        public async Task<ActionResult<HotelDto>> GetHotelInfo()
-        {
-            try
-            {
-                var query = new GetHotelInfoQuery();
-                query.hotelId = await GetHotelIdFromToken();
-                return await Mediator.Send(query);
-            }
-            catch (NotFoundException)
-            {
-                return new StatusCodeResult(404);
-            }
-        }
+       
         [HttpGet("offerInfo")]
         public async Task<ActionResult<DetailedOfferDto>> GetOfferInfo(int id)
         {

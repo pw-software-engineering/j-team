@@ -14,7 +14,7 @@
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="hotelName">
       <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let hotel"><a routerLink="/{{hotel.hotelID}}">{{ hotel.hotelName }}</a></td>
+      <td mat-cell *matCellDef="let hotel"><a routerLink="{{hotel.hotelID}}">{{ hotel.hotelName }}</a></td>
     </ng-container>
 
     <ng-container matColumnDef="country">
