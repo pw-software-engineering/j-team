@@ -14,7 +14,7 @@ namespace HotelReservationSystem.Application.Reservations.Commands.CreateReserva
 {
     public class CreateReservationCmd : IRequest<int>
     {
-        public int? ClientId;
+        public int ClientId;
         public int HotelId;
         public int OfferId;
         public DateTime From { get; set; }
@@ -65,7 +65,7 @@ namespace HotelReservationSystem.Application.Reservations.Commands.CreateReserva
             var reservation = new Reservation
             {
                 OfferId = request.OfferId,
-                ClientId = request.ClientId ?? 1,
+                ClientId = request.ClientId,
                 RoomId = availableRooms.Min(room => room.RoomId),
                 FromTime = request.From,
                 ToTime = request.To,

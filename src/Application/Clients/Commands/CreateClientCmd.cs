@@ -14,6 +14,7 @@ namespace HotelReservationSystem.Application.Clients.Commands.CreateClient
         public string Surname { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
     }
      public class CreateClientCmdHandler : IRequestHandler<CreateClientCmd, int>
     {
@@ -31,7 +32,8 @@ namespace HotelReservationSystem.Application.Clients.Commands.CreateClient
                 Name = request.Name,
                 Surname = request.Surname,
                 Username = request.Username,
-                Email = request.Email
+                Email = request.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
             };
             _context.Clients.Add(entity);
             await _context.SaveChangesAsync(cancellationToken);

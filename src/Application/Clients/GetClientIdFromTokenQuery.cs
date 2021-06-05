@@ -6,14 +6,15 @@ using HotelReservationSystem.Application.Common.Interfaces;
 using HotelReservationSystem.Application.Hotels.Commands.CreateHotel;
 using HotelReservationSystem.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace HotelReservationSystem.Application.Clients.Commands.CreateClient
+namespace HotelReservationSystem.Application.Clients.Commands.GetClientToken
 {
-    public class GetClientIdFromTokenQuery : IRequest<int>
+    public class GetClientIdFromTokenQuery : IRequest<int?>
     {
         public string Token { get; set; }
     }
-    public class GetClientIdFromTokenQueryHandler : IRequestHandler<GetClientIdFromTokenQuery, int>
+    public class GetClientIdFromTokenQueryHandler : IRequestHandler<GetClientIdFromTokenQuery, int?>
     {
         private readonly IApplicationDbContext _context;
 
@@ -22,10 +23,11 @@ namespace HotelReservationSystem.Application.Clients.Commands.CreateClient
             _context = context;
         }
 
-        public async Task<int> Handle(GetClientIdFromTokenQuery request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(GetClientIdFromTokenQuery request, CancellationToken cancellationToken)
         {
-            //TODO: zmienic na token prawdziwy
-            return _context.Clients.First().ClientId;
+            var client = await _context.Clients.FirstOrDefaultAsync(x => x.AccessToken == request.Token);
+
+            return client?.ClientId;
         }
     }
 }

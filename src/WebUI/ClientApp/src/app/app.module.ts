@@ -18,6 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from './../environments/environment';
 import { ReviewsListComponent } from './reviews/reviews-list.component';
 import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
+import {LoginComponent} from "./login/login.component";
 
 export const providers = [
   { provide: API_BASE_URL, useValue: environment.apiUrl }
@@ -30,7 +31,8 @@ export const providers = [
     OffersListComponent,
     MakeReservationComponent,
     ReviewsListComponent,
-    ReviewsAddEditComponent
+    ReviewsAddEditComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
