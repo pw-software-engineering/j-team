@@ -11,11 +11,12 @@ using HotelReservationSystem.Application.Common.Exceptions;
 using ValidationException = HotelReservationSystem.Application.Common.Exceptions.ValidationException;
 using HotelReservationSystem.Application.Hotels;
 using HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo;
-
+using HotelReservationSystem.Application.Common.Security;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
+    [AuthorizeHotel]
     [Route("api-hotel")]
     public class HotelController : ApiControllerBase
     {

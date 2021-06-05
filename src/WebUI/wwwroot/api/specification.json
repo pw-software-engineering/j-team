@@ -39,7 +39,7 @@
         }
       }
     },
-    "/api-client/login": {
+    "/api-client/client/login": {
       "post": {
         "tags": [
           "Client"
@@ -63,7 +63,305 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/ClientToken"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-client/hotels": {
+      "get": {
+        "tags": [
+          "Hotels"
+        ],
+        "operationId": "Hotels_GetHotelsWithPagination",
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Country",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "City",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "HotelName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HotelListedDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-client/hotels/{id}/offers": {
+      "get": {
+        "tags": [
+          "Hotels"
+        ],
+        "operationId": "Hotels_GetFilteredHotelOffersWithPagination",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "HotelId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "FromTime",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "ToTime",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "MinGuest",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "CostMin",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "CostMax",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OfferDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-client/hotels/{hotelID}/offers/{offerID}/reservations": {
+      "post": {
+        "tags": [
+          "ClientReserevations"
+        ],
+        "operationId": "ClientReserevations_Create",
+        "parameters": [
+          {
+            "name": "hotelID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "offerID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReservationCmd"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 3
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-client/hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}": {
+      "delete": {
+        "tags": [
+          "ClientReserevations"
+        ],
+        "operationId": "ClientReserevations_Delete",
+        "parameters": [
+          {
+            "name": "reservationID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "hotelID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "offerID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
+          },
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
                 }
               }
             }
@@ -253,184 +551,6 @@
                 "schema": {
                   "type": "string",
                   "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api-client/hotels": {
-      "get": {
-        "tags": [
-          "Hotels"
-        ],
-        "operationId": "Hotels_GetHotelsWithPagination",
-        "parameters": [
-          {
-            "name": "PageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "Country",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
-            "name": "City",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 4
-          },
-          {
-            "name": "HotelName",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 5
-          },
-          {
-            "type": "string",
-            "name": "x-client-token",
-            "in": "header",
-            "description": "client authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/HotelListedDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api-client/hotels/{id}/offers": {
-      "get": {
-        "tags": [
-          "Hotels"
-        ],
-        "operationId": "Hotels_GetFilteredHotelOffersWithPagination",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "HotelId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "FromTime",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
-            "name": "ToTime",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time",
-              "nullable": true
-            },
-            "x-position": 4
-          },
-          {
-            "name": "MinGuest",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 5
-          },
-          {
-            "name": "CostMin",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 6
-          },
-          {
-            "name": "CostMax",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 7
-          },
-          {
-            "type": "string",
-            "name": "x-client-token",
-            "in": "header",
-            "description": "client authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OfferDto"
-                  }
                 }
               }
             }
@@ -826,126 +946,6 @@
                 "schema": {
                   "type": "string",
                   "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api-client/hotels/{hotelID}/offers/{offerID}/reservations": {
-      "post": {
-        "tags": [
-          "Reservation"
-        ],
-        "operationId": "Reservation_Create",
-        "parameters": [
-          {
-            "name": "hotelID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "offerID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "type": "string",
-            "name": "x-client-token",
-            "in": "header",
-            "description": "client authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateReservationCmd"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 3
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api-client/hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}": {
-      "delete": {
-        "tags": [
-          "Reservation"
-        ],
-        "operationId": "Reservation_Delete",
-        "parameters": [
-          {
-            "name": "reservationID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "hotelID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "offerID",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 3
-          },
-          {
-            "type": "string",
-            "name": "x-client-token",
-            "in": "header",
-            "description": "client authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
                 }
               }
             }
@@ -1538,6 +1538,20 @@
           }
         }
       },
+      "ClientToken": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "ClientLoginCmd": {
         "type": "object",
         "additionalProperties": false,
@@ -1549,6 +1563,115 @@
           "password": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "HotelListedDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "hotelID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hotelName": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "hotelPreviewPicture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          }
+        }
+      },
+      "OfferDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "offerID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offerTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "costPerChild": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerAdult": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxGuests": {
+            "type": "integer"
+          },
+          "offerPreviewPicture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "pictures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          }
+        }
+      },
+      "CreateReservationCmd": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "clientId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hotelId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "numberOfChildren": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfAdults": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1719,81 +1842,6 @@
           }
         }
       },
-      "HotelListedDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "hotelID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hotelName": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "country": {
-            "type": "string",
-            "nullable": true
-          },
-          "hotelPreviewPicture": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          }
-        }
-      },
-      "OfferDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "offerID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "offerTitle": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "isActive": {
-            "type": "boolean"
-          },
-          "isDeleted": {
-            "type": "boolean"
-          },
-          "costPerChild": {
-            "type": "number",
-            "format": "double"
-          },
-          "costPerAdult": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxGuests": {
-            "type": "integer"
-          },
-          "offerPreviewPicture": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "pictures": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string",
-              "format": "byte"
-            }
-          }
-        }
-      },
       "RoomDto": {
         "type": "object",
         "additionalProperties": false,
@@ -1930,40 +1978,6 @@
             }
           },
           "hotelId": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "CreateReservationCmd": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "clientId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hotelId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "offerId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "from": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "to": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "numberOfChildren": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "numberOfAdults": {
             "type": "integer",
             "format": "int32"
           }

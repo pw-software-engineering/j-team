@@ -29,15 +29,23 @@ namespace HotelReservationSystem.Application.Common.Security
         }
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var rawToken = context.HttpContext.Request.Headers["x-hotel-token"];
-            var token = JsonConvert.DeserializeObject<HotelToken>(rawToken);
-            var mediator = context.HttpContext.RequestServices.GetService<ISender>();
-            var hotelId = await mediator.Send(new GetHotelIdFromTokenQuery() { Token = token.Id.ToString() });
-            if (hotelId is null)
+            var authFailedResult = new ObjectResult(new AuthFailedResult() { Desc = "Authentication failed" });
+            authFailedResult.StatusCode = 401;
+            int? hotelId = null;
+            try
             {
-                var result = new ObjectResult(new AuthFailedResult() { Desc = "Authentication failed" });
-                result.StatusCode = 401;
-                context.Result = result;
+                var rawToken = context.HttpContext.Request.Headers["x-hotel-token"];
+                var token = JsonConvert.DeserializeObject<HotelToken>(rawToken);
+                var mediator = context.HttpContext.RequestServices.GetService<ISender>();
+                hotelId = await mediator.Send(new GetHotelIdFromTokenQuery() { Token = token.Id.ToString() });
+                if (hotelId is null)
+                {
+                    context.Result = authFailedResult;
+                }
+            }
+            catch (Exception)
+            {
+                context.Result = authFailedResult;
             }
         }
     }
@@ -65,14 +73,23 @@ namespace HotelReservationSystem.Application.Common.Security
         }
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var rawToken = context.HttpContext.Request.Headers["x-client-token"];
-            var mediator = context.HttpContext.RequestServices.GetService<ISender>();
-            var clientId = await mediator.Send(new GetClientIdFromTokenQuery() { Token = rawToken });
-            if (clientId is null)
+            var authFailedResult = new ObjectResult(new AuthFailedResult() { Desc = "Authentication failed" });
+            authFailedResult.StatusCode = 401;
+            int? clientId = null;
+            try
             {
-                var result = new ObjectResult(new AuthFailedResult() { Desc = "Authentication failed" });
-                result.StatusCode = 401;
-                context.Result = result;
+                var rawToken = context.HttpContext.Request.Headers["x-client-token"];
+                var token = JsonConvert.DeserializeObject<ClientToken>(rawToken);
+                var mediator = context.HttpContext.RequestServices.GetService<ISender>();
+                clientId = await mediator.Send(new GetClientIdFromTokenQuery() { Token = token.id.ToString() });
+                if (clientId is null)
+                {
+                    context.Result = authFailedResult;
+                }
+            }
+            catch (Exception)
+            {
+                context.Result = authFailedResult;
             }
         }
     }

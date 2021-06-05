@@ -46,14 +46,16 @@ namespace HotelReservationSystem.Infrastructure.Persistence
             }
             if (!context.Clients.Any())
             {
-                context.Clients.Add(new Client
+                var client = new Client
                 {
                     Name = "client",
                     Surname = "client",
                     Email = "email@email.com",
                     Username = "client",
-                    Password = BCrypt.Net.BCrypt.HashPassword("client")
-                });
+                    Password = BCrypt.Net.BCrypt.HashPassword("client"),
+                };
+                context.Clients.Add(client);
+                client.AccessToken = client.ClientId.ToString();
 
                 await context.SaveChangesAsync();
             }
