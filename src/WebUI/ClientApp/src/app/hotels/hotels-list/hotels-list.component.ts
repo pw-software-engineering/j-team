@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/co
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { count } from 'rxjs/operators';
+import { GetClientToken } from 'src/app/login/login.component';
 import { HotelClient, HotelListedDto, HotelsClient, OfferClient, OfferDto } from '../../web-api-client';
 
 @Component({
@@ -74,7 +75,7 @@ export class HotelsListComponent implements AfterViewInit {
       this.country,
       this.city,
       this.hotelName,
-      "");
+      GetClientToken());
 
     hotelsRequest.subscribe({
       next: (value) => {

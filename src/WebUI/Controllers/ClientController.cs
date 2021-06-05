@@ -16,7 +16,7 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             return await Mediator.Send(command);
         }
-        [HttpPost("client/login")]
+        [HttpPost("login")]
         public async Task<ActionResult<ClientToken>> Login(ClientLoginCmd command)
         {
             try

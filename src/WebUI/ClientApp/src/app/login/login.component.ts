@@ -33,7 +33,10 @@ export class LoginComponent implements OnInit {
       {
         next: (value) => {
           console.log(value);
-          localStorage.setItem('x-client-token', value);
+          console.log(JSON.stringify(value));
+          localStorage.setItem('x-client-token',JSON.stringify(value));
+          var a = localStorage.getItem('x-client-token');
+          console.log(a);
           this.router.navigate(['/hotels'], {relativeTo: this.route});
         },
         error: (error) => {
@@ -43,4 +46,10 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+}
+export function GetClientToken(){
+    let token = localStorage.getItem('x-client-token');
+    if (token == null)
+      token = "";
+    return token;
 }

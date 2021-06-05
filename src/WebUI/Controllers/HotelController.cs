@@ -41,21 +41,7 @@ namespace HotelReservationSystem.WebUI.Controllers
                 return new StatusCodeResult(404);
             }
         }
-        [HttpGet("offerInfo")]
-        public async Task<ActionResult<DetailedOfferDto>> GetOfferInfo(int id)
-        {
-            try
-            {
-                var query = new GetOfferInfoQuery();
-                query.hotelId = await GetHotelIdFromToken();
-                query.offerId = id;
-                return await Mediator.Send(query);
-            }
-            catch (NotFoundException)
-            {
-                return new StatusCodeResult(404);
-            }
-        }
+
 
         [HttpPatch("hotelInfo")]
         public async Task<ActionResult> Update(UpdateHotelCmd command)

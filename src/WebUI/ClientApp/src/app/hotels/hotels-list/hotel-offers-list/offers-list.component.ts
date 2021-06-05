@@ -3,6 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+import { GetClientToken } from 'src/app/login/login.component';
 import { HotelClient, HotelsClient, OfferDto } from '../../../web-api-client';
 
 @Component({
@@ -69,7 +70,7 @@ export class OffersListComponent implements AfterViewInit {
       this.minGuests,
       this.costMin,
       this.costMax,
-      ""
+      GetClientToken()
       )
       .pipe(first())
       .subscribe(data => {
