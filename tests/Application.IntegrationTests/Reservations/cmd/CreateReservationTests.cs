@@ -19,7 +19,6 @@ namespace HotelReservationSystem.Application.IntegrationTests
     using static Testing;
     class CreateReservationTests : TestBase
     {
-
         [Test]
         public void ShouldThrowExceptionIfOfferOrHotelIsNotFound()
         {
