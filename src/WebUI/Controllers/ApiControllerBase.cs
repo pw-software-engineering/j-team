@@ -1,15 +1,18 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Application.Auth;
+using HotelReservationSystem.Application.Clients.Commands.CreateClient;
 using HotelReservationSystem.Application.Common.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api-hotel/[controller]")]
     public abstract class ApiControllerBase : ControllerBase
     {
         private ISender _mediator;
@@ -17,7 +20,9 @@ namespace HotelReservationSystem.WebUI.Controllers
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
         protected string GetHotelToken()
         {
-            return Request.Headers["x-hotel-token"];
+            var rawString = Request.Headers["x-hotel-token"];
+            var token = JsonConvert.DeserializeObject<HotelToken>(rawString);
+            return token.Id.ToString();
         }
         protected async Task<int> GetHotelIdFromToken()
         {
@@ -26,8 +31,9 @@ namespace HotelReservationSystem.WebUI.Controllers
         }
         protected async Task<int> GetClientIdFromToken()
         {
-            //TODO: prawdziwy token
-            return 1;
+            var clientId = await Mediator.Send(new GetClientIdFromTokenQuery() { Token = "" });
+            return clientId;
         }
     }
+
 }

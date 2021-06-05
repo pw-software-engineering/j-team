@@ -32,7 +32,7 @@ export class ClientClient implements IClientClient {
     }
 
     create(command: CreateClientCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api/Client";
+        let url_ = this.baseUrl + "/api-hotel/Client";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -86,15 +86,6 @@ export class ClientClient implements IClientClient {
 
 export interface IHotelClient {
     /**
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param country (optional) 
-     * @param city (optional) 
-     * @param hotelName (optional) 
-     * @param x_client_token (optional) client authorization token
-     */
-    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]>;
-    /**
      * @param x_client_token (optional) client authorization token
      */
     create(x_client_token: string | undefined, command: CreateHotelCmd): Observable<number>;
@@ -115,16 +106,6 @@ export interface IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     delete(id: number, x_client_token: string | undefined): Observable<FileResponse>;
-    /**
-     * @param hotelId (optional) 
-     * @param fromTime (optional) 
-     * @param toTime (optional) 
-     * @param minGuest (optional) 
-     * @param costMin (optional) 
-     * @param costMax (optional) 
-     * @param x_client_token (optional) client authorization token
-     */
-    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMin: number | null | undefined, costMax: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]>;
 }
 
 @Injectable({
@@ -141,85 +122,10 @@ export class HotelClient implements IHotelClient {
     }
 
     /**
-     * @param pageNumber (optional) 
-     * @param pageSize (optional) 
-     * @param country (optional) 
-     * @param city (optional) 
-     * @param hotelName (optional) 
-     * @param x_client_token (optional) client authorization token
-     */
-    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]> {
-        let url_ = this.baseUrl + "/api/hotels?";
-        if (pageNumber === null)
-            throw new Error("The parameter 'pageNumber' cannot be null.");
-        else if (pageNumber !== undefined)
-            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
-        if (pageSize === null)
-            throw new Error("The parameter 'pageSize' cannot be null.");
-        else if (pageSize !== undefined)
-            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
-        if (country !== undefined && country !== null)
-            url_ += "Country=" + encodeURIComponent("" + country) + "&";
-        if (city !== undefined && city !== null)
-            url_ += "City=" + encodeURIComponent("" + city) + "&";
-        if (hotelName !== undefined && hotelName !== null)
-            url_ += "HotelName=" + encodeURIComponent("" + hotelName) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetHotelsWithPagination(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetHotelsWithPagination(<any>response_);
-                } catch (e) {
-                    return <Observable<HotelListedDto[]>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<HotelListedDto[]>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGetHotelsWithPagination(response: HttpResponseBase): Observable<HotelListedDto[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(HotelListedDto.fromJS(item));
-            }
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<HotelListedDto[]>(<any>null);
-    }
-
-    /**
      * @param x_client_token (optional) client authorization token
      */
     create(x_client_token: string | undefined, command: CreateHotelCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api";
+        let url_ = this.baseUrl + "/api-hotel";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -275,7 +181,7 @@ export class HotelClient implements IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     getHotelInfo(x_client_token: string | undefined): Observable<HotelDto> {
-        let url_ = this.baseUrl + "/api/hotelInfo";
+        let url_ = this.baseUrl + "/api-hotel/hotelInfo";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -327,7 +233,7 @@ export class HotelClient implements IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     update(x_client_token: string | undefined, command: UpdateHotelCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/hotelInfo";
+        let url_ = this.baseUrl + "/api-hotel/hotelInfo";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -438,7 +344,7 @@ export class HotelClient implements IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     delete(id: number, x_client_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/{id}";
+        let url_ = this.baseUrl + "/api-hotel/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -486,6 +392,117 @@ export class HotelClient implements IHotelClient {
         }
         return _observableOf<FileResponse>(<any>null);
     }
+}
+
+export interface IHotelsClient {
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param country (optional) 
+     * @param city (optional) 
+     * @param hotelName (optional) 
+     * @param x_client_token (optional) client authorization token
+     */
+    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]>;
+    /**
+     * @param hotelId (optional) 
+     * @param fromTime (optional) 
+     * @param toTime (optional) 
+     * @param minGuest (optional) 
+     * @param costMin (optional) 
+     * @param costMax (optional) 
+     * @param x_client_token (optional) client authorization token
+     */
+    getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMin: number | null | undefined, costMax: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class HotelsClient implements IHotelsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param country (optional) 
+     * @param city (optional) 
+     * @param hotelName (optional) 
+     * @param x_client_token (optional) client authorization token
+     */
+    getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]> {
+        let url_ = this.baseUrl + "/api-client/hotels?";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (country !== undefined && country !== null)
+            url_ += "Country=" + encodeURIComponent("" + country) + "&";
+        if (city !== undefined && city !== null)
+            url_ += "City=" + encodeURIComponent("" + city) + "&";
+        if (hotelName !== undefined && hotelName !== null)
+            url_ += "HotelName=" + encodeURIComponent("" + hotelName) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetHotelsWithPagination(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetHotelsWithPagination(<any>response_);
+                } catch (e) {
+                    return <Observable<HotelListedDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<HotelListedDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetHotelsWithPagination(response: HttpResponseBase): Observable<HotelListedDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(HotelListedDto.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<HotelListedDto[]>(<any>null);
+    }
 
     /**
      * @param hotelId (optional) 
@@ -497,7 +514,7 @@ export class HotelClient implements IHotelClient {
      * @param x_client_token (optional) client authorization token
      */
     getFilteredHotelOffersWithPagination(id: number, hotelId: number | undefined, fromTime: Date | null | undefined, toTime: Date | null | undefined, minGuest: number | null | undefined, costMin: number | null | undefined, costMax: number | null | undefined, x_client_token: string | undefined): Observable<OfferDto[]> {
-        let url_ = this.baseUrl + "/api/hotels/{id}/offers?";
+        let url_ = this.baseUrl + "/api-client/hotels/{id}/offers?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -628,7 +645,7 @@ export class OfferClient implements IOfferClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     rooms(offerID: number, roomNumber: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<RoomDto[]> {
-        let url_ = this.baseUrl + "/api/offers/{offerID}/rooms?";
+        let url_ = this.baseUrl + "/api-hotel/offers/{offerID}/rooms?";
         if (offerID === undefined || offerID === null)
             throw new Error("The parameter 'offerID' must be defined.");
         url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
@@ -697,7 +714,7 @@ export class OfferClient implements IOfferClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     addRoom(offerID: number, x_hotel_token: string | undefined, roomID: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/offers/{offerID}/rooms";
+        let url_ = this.baseUrl + "/api-hotel/offers/{offerID}/rooms";
         if (offerID === undefined || offerID === null)
             throw new Error("The parameter 'offerID' must be defined.");
         url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
@@ -757,7 +774,7 @@ export class OfferClient implements IOfferClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     getOffersWithPagination(isActive: boolean | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<OfferDto[]> {
-        let url_ = this.baseUrl + "/api/offers?";
+        let url_ = this.baseUrl + "/api-hotel/offers?";
         if (isActive !== undefined && isActive !== null)
             url_ += "IsActive=" + encodeURIComponent("" + isActive) + "&";
         if (pageNumber === null)
@@ -823,7 +840,7 @@ export class OfferClient implements IOfferClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     create(x_hotel_token: string | undefined, command: CreateOfferCmd): Observable<CreateOfferResponse> {
-        let url_ = this.baseUrl + "/api/offers";
+        let url_ = this.baseUrl + "/api-hotel/offers";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -879,7 +896,7 @@ export class OfferClient implements IOfferClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     getOffer(offerID: number, x_hotel_token: string | undefined): Observable<OfferDto> {
-        let url_ = this.baseUrl + "/api/offers/{offerID}";
+        let url_ = this.baseUrl + "/api-hotel/offers/{offerID}";
         if (offerID === undefined || offerID === null)
             throw new Error("The parameter 'offerID' must be defined.");
         url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
@@ -934,7 +951,7 @@ export class OfferClient implements IOfferClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     update(offerID: number, x_hotel_token: string | undefined, command: UpdateOfferCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/offers/{offerID}";
+        let url_ = this.baseUrl + "/api-hotel/offers/{offerID}";
         if (offerID === undefined || offerID === null)
             throw new Error("The parameter 'offerID' must be defined.");
         url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
@@ -991,7 +1008,7 @@ export class OfferClient implements IOfferClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     delete(offerID: number, x_hotel_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/offers/{offerID}";
+        let url_ = this.baseUrl + "/api-hotel/offers/{offerID}";
         if (offerID === undefined || offerID === null)
             throw new Error("The parameter 'offerID' must be defined.");
         url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
@@ -1044,7 +1061,7 @@ export class OfferClient implements IOfferClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     deleteRoom(offerID: number, roomID: number, x_hotel_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/offers/{offerID}/rooms/{roomID}";
+        let url_ = this.baseUrl + "/api-hotel/offers/{offerID}/rooms/{roomID}";
         if (offerID === undefined || offerID === null)
             throw new Error("The parameter 'offerID' must be defined.");
         url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
@@ -1099,7 +1116,7 @@ export class OfferClient implements IOfferClient {
 
 export interface IReservationClient {
     create(hotelID: number, offerID: number, command: CreateReservationCmd): Observable<number>;
-    delete(reservationID: number): Observable<number>;
+    delete(reservationID: number, hotelID: string, offerID: string): Observable<number>;
 }
 
 @Injectable({
@@ -1173,11 +1190,17 @@ export class ReservationClient implements IReservationClient {
         return _observableOf<number>(<any>null);
     }
 
-    delete(reservationID: number): Observable<number> {
-        let url_ = this.baseUrl + "/api-client/reservations/{reservationID}";
+    delete(reservationID: number, hotelID: string, offerID: string): Observable<number> {
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}";
         if (reservationID === undefined || reservationID === null)
             throw new Error("The parameter 'reservationID' must be defined.");
         url_ = url_.replace("{reservationID}", encodeURIComponent("" + reservationID));
+        if (hotelID === undefined || hotelID === null)
+            throw new Error("The parameter 'hotelID' must be defined.");
+        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1257,7 +1280,7 @@ export class ReservationsClient implements IReservationsClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     getReservationsWithPagination(page_num: number | undefined, page_siz: number | undefined, roomID: number | null | undefined, currentOnly: boolean | null | undefined, x_hotel_token: string | undefined): Observable<ReservationDto[]> {
-        let url_ = this.baseUrl + "/api/reservations?";
+        let url_ = this.baseUrl + "/api-hotel/reservations?";
         if (page_num === null)
             throw new Error("The parameter 'page_num' cannot be null.");
         else if (page_num !== undefined)
@@ -1324,30 +1347,25 @@ export class ReservationsClient implements IReservationsClient {
 
 export interface IReviewsClient {
     /**
-     * @param hotelIDQuery (optional) 
-     * @param offerIDQuery (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    getReviewsWithPagination(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, x_hotel_token: string | undefined): Observable<ReviewDto[]>;
+    getReview(hotelID: number, offerID: number, reviewID: number, x_client_token: string | undefined): Observable<ReviewDto>;
     /**
-     * @param hotelIDQuery (optional) 
-     * @param offerIDQuery (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    createReview(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, x_hotel_token: string | undefined, cmd: CreateReviewCmd): Observable<FileResponse>;
+    updateReview(hotelID: number, offerID: number, reviewID: number, x_client_token: string | undefined, cmd: UpdateReviewCmd): Observable<FileResponse>;
     /**
-     * @param hotelIDQuery (optional) 
-     * @param offerIDQuery (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    updateReview(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, x_hotel_token: string | undefined, cmd: UpdateReviewCmd): Observable<FileResponse>;
+    deleteReview(hotelID: number, offerID: number, reviewID: number, x_client_token: string | undefined): Observable<FileResponse>;
     /**
-     * @param hotelIDQuery (optional) 
-     * @param offerIDQuery (optional) 
-     * @param reviewIDQuery (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    deleteReview(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, reviewIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, reviewIDPath: string, x_hotel_token: string | undefined): Observable<FileResponse>;
+    getReviewsWithPagination(hotelID: number, offerID: number, x_client_token: string | undefined): Observable<ReviewDto[]>;
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    createReview(hotelID: number, offerID: number, x_client_token: string | undefined, cmd: CreateReviewCmd): Observable<FileResponse>;
 }
 
 @Injectable({
@@ -1364,33 +1382,206 @@ export class ReviewsClient implements IReviewsClient {
     }
 
     /**
-     * @param hotelIDQuery (optional) 
-     * @param offerIDQuery (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    getReviewsWithPagination(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, x_hotel_token: string | undefined): Observable<ReviewDto[]> {
-        let url_ = this.baseUrl + "/client-api/hotels/{hotelID}/offers/{offerID}/reviews?";
-        if (hotelIDPath === undefined || hotelIDPath === null)
-            throw new Error("The parameter 'hotelIDPath' must be defined.");
-        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelIDPath));
-        if (offerIDPath === undefined || offerIDPath === null)
-            throw new Error("The parameter 'offerIDPath' must be defined.");
-        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerIDPath));
-        if (hotelIDQuery === null)
-            throw new Error("The parameter 'hotelIDQuery' cannot be null.");
-        else if (hotelIDQuery !== undefined)
-            url_ += "hotelID=" + encodeURIComponent("" + hotelIDQuery) + "&";
-        if (offerIDQuery === null)
-            throw new Error("The parameter 'offerIDQuery' cannot be null.");
-        else if (offerIDQuery !== undefined)
-            url_ += "offerID=" + encodeURIComponent("" + offerIDQuery) + "&";
+    getReview(hotelID: number, offerID: number, reviewID: number, x_client_token: string | undefined): Observable<ReviewDto> {
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reviews/{reviewID}";
+        if (hotelID === undefined || hotelID === null)
+            throw new Error("The parameter 'hotelID' must be defined.");
+        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
+        if (reviewID === undefined || reviewID === null)
+            throw new Error("The parameter 'reviewID' must be defined.");
+        url_ = url_.replace("{reviewID}", encodeURIComponent("" + reviewID));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetReview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetReview(<any>response_);
+                } catch (e) {
+                    return <Observable<ReviewDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ReviewDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetReview(response: HttpResponseBase): Observable<ReviewDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ReviewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ReviewDto>(<any>null);
+    }
+
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    updateReview(hotelID: number, offerID: number, reviewID: number, x_client_token: string | undefined, cmd: UpdateReviewCmd): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reviews/{reviewID}";
+        if (hotelID === undefined || hotelID === null)
+            throw new Error("The parameter 'hotelID' must be defined.");
+        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
+        if (reviewID === undefined || reviewID === null)
+            throw new Error("The parameter 'reviewID' must be defined.");
+        url_ = url_.replace("{reviewID}", encodeURIComponent("" + reviewID));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateReview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateReview(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateReview(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    deleteReview(hotelID: number, offerID: number, reviewID: number, x_client_token: string | undefined): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reviews/{reviewID}";
+        if (hotelID === undefined || hotelID === null)
+            throw new Error("The parameter 'hotelID' must be defined.");
+        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
+        if (reviewID === undefined || reviewID === null)
+            throw new Error("The parameter 'reviewID' must be defined.");
+        url_ = url_.replace("{reviewID}", encodeURIComponent("" + reviewID));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteReview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteReview(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeleteReview(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
+    }
+
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    getReviewsWithPagination(hotelID: number, offerID: number, x_client_token: string | undefined): Observable<ReviewDto[]> {
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reviews";
+        if (hotelID === undefined || hotelID === null)
+            throw new Error("The parameter 'hotelID' must be defined.");
+        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Accept": "application/json"
             })
         };
@@ -1436,26 +1627,16 @@ export class ReviewsClient implements IReviewsClient {
     }
 
     /**
-     * @param hotelIDQuery (optional) 
-     * @param offerIDQuery (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
+     * @param x_client_token (optional) client authorization token
      */
-    createReview(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, x_hotel_token: string | undefined, cmd: CreateReviewCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/client-api/hotels/{hotelID}/offers/{offerID}/reviews?";
-        if (hotelIDPath === undefined || hotelIDPath === null)
-            throw new Error("The parameter 'hotelIDPath' must be defined.");
-        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelIDPath));
-        if (offerIDPath === undefined || offerIDPath === null)
-            throw new Error("The parameter 'offerIDPath' must be defined.");
-        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerIDPath));
-        if (hotelIDQuery === null)
-            throw new Error("The parameter 'hotelIDQuery' cannot be null.");
-        else if (hotelIDQuery !== undefined)
-            url_ += "hotelID=" + encodeURIComponent("" + hotelIDQuery) + "&";
-        if (offerIDQuery === null)
-            throw new Error("The parameter 'offerIDQuery' cannot be null.");
-        else if (offerIDQuery !== undefined)
-            url_ += "offerID=" + encodeURIComponent("" + offerIDQuery) + "&";
+    createReview(hotelID: number, offerID: number, x_client_token: string | undefined, cmd: CreateReviewCmd): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelID}/offers/{offerID}/reviews";
+        if (hotelID === undefined || hotelID === null)
+            throw new Error("The parameter 'hotelID' must be defined.");
+        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelID));
+        if (offerID === undefined || offerID === null)
+            throw new Error("The parameter 'offerID' must be defined.");
+        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerID));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(cmd);
@@ -1465,7 +1646,7 @@ export class ReviewsClient implements IReviewsClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
                 "Content-Type": "application/json",
                 "Accept": "application/octet-stream"
             })
@@ -1504,150 +1685,6 @@ export class ReviewsClient implements IReviewsClient {
         }
         return _observableOf<FileResponse>(<any>null);
     }
-
-    /**
-     * @param hotelIDQuery (optional) 
-     * @param offerIDQuery (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
-     */
-    updateReview(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, x_hotel_token: string | undefined, cmd: UpdateReviewCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/client-api/hotels/{hotelID}/offers/{offerID}/reviews?";
-        if (hotelIDPath === undefined || hotelIDPath === null)
-            throw new Error("The parameter 'hotelIDPath' must be defined.");
-        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelIDPath));
-        if (offerIDPath === undefined || offerIDPath === null)
-            throw new Error("The parameter 'offerIDPath' must be defined.");
-        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerIDPath));
-        if (hotelIDQuery === null)
-            throw new Error("The parameter 'hotelIDQuery' cannot be null.");
-        else if (hotelIDQuery !== undefined)
-            url_ += "hotelID=" + encodeURIComponent("" + hotelIDQuery) + "&";
-        if (offerIDQuery === null)
-            throw new Error("The parameter 'offerIDQuery' cannot be null.");
-        else if (offerIDQuery !== undefined)
-            url_ += "offerID=" + encodeURIComponent("" + offerIDQuery) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(cmd);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateReview(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdateReview(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processUpdateReview(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(<any>null);
-    }
-
-    /**
-     * @param hotelIDQuery (optional) 
-     * @param offerIDQuery (optional) 
-     * @param reviewIDQuery (optional) 
-     * @param x_hotel_token (optional) hotel authorization token
-     */
-    deleteReview(hotelIDQuery: number | undefined, offerIDQuery: number | undefined, reviewIDQuery: number | undefined, hotelIDPath: string, offerIDPath: string, reviewIDPath: string, x_hotel_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/client-api/hotels/{hotelID}/offers/{offerID}/reviews/{reviewID}?";
-        if (hotelIDPath === undefined || hotelIDPath === null)
-            throw new Error("The parameter 'hotelIDPath' must be defined.");
-        url_ = url_.replace("{hotelID}", encodeURIComponent("" + hotelIDPath));
-        if (offerIDPath === undefined || offerIDPath === null)
-            throw new Error("The parameter 'offerIDPath' must be defined.");
-        url_ = url_.replace("{offerID}", encodeURIComponent("" + offerIDPath));
-        if (reviewIDPath === undefined || reviewIDPath === null)
-            throw new Error("The parameter 'reviewIDPath' must be defined.");
-        url_ = url_.replace("{reviewID}", encodeURIComponent("" + reviewIDPath));
-        if (hotelIDQuery === null)
-            throw new Error("The parameter 'hotelIDQuery' cannot be null.");
-        else if (hotelIDQuery !== undefined)
-            url_ += "hotelID=" + encodeURIComponent("" + hotelIDQuery) + "&";
-        if (offerIDQuery === null)
-            throw new Error("The parameter 'offerIDQuery' cannot be null.");
-        else if (offerIDQuery !== undefined)
-            url_ += "offerID=" + encodeURIComponent("" + offerIDQuery) + "&";
-        if (reviewIDQuery === null)
-            throw new Error("The parameter 'reviewIDQuery' cannot be null.");
-        else if (reviewIDQuery !== undefined)
-            url_ += "reviewID=" + encodeURIComponent("" + reviewIDQuery) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "x-hotel-token": x_hotel_token !== undefined && x_hotel_token !== null ? "" + x_hotel_token : "",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeleteReview(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDeleteReview(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDeleteReview(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(<any>null);
-    }
 }
 
 export interface IRoomClient {
@@ -1661,7 +1698,7 @@ export interface IRoomClient {
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    create(x_hotel_token: string | undefined, hotel_room_number: string): Observable<number>;
+    create(x_hotel_token: string | undefined, hotel_room_number: string): Observable<CreateRoomResponse>;
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
@@ -1692,7 +1729,7 @@ export class RoomClient implements IRoomClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     getRoomsWithPagination(roomNumber: string | null | undefined, pageNumber: number | undefined, pageSize: number | undefined, x_hotel_token: string | undefined): Observable<RoomDto[]> {
-        let url_ = this.baseUrl + "/api/rooms?";
+        let url_ = this.baseUrl + "/api-hotel/rooms?";
         if (roomNumber !== undefined && roomNumber !== null)
             url_ += "RoomNumber=" + encodeURIComponent("" + roomNumber) + "&";
         if (pageNumber === null)
@@ -1757,8 +1794,8 @@ export class RoomClient implements IRoomClient {
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
-    create(x_hotel_token: string | undefined, hotel_room_number: string): Observable<number> {
-        let url_ = this.baseUrl + "/api/rooms";
+    create(x_hotel_token: string | undefined, hotel_room_number: string): Observable<CreateRoomResponse> {
+        let url_ = this.baseUrl + "/api-hotel/rooms";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(hotel_room_number);
@@ -1781,14 +1818,14 @@ export class RoomClient implements IRoomClient {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<number>><any>_observableThrow(e);
+                    return <Observable<CreateRoomResponse>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<number>><any>_observableThrow(response_);
+                return <Observable<CreateRoomResponse>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<number> {
+    protected processCreate(response: HttpResponseBase): Observable<CreateRoomResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1799,7 +1836,7 @@ export class RoomClient implements IRoomClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            result200 = CreateRoomResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1807,14 +1844,14 @@ export class RoomClient implements IRoomClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<number>(<any>null);
+        return _observableOf<CreateRoomResponse>(<any>null);
     }
 
     /**
      * @param x_hotel_token (optional) hotel authorization token
      */
     update(id: number, x_hotel_token: string | undefined, command: UpdateRoomCmd): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/rooms/{id}";
+        let url_ = this.baseUrl + "/api-hotel/rooms/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -1871,7 +1908,7 @@ export class RoomClient implements IRoomClient {
      * @param x_hotel_token (optional) hotel authorization token
      */
     delete(id: number, x_hotel_token: string | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/rooms/{id}";
+        let url_ = this.baseUrl + "/api-hotel/rooms/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -1967,58 +2004,6 @@ export interface ICreateClientCmd {
     surname?: string | undefined;
     username?: string | undefined;
     email?: string | undefined;
-}
-
-export class HotelListedDto implements IHotelListedDto {
-    hotelID?: number;
-    hotelName?: string | undefined;
-    city?: string | undefined;
-    country?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
-
-    constructor(data?: IHotelListedDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.hotelID = _data["hotelID"];
-            this.hotelName = _data["hotelName"];
-            this.city = _data["city"];
-            this.country = _data["country"];
-            this.hotelPreviewPicture = _data["hotelPreviewPicture"];
-        }
-    }
-
-    static fromJS(data: any): HotelListedDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new HotelListedDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["hotelID"] = this.hotelID;
-        data["hotelName"] = this.hotelName;
-        data["city"] = this.city;
-        data["country"] = this.country;
-        data["hotelPreviewPicture"] = this.hotelPreviewPicture;
-        return data; 
-    }
-}
-
-export interface IHotelListedDto {
-    hotelID?: number;
-    hotelName?: string | undefined;
-    city?: string | undefined;
-    country?: string | undefined;
-    hotelPreviewPicture?: string | undefined;
 }
 
 export class CreateHotelCmd implements ICreateHotelCmd {
@@ -2335,6 +2320,58 @@ export interface IUpdateHotelCmd {
     hotelDesc?: string | undefined;
     hotelPreviewPicture?: string | undefined;
     hotelPictures?: string[] | undefined;
+}
+
+export class HotelListedDto implements IHotelListedDto {
+    hotelID?: number;
+    hotelName?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
+
+    constructor(data?: IHotelListedDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hotelID = _data["hotelID"];
+            this.hotelName = _data["hotelName"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+            this.hotelPreviewPicture = _data["hotelPreviewPicture"];
+        }
+    }
+
+    static fromJS(data: any): HotelListedDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new HotelListedDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotelID"] = this.hotelID;
+        data["hotelName"] = this.hotelName;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        data["hotelPreviewPicture"] = this.hotelPreviewPicture;
+        return data; 
+    }
+}
+
+export interface IHotelListedDto {
+    hotelID?: number;
+    hotelName?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    hotelPreviewPicture?: string | undefined;
 }
 
 export class OfferDto implements IOfferDto {
@@ -2860,8 +2897,8 @@ export interface IReviewDto {
 export class CreateReviewCmd implements ICreateReviewCmd {
     content?: string | undefined;
     rating?: number;
-    hotelId?: number;
-    offerId?: number;
+    hotelID?: number;
+    offerID?: number;
     clientId?: number;
 
     constructor(data?: ICreateReviewCmd) {
@@ -2877,8 +2914,8 @@ export class CreateReviewCmd implements ICreateReviewCmd {
         if (_data) {
             this.content = _data["content"];
             this.rating = _data["rating"];
-            this.hotelId = _data["hotelId"];
-            this.offerId = _data["offerId"];
+            this.hotelID = _data["hotelID"];
+            this.offerID = _data["offerID"];
             this.clientId = _data["clientId"];
         }
     }
@@ -2894,8 +2931,8 @@ export class CreateReviewCmd implements ICreateReviewCmd {
         data = typeof data === 'object' ? data : {};
         data["content"] = this.content;
         data["rating"] = this.rating;
-        data["hotelId"] = this.hotelId;
-        data["offerId"] = this.offerId;
+        data["hotelID"] = this.hotelID;
+        data["offerID"] = this.offerID;
         data["clientId"] = this.clientId;
         return data; 
     }
@@ -2904,8 +2941,8 @@ export class CreateReviewCmd implements ICreateReviewCmd {
 export interface ICreateReviewCmd {
     content?: string | undefined;
     rating?: number;
-    hotelId?: number;
-    offerId?: number;
+    hotelID?: number;
+    offerID?: number;
     clientId?: number;
 }
 
@@ -2971,6 +3008,46 @@ export interface IUpdateReviewCmd {
     offerId?: number;
     hotelId?: number;
     clientId?: number;
+}
+
+export class CreateRoomResponse implements ICreateRoomResponse {
+    roomID?: number;
+    error?: string | undefined;
+
+    constructor(data?: ICreateRoomResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.roomID = _data["roomID"];
+            this.error = _data["error"];
+        }
+    }
+
+    static fromJS(data: any): CreateRoomResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateRoomResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["roomID"] = this.roomID;
+        data["error"] = this.error;
+        return data; 
+    }
+}
+
+export interface ICreateRoomResponse {
+    roomID?: number;
+    error?: string | undefined;
 }
 
 export class UpdateRoomCmd implements IUpdateRoomCmd {
