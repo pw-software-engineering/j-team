@@ -11,7 +11,6 @@ namespace HotelReservationSystem.WebUI
             context.OperationDescription.Operation.Parameters.Add(
                 new OpenApiParameter
                 {
-
                     Name = "x-client-token",
                     Kind = OpenApiParameterKind.Header,
                     Type = NJsonSchema.JsonObjectType.String,

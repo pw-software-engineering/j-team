@@ -1,5 +1,6 @@
 ﻿using Application.Hotels;
 using Application.Offers;
+using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffers;
 using HotelReservationSystem.Application.Hotels.Queries.GetHotelsWithPagination;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using ValidationException = HotelReservationSystem.Application.Common.Exceptions
 namespace HotelReservationSystem.WebUI.Controllers
 {
     [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
+    [AuthorizeClient]
     [Route("api-client")]
     public class HotelsController : ApiControllerBase
     {

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CreateOfferCmd, OfferClient, CreateReservationCmd, RoomClient, ReservationClient } from 'src/app/web-api-client';
+import { CreateReservationCmd, RoomClient, ReservationClient } from 'src/app/web-api-client';
 import {HttpErrorResponse} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
@@ -47,6 +47,16 @@ export class MakeReservationComponent implements OnInit {
 
   get f() { return this.form.controls; }
 
+  getToken() {
+    let token = localStorage.getItem('x-client-token');
+    if (token == null)
+      token = "";
+    return token;
+  }
+  backToList(): void {
+    this.router.navigate(['hotels', this.hotelId, 'offers']);
+  }
+
   onSubmit(): Observable<any> {
     this.submitted = true;
 
@@ -55,18 +65,16 @@ export class MakeReservationComponent implements OnInit {
       createReservationCmd.from = new Date(this.form.getRawValue().from);
       createReservationCmd.to = new Date(this.form.getRawValue().to);
 
-      const addRequest = this.reservationClient.create(+this.hotelId, +this.offerId, createReservationCmd).pipe(catchError(this.handleError));
+      const addRequest = this.reservationClient.create(+this.hotelId, +this.offerId, this.getToken(), createReservationCmd).pipe(catchError(this.handleError));
 
       addRequest.subscribe({
         next: (value) => {
           alert("Reservation has been made.");
           console.log(value);
-          this.router.navigate(['../../'], {relativeTo: this.route});
         },
         error: (error) => {
           alert(error.response);
           console.log(error.response);
-          this.router.navigate([''], {relativeTo: this.route});
         }
       });
       return addRequest;

@@ -16,16 +16,13 @@ namespace HotelReservationSystem.Application.Reservations.Commands.DeleteReserva
         public int ReservationId;
         public int ClientId;
     }
-
     public class DeleteReservationCmdHandler : IRequestHandler<DeleteReservationCmd, int>
     {
         private readonly IApplicationDbContext _context;
-
         public DeleteReservationCmdHandler(IApplicationDbContext context)
         {
             _context = context;
         }
-
         public async Task<int> Handle(DeleteReservationCmd request, CancellationToken cancellationToken)
         {
             var reservation = await _context.Reservations.FindAsync(request.ReservationId);
@@ -38,7 +35,6 @@ namespace HotelReservationSystem.Application.Reservations.Commands.DeleteReserva
                 {
                     new ValidationFailure(nameof(Reservation), "Reservation is currently underway or already completed")
                 });
-
 
             _context.Reservations.Remove(reservation);
             var intersectedReservations = _context.Reservations.Where(r =>
