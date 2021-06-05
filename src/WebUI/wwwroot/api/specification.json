@@ -182,6 +182,44 @@
         }
       }
     },
+    "/api-hotel/offerInfo": {
+      "get": {
+        "tags": [
+          "Hotel"
+        ],
+        "operationId": "Hotel_GetOfferInfo",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "type": "string",
+            "name": "x-hotel-token",
+            "in": "header",
+            "description": "hotel authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedOfferDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api-hotel/{id}": {
       "delete": {
         "tags": [
@@ -1585,6 +1623,68 @@
               "type": "string",
               "format": "byte"
             }
+          }
+        }
+      },
+      "DetailedOfferDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "maxGuests": {
+            "type": "integer"
+          },
+          "costPerChild": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPerAdult": {
+            "type": "number",
+            "format": "double"
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isDeleted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "offerPictures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "availabilityTimeIntervals": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ValueTupleOfDateTimeAndDateTime"
+            }
+          }
+        }
+      },
+      "ValueTupleOfDateTimeAndDateTime": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "item1": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "item2": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
