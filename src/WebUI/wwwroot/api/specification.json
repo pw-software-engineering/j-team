@@ -6,7 +6,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api-client": {
+    "/api-client/client": {
       "post": {
         "tags": [
           "Client"
@@ -39,7 +39,7 @@
         }
       }
     },
-    "/api-client/client/login": {
+    "/api-client/client/client/login": {
       "post": {
         "tags": [
           "Client"

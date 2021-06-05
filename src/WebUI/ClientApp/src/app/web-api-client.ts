@@ -33,7 +33,7 @@ export class ClientClient implements IClientClient {
     }
 
     create(command: CreateClientCmd): Observable<number> {
-        let url_ = this.baseUrl + "/api-client";
+        let url_ = this.baseUrl + "/api-client/client";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -85,7 +85,7 @@ export class ClientClient implements IClientClient {
     }
 
     login(command: ClientLoginCmd): Observable<ClientToken> {
-        let url_ = this.baseUrl + "/api-client/client/login";
+        let url_ = this.baseUrl + "/api-client/client/client/login";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
