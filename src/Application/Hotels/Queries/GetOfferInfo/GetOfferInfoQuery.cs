@@ -35,13 +35,13 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo
      
             var offer = _context.Offers.Include(x=> x.Rooms).Include("Rooms.Reservations").Where(x => x.HotelId == request.hotelId && x.OfferId == request.offerId).FirstOrDefault();
             if (offer == null) throw new NotFoundException();
-            var avaibility = new List<(DateTime from, DateTime to)>();
+            var avaibility = new List<TimeInterval>();
 
             foreach(Room room in offer.Rooms)
             {
                 if (room.Reservations.Count == 0)
                 {
-                    avaibility.Add((DateTime.Now, DateTime.Today.AddDays(365)));
+                    avaibility.Add(new TimeInterval(DateTime.Now, DateTime.Today.AddDays(365)));
                     continue;
                 }
                 var reservations=room.Reservations.OrderBy(x => x.FromTime).ToList();
@@ -49,9 +49,9 @@ namespace HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo
                 for(int i = 0; i < reservations.Count; i++)
                 {
                     if (reservations[i].ToTime <= DateTime.Now) continue;
-                    if (room.Reservations[i].FromTime > firstfree) avaibility.Add((firstfree, reservations[i].FromTime.AddDays(-1)));
+                    if (room.Reservations[i].FromTime > firstfree) avaibility.Add(new TimeInterval(firstfree, reservations[i].FromTime.AddDays(-1)));
                     firstfree = reservations[i].ToTime.AddDays(1);
-                    if (i == reservations.Count - 1) avaibility.Add((firstfree, DateTime.Today.AddDays(365)));
+                    if (i == reservations.Count - 1) avaibility.Add(new TimeInterval(firstfree, DateTime.Today.AddDays(365)));
                 }
             }
             
