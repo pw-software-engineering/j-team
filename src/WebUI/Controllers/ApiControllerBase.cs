@@ -32,7 +32,9 @@ namespace HotelReservationSystem.WebUI.Controllers
         }
         protected string GetClientToken()
         {
-            return Request.Headers["x-client-token"];
+            var rawString = Request.Headers["x-client-token"];
+            var token = JsonConvert.DeserializeObject<ClientToken>(rawString);
+            return token.id.ToString();
         }
         protected async Task<int> GetClientIdFromToken()
         {

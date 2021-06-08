@@ -23,20 +23,21 @@ namespace HotelReservationSystem.WebUI.Controllers
     public class ReservationsController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<ReservationDto>>> GetReservationsWithPagination(int page_num, int page_siz, int? roomID, bool? currentOnly)
+        public async Task<ActionResult<List<ReservationDto>>> GetReservationsWithPagination(int pageNumber = 1, int pageSize = 10, int? roomID = null, bool? currentOnly = null)
         {
-            var hotelId =  await GetHotelIdFromToken();
+            var hotelId = await GetHotelIdFromToken();
+            var query = new GetReservationsWithPaginationQuery()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                HotelId = hotelId,
+                RoomID = roomID,
+                CurrentOnly = currentOnly
+            };
             try
             {
-                var response = await Mediator.Send(new GetReservationsWithPaginationQuery
-                {
-                    PageNumber = page_num,
-                    PageSize = page_siz,
-                    HotelId = hotelId,
-                    RoomID = roomID,
-                    CurrentOnly = currentOnly
-                });
-                if (roomID == null && !response.Items.Any())
+                var response = await Mediator.Send(query);
+                if (query.RoomID != null && !response.Items.Any())
                 {
                     return new StatusCodeResult(404);
                 }
@@ -50,7 +51,7 @@ namespace HotelReservationSystem.WebUI.Controllers
             {
                 return new StatusCodeResult(403);
             }
-            
+
         }
     }
 }
