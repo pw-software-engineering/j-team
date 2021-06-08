@@ -10,8 +10,8 @@ import { DetailedOfferDto, HotelsClient } from 'src/app/web-api-client';
 })
 export class OfferDetailsComponent implements OnInit {
 
-  hotelId!: number;
-  offerId!: number;
+  hotelId: number = 0;
+  offerId: number = 0;
   offer?: DetailedOfferDto = undefined;
 
   constructor(
@@ -21,8 +21,8 @@ export class OfferDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.hotelId = this.route.snapshot.params['id'];
-    this.offerId = this.route.snapshot.params['offerID'];
+    this.hotelId = this.route.snapshot.params['id'] != null ? this.route.snapshot.params['id'] : this.hotelId;
+    this.offerId = this.route.snapshot.params['offerID'] != null ? this.route.snapshot.params['offerID'] : this.offerId;
 
     this.getOfferInfo();
   }
