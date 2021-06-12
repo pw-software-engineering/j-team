@@ -2421,7 +2421,7 @@ export class DetailedOfferDto implements IDetailedOfferDto {
     isActive?: boolean | undefined;
     isDeleted?: boolean | undefined;
     offerPictures?: string[] | undefined;
-    availabilityTimeIntervals?: ValueTupleOfDateTimeAndDateTime[] | undefined;
+    availabilityTimeIntervals?: TimeInterval[] | undefined;
 
     constructor(data?: IDetailedOfferDto) {
         if (data) {
@@ -2449,7 +2449,7 @@ export class DetailedOfferDto implements IDetailedOfferDto {
             if (Array.isArray(_data["availabilityTimeIntervals"])) {
                 this.availabilityTimeIntervals = [] as any;
                 for (let item of _data["availabilityTimeIntervals"])
-                    this.availabilityTimeIntervals!.push(ValueTupleOfDateTimeAndDateTime.fromJS(item));
+                    this.availabilityTimeIntervals!.push(TimeInterval.fromJS(item));
             }
         }
     }
@@ -2493,14 +2493,14 @@ export interface IDetailedOfferDto {
     isActive?: boolean | undefined;
     isDeleted?: boolean | undefined;
     offerPictures?: string[] | undefined;
-    availabilityTimeIntervals?: ValueTupleOfDateTimeAndDateTime[] | undefined;
+    availabilityTimeIntervals?: TimeInterval[] | undefined;
 }
 
-export class ValueTupleOfDateTimeAndDateTime implements IValueTupleOfDateTimeAndDateTime {
-    item1?: Date;
-    item2?: Date;
+export class TimeInterval implements ITimeInterval {
+    from?: Date;
+    to?: Date;
 
-    constructor(data?: IValueTupleOfDateTimeAndDateTime) {
+    constructor(data?: ITimeInterval) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2511,29 +2511,29 @@ export class ValueTupleOfDateTimeAndDateTime implements IValueTupleOfDateTimeAnd
 
     init(_data?: any) {
         if (_data) {
-            this.item1 = _data["item1"] ? new Date(_data["item1"].toString()) : <any>undefined;
-            this.item2 = _data["item2"] ? new Date(_data["item2"].toString()) : <any>undefined;
+            this.from = _data["from"] ? new Date(_data["from"].toString()) : <any>undefined;
+            this.to = _data["to"] ? new Date(_data["to"].toString()) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): ValueTupleOfDateTimeAndDateTime {
+    static fromJS(data: any): TimeInterval {
         data = typeof data === 'object' ? data : {};
-        let result = new ValueTupleOfDateTimeAndDateTime();
+        let result = new TimeInterval();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["item1"] = this.item1 ? this.item1.toISOString() : <any>undefined;
-        data["item2"] = this.item2 ? this.item2.toISOString() : <any>undefined;
+        data["from"] = this.from ? this.from.toISOString() : <any>undefined;
+        data["to"] = this.to ? this.to.toISOString() : <any>undefined;
         return data; 
     }
 }
 
-export interface IValueTupleOfDateTimeAndDateTime {
-    item1?: Date;
-    item2?: Date;
+export interface ITimeInterval {
+    from?: Date;
+    to?: Date;
 }
 
 export class CreateReservationCmd implements ICreateReservationCmd {
