@@ -1,7 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-row">
     <div class="form-group col-5">
-      <label>E-Mail</label>
+      <label>Username</label>
       <input type="text" formControlName="login" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.login.errors }"/>
       <div *ngIf="submitted && f.login.errors" class="invalid-feedback">
         <div *ngIf="f.login.errors.required">E-Mail is required</div>

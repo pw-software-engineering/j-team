@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Reservations.Commands.CreateReservation;
 using HotelReservationSystem.Application.Reservations.Commands.DeleteReservation;
+using HotelReservationSystem.Application.Reservations.Queries.GetReservationsWithPagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
@@ -61,6 +63,13 @@ namespace HotelReservationSystem.WebUI.Controllers
             {
                 return BadRequest(validationException.Errors);
             }
+        }
+        [HttpGet("reservations")]
+        public async Task<ActionResult<List<ClientReservationResult>>> GetClientReservations()
+        {
+            GetClientReservationsWithPaginationQuery query = new GetClientReservationsWithPaginationQuery();
+            query.ClientId = await GetClientIdFromToken();
+            return (await Mediator.Send(query));
         }
     }
 }
