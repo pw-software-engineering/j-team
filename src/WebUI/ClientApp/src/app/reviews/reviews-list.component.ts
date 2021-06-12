@@ -3,6 +3,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { count } from 'rxjs/operators';
+import { GetClientToken } from '../login/login.component';
 import { HotelListedDto, ReviewDto, ReviewsClient } from '../web-api-client';
 
 @Component({
@@ -48,7 +49,7 @@ export class ReviewsListComponent implements AfterViewInit {
     this.fetchData();
   }
   Delete = (reviewId: number) => {
-      const request = this.reviewsClient.deleteReview(this.hotelId, this.offerId, reviewId, "");
+      const request = this.reviewsClient.deleteReview(this.hotelId, this.offerId, reviewId, GetClientToken());
       request.subscribe({
         next: (value) => {
           this.fetchData();
@@ -63,7 +64,7 @@ export class ReviewsListComponent implements AfterViewInit {
     const hotelsRequest = this.reviewsClient.getReviewsWithPagination(
       this.hotelId,
       this.offerId,
-      "");
+      GetClientToken());
 
     hotelsRequest.subscribe({
       next: (value) => {

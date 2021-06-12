@@ -19,7 +19,6 @@ using WebUI;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    //[ApiController]
     [AuthorizeHotel]
     [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
     [Route("api-hotel/rooms")]

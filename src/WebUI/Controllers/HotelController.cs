@@ -11,11 +11,12 @@ using HotelReservationSystem.Application.Common.Exceptions;
 using ValidationException = HotelReservationSystem.Application.Common.Exceptions.ValidationException;
 using HotelReservationSystem.Application.Hotels;
 using HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo;
-
+using HotelReservationSystem.Application.Common.Security;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
+    [OpenApiOperationProcessor(typeof(HotelHeaderOperationProcessor))]
+    [AuthorizeHotel]
     [Route("api-hotel")]
     public class HotelController : ApiControllerBase
     {
@@ -26,15 +27,13 @@ namespace HotelReservationSystem.WebUI.Controllers
             return await Mediator.Send(command);
         }
 
-       
-        [HttpGet("offerInfo")]
-        public async Task<ActionResult<DetailedOfferDto>> GetOfferInfo(int id)
+        [HttpGet("hotelInfo")]
+        public async Task<ActionResult<HotelDto>> GetHotelInfo()
         {
             try
             {
-                var query = new GetOfferInfoQuery();
+                var query = new GetHotelInfoQuery();
                 query.hotelId = await GetHotelIdFromToken();
-                query.offerId = id;
                 return await Mediator.Send(query);
             }
             catch (NotFoundException)
@@ -42,6 +41,7 @@ namespace HotelReservationSystem.WebUI.Controllers
                 return new StatusCodeResult(404);
             }
         }
+
 
         [HttpPatch("hotelInfo")]
         public async Task<ActionResult> Update(UpdateHotelCmd command)

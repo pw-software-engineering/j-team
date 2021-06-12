@@ -40,7 +40,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Reviews
                 Name = "John",
                 Surname = "Kowalski",
                 Username = "johnkowalski",
-                Email = "john@kowalski.com"
+                Email = "john@kowalski.com",
+                Password = "pass"
             });
             return (offerId, hotelId, clientId);
         }

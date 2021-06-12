@@ -42,20 +42,23 @@ namespace HotelReservationSystem.Application.Reservations.Queries.GetReservation
             if (request.RoomID != null)
             {
                 var reservation = _context.Rooms.FirstOrDefault(x => x.RoomId == request.RoomID);
-                if (reservation.HotelId != request.HotelId)
+                if (reservation is null)
+                    throw new NotFoundException();
+                if (reservation?.HotelId != request.HotelId)
                 {
                     throw new ForbiddenAccessException();
                 }
             }
 
+            var now = System.DateTime.Now;
             return await _context.Reservations
                 .OrderBy(x => x.ReservationId)
                  .Where(x => request.RoomID == null || request.RoomID == x.RoomId)
-                 .Where(x => request.CurrentOnly==null || (request.CurrentOnly == true&& System.DateTime.Now>x.FromTime))
+                 .Where(x => request.CurrentOnly == null || (request.CurrentOnly == true && now >= x.FromTime && now <= x.ToTime))
                 .ProjectTo<ReservationDto>(_mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
 
-		
-	}
+
+    }
 }
