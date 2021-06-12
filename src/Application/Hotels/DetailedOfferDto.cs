@@ -26,7 +26,19 @@ namespace HotelReservationSystem.Application.Hotels
         [JsonIgnore]
         public List<File> OfferPicturesData { get; set; }
 
-        public List<(DateTime, DateTime) > AvailabilityTimeIntervals { get; set; }
+        public List<TimeInterval> AvailabilityTimeIntervals { get; set; }
 
+    }
+
+    public class TimeInterval
+    {
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
+
+        public TimeInterval(DateTime from, DateTime to)
+        {
+            this.From = from;
+            this.To = to;
+        }
     }
 }
