@@ -15,6 +15,8 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IClientClient {
+    get(): Observable<ClientDto>;
+    patch(cmd: UpdateClientCmd): Observable<FileResponse>;
     create(command: CreateClientCmd): Observable<number>;
     login(command: ClientLoginCmd): Observable<ClientToken>;
 }
@@ -30,6 +32,104 @@ export class ClientClient implements IClientClient {
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    get(): Observable<ClientDto> {
+        let url_ = this.baseUrl + "/api-client/client";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ClientDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ClientDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ClientDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ClientDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ClientDto>(<any>null);
+    }
+
+    patch(cmd: UpdateClientCmd): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api-client/client";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cmd);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPatch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPatch(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processPatch(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse>(<any>null);
     }
 
     create(command: CreateClientCmd): Observable<number> {
@@ -148,6 +248,10 @@ export interface IHotelsClient {
      */
     getHotelsWithPagination(pageNumber: number | undefined, pageSize: number | undefined, country: string | null | undefined, city: string | null | undefined, hotelName: string | null | undefined, x_client_token: string | undefined): Observable<HotelListedDto[]>;
     /**
+     * @param x_client_token (optional) client authorization token
+     */
+    getHotel(hotelId: number, x_client_token: string | undefined): Observable<HotelDetailsDto>;
+    /**
      * @param hotelId (optional) 
      * @param fromTime (optional) 
      * @param toTime (optional) 
@@ -249,6 +353,61 @@ export class HotelsClient implements IHotelsClient {
             }));
         }
         return _observableOf<HotelListedDto[]>(<any>null);
+    }
+
+    /**
+     * @param x_client_token (optional) client authorization token
+     */
+    getHotel(hotelId: number, x_client_token: string | undefined): Observable<HotelDetailsDto> {
+        let url_ = this.baseUrl + "/api-client/hotels/{hotelId}";
+        if (hotelId === undefined || hotelId === null)
+            throw new Error("The parameter 'hotelId' must be defined.");
+        url_ = url_.replace("{hotelId}", encodeURIComponent("" + hotelId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "x-client-token": x_client_token !== undefined && x_client_token !== null ? "" + x_client_token : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetHotel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetHotel(<any>response_);
+                } catch (e) {
+                    return <Observable<HotelDetailsDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<HotelDetailsDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetHotel(response: HttpResponseBase): Observable<HotelDetailsDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HotelDetailsDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<HotelDetailsDto>(<any>null);
     }
 
     /**
@@ -2025,6 +2184,94 @@ export class RoomClient implements IRoomClient {
     }
 }
 
+export class ClientDto implements IClientDto {
+    name?: string | undefined;
+    surname?: string | undefined;
+    username?: string | undefined;
+    email?: string | undefined;
+
+    constructor(data?: IClientDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.surname = _data["surname"];
+            this.username = _data["username"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): ClientDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClientDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["surname"] = this.surname;
+        data["username"] = this.username;
+        data["email"] = this.email;
+        return data; 
+    }
+}
+
+export interface IClientDto {
+    name?: string | undefined;
+    surname?: string | undefined;
+    username?: string | undefined;
+    email?: string | undefined;
+}
+
+export class UpdateClientCmd implements IUpdateClientCmd {
+    username?: string | undefined;
+    email?: string | undefined;
+
+    constructor(data?: IUpdateClientCmd) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.username = _data["username"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): UpdateClientCmd {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateClientCmd();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["email"] = this.email;
+        return data; 
+    }
+}
+
+export interface IUpdateClientCmd {
+    username?: string | undefined;
+    email?: string | undefined;
+}
+
 export class CreateClientCmd implements ICreateClientCmd {
     name?: string | undefined;
     surname?: string | undefined;
@@ -2207,6 +2454,66 @@ export interface IHotelListedDto {
     city?: string | undefined;
     country?: string | undefined;
     hotelPreviewPicture?: string | undefined;
+}
+
+export class HotelDetailsDto implements IHotelDetailsDto {
+    hotelName?: string | undefined;
+    hotelDescription?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    hotelPictures?: string[] | undefined;
+
+    constructor(data?: IHotelDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.hotelName = _data["hotelName"];
+            this.hotelDescription = _data["hotelDescription"];
+            this.city = _data["city"];
+            this.country = _data["country"];
+            if (Array.isArray(_data["hotelPictures"])) {
+                this.hotelPictures = [] as any;
+                for (let item of _data["hotelPictures"])
+                    this.hotelPictures!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): HotelDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new HotelDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["hotelName"] = this.hotelName;
+        data["hotelDescription"] = this.hotelDescription;
+        data["city"] = this.city;
+        data["country"] = this.country;
+        if (Array.isArray(this.hotelPictures)) {
+            data["hotelPictures"] = [];
+            for (let item of this.hotelPictures)
+                data["hotelPictures"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IHotelDetailsDto {
+    hotelName?: string | undefined;
+    hotelDescription?: string | undefined;
+    city?: string | undefined;
+    country?: string | undefined;
+    hotelPictures?: string[] | undefined;
 }
 
 export class OfferDto implements IOfferDto {
