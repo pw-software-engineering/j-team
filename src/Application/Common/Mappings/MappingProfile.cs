@@ -38,10 +38,11 @@ namespace HotelReservationSystem.Application.Common.Mappings
             CreateMap<Offer, int>()
                 .ConstructUsing(src => src.OfferId);
             CreateMap<Reservation, ReservationDto>()
-              .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Client.Name))
-              .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Client.Surname))
-              .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Client.Username))
-              .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Client.Email));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Client.Name))
+                .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Client.Surname))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Client.Username))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Client.Email))
+                .ForMember(dest => dest.HotelRoomNumber, opt => opt.MapFrom(s => s.Room.HotelRoomNumber));
             CreateMap<Review, ReviewDto>()
                 .ForMember(d => d.OfferID, o => o.MapFrom(s => s.OfferId))
                 .ForMember(d => d.Id, o => o.MapFrom(s => s.ReviewId));

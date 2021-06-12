@@ -19,6 +19,7 @@ import { environment } from './../environments/environment';
 import { ReviewsListComponent } from './reviews/reviews-list.component';
 import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
 import {LoginComponent} from "./login/login.component";
+import {ClientReservationsComponent} from "./reservations/reservations.component";
 
 export const providers = [
   { provide: API_BASE_URL, useValue: environment.apiUrl }
@@ -32,7 +33,8 @@ export const providers = [
     MakeReservationComponent,
     ReviewsListComponent,
     ReviewsAddEditComponent,
-    LoginComponent
+    LoginComponent,
+    ClientReservationsComponent
   ],
   imports: [
     BrowserModule,

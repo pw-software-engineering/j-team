@@ -8,6 +8,7 @@ namespace Application.Reservations
     public class ReservationDto
     {
         public int ReservationId { get; set; }
+        public string HotelRoomNumber { get; set; }
         public DateTime FromTime { get; set; }
         public DateTime ToTime { get; set; }
         public int ChildrenCount { get; set; }

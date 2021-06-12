@@ -15,7 +15,7 @@ namespace HotelReservationSystem.WebUI.Controllers
     [Route("api-client")]
     [AuthorizeClient]
     [OpenApiOperationProcessor(typeof(ClientHeaderOperationProcessor))]
-    public class ClientReserevationsController : ApiControllerBase
+    public class ClientReservationsController : ApiControllerBase
     {
         [HttpPost("hotels/{hotelID}/offers/{offerID}/reservations")]
         public async Task<ActionResult<int>> Create(int hotelID, int offerID, CreateReservationCmd command)

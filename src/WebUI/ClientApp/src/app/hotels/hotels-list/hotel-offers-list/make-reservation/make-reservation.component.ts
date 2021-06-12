@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { CreateReservationCmd, RoomClient, ClientReserevationsClient } from 'src/app/web-api-client';
+import { CreateReservationCmd, RoomClient, ClientReservationsClient } from 'src/app/web-api-client';
 import {HttpErrorResponse} from "@angular/common/http";
 import {Observable, throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
@@ -27,7 +27,7 @@ export class MakeReservationComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private reservationClient: ClientReserevationsClient,
+    private reservationClient: ClientReservationsClient,
     private roomClient: RoomClient,
     private route: ActivatedRoute,
     private router: Router
@@ -66,6 +66,7 @@ export class MakeReservationComponent implements OnInit {
         next: (value) => {
           alert("Reservation has been made.");
           console.log(value);
+          window.location.reload();
         },
         error: (error) => {
           alert(error.response);
