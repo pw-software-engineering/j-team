@@ -20,6 +20,7 @@ import { ReviewsListComponent } from './reviews/reviews-list.component';
 import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
 import {LoginComponent} from "./login/login.component";
 import {ClientReservationsComponent} from "./reservations/reservations.component";
+import { OfferDetailsComponent } from './hotels/hotels-list/hotel-offers-list/offer-details/offer-details.component';
 
 export const providers = [
   { provide: API_BASE_URL, useValue: environment.apiUrl }
@@ -34,7 +35,8 @@ export const providers = [
     ReviewsListComponent,
     ReviewsAddEditComponent,
     LoginComponent,
-    ClientReservationsComponent
+    ClientReservationsComponent,
+    OfferDetailsComponent
   ],
   imports: [
     BrowserModule,
