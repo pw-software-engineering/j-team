@@ -529,44 +529,6 @@
         }
       }
     },
-    "/api-hotel/offerInfo": {
-      "get": {
-        "tags": [
-          "Hotel"
-        ],
-        "operationId": "Hotel_GetOfferInfo",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "type": "string",
-            "name": "x-hotel-token",
-            "in": "header",
-            "description": "hotel authorization token",
-            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DetailedOfferDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api-hotel/{id}": {
       "delete": {
         "tags": [
@@ -1735,20 +1697,20 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/ValueTupleOfDateTimeAndDateTime"
+              "$ref": "#/components/schemas/TimeInterval"
             }
           }
         }
       },
-      "ValueTupleOfDateTimeAndDateTime": {
+      "TimeInterval": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "item1": {
+          "from": {
             "type": "string",
             "format": "date-time"
           },
-          "item2": {
+          "to": {
             "type": "string",
             "format": "date-time"
           }

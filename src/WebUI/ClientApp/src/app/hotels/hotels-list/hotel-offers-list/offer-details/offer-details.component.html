@@ -1,0 +1,15 @@
+<div>
+  <button class="btn btn-sm btn-success mb-2" (click)="goBack()">Go back</button>
+  <div *ngIf="offer != undefined" style="margin-left: 20px;">
+    <h1>{{ offer.title}}</h1>
+    <div>Cost per adult: {{ offer.costPerAdult }}</div>
+    <div>Cost per child: {{ offer.costPerChild }}</div>
+    <div>Maximum number of guests: {{ offer.maxGuests }}</div>
+    <div>Availability:</div>
+    <div *ngFor="let entry of offer.availabilityTimeIntervals">
+
+      <span>From {{ entry.from!.toLocaleString()}} to {{ entry.to!.toLocaleString() }}</span>
+    </div>
+    <div>Description: {{ offer.description}}</div>
+  </div>
+</div>
