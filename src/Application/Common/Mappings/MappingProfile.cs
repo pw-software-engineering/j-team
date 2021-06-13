@@ -45,6 +45,8 @@ namespace HotelReservationSystem.Application.Common.Mappings
             CreateMap<Review, ReviewDto>()
                 .ForMember(d => d.OfferID, o => o.MapFrom(s => s.OfferId))
                 .ForMember(d => d.Id, o => o.MapFrom(s => s.ReviewId));
+            CreateMap<HotelDto, HotelDetailsDto>()
+            .ForMember(d => d.HotelDescription, o => o.MapFrom(s => s.HotelDesc));
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {

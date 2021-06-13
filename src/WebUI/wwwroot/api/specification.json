@@ -7,6 +7,55 @@
   },
   "paths": {
     "/api-client/client": {
+      "get": {
+        "tags": [
+          "Client"
+        ],
+        "operationId": "Client_Get",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Client"
+        ],
+        "operationId": "Client_Patch",
+        "requestBody": {
+          "x-name": "cmd",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientCmd"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Client"
@@ -148,15 +197,15 @@
         }
       }
     },
-    "/api-client/hotels/{id}": {
+    "/api-client/hotels/{hotelId}": {
       "get": {
         "tags": [
           "Hotels"
         ],
-        "operationId": "Hotels_GetHotelInfo",
+        "operationId": "Hotels_GetHotel",
         "parameters": [
           {
-            "name": "id",
+            "name": "hotelId",
             "in": "path",
             "required": true,
             "schema": {
@@ -179,7 +228,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HotelDto"
+                  "$ref": "#/components/schemas/HotelDetailsDto"
                 }
               }
             }
@@ -1564,6 +1613,42 @@
   },
   "components": {
     "schemas": {
+      "ClientDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateClientCmd": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "CreateClientCmd": {
         "type": "object",
         "additionalProperties": false,
@@ -1645,7 +1730,7 @@
           }
         }
       },
-      "HotelDto": {
+      "HotelDetailsDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1653,7 +1738,7 @@
             "type": "string",
             "nullable": true
           },
-          "hotelDesc": {
+          "hotelDescription": {
             "type": "string",
             "nullable": true
           },
@@ -1663,11 +1748,6 @@
           },
           "country": {
             "type": "string",
-            "nullable": true
-          },
-          "hotelPreviewPicture": {
-            "type": "string",
-            "format": "byte",
             "nullable": true
           },
           "hotelPictures": {
@@ -1860,6 +1940,41 @@
           "password": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "HotelDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "hotelName": {
+            "type": "string",
+            "nullable": true
+          },
+          "hotelDesc": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "hotelPreviewPicture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "hotelPictures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
           }
         }
       },

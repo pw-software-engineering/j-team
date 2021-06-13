@@ -3,6 +3,7 @@ using Application.Offers;
 using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Security;
 using HotelReservationSystem.Application.Hotels;
+using HotelReservationSystem.Application.Hotels.Queries;
 using HotelReservationSystem.Application.Hotels.Queries.GetFilteredHotelOffers;
 using HotelReservationSystem.Application.Hotels.Queries.GetHotelsWithPagination;
 using HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo;
@@ -28,6 +29,19 @@ namespace HotelReservationSystem.WebUI.Controllers
         {
             var paginated = await Mediator.Send(query);
             return paginated.Items;
+        }
+        [HttpGet("hotels/{hotelId}")]
+        public async Task<ActionResult<HotelDetailsDto>> GetHotel(int hotelId)
+        {
+            try
+            {
+                var response = await Mediator.Send(new GetHotelQuery() { HotelId = hotelId });
+                return response;
+            }
+            catch (NotFoundException)
+            {
+                return new StatusCodeResult(404);
+            }
         }
 
 
