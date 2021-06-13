@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'hotels', component: HotelsListComponent },
   { path: 'hotels/:id/offers', component: OffersListComponent},
+  { path: 'hotels/:id/offers/:offerID', component: OfferDetailsComponent},
   { path: 'hotels/:id/offers/:offerID/reviews', component: ReviewsListComponent},
   { path: 'hotels/:id/offers/:offerID/reviews/add', component: ReviewsAddEditComponent},
   { path: 'hotels/:id/offers/:offerID/reviews/:reviewID', component: ReviewsAddEditComponent},
