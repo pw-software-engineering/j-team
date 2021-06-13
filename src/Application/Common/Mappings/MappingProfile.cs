@@ -66,6 +66,8 @@ namespace HotelReservationSystem.Application.Common.Mappings
                 .ForMember(dest => dest.offerTitle, o => o.MapFrom(s => s.Title))
                 .ForMember(dest => dest.offerID, o => o.MapFrom(s => s.OfferId))
                 .ForMember(dest => dest.offerPreviewPicture, o => o.MapFrom(s => s.OfferPreviewPicture.Data));
+            CreateMap<HotelDto, HotelDetailsDto>()
+            .ForMember(d => d.HotelDescription, o => o.MapFrom(s => s.HotelDesc));
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {
