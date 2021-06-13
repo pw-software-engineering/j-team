@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotelsClient, HotelDto } from '../../../web-api-client';
+import { GetClientToken } from 'src/app/login/login.component';
 
 @Component({
   selector: 'app-hotel-info',
@@ -33,9 +34,9 @@ export class HotelInfoComponent implements OnInit {
   fetchData = () => {
    
 
-    this.hotelClient.getHotelInfo(
+    this.hotelClient.getHotel(
       this.hotelId,
-      ""
+      GetClientToken()
     )
       .subscribe(data => {
         console.log(data);

@@ -46,22 +46,7 @@ namespace HotelReservationSystem.WebUI.Controllers
 
 
 
-        [HttpGet("hotels/{id}")]
-        public async Task<ActionResult<HotelDto>> GetHotelInfo(int id)
-        {
-            Console.WriteLine("hej");
-            try
-            {
-                var query = new GetHotelInfoQuery();
-                query.hotelId = id;
-                Console.WriteLine(query.hotelId);
-                return await Mediator.Send(query);
-            }
-            catch (NotFoundException)
-            {
-                return new StatusCodeResult(404);
-            }
-        }
+       
 
         [HttpGet("hotels/{id}/offers")]
         public async Task<ActionResult<List<OfferDto>>> GetFilteredHotelOffersWithPagination(int id, [FromQuery] GetFilteredHotelOffersQuery query)
