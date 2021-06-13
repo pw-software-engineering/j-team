@@ -54,7 +54,7 @@ namespace HotelReservationSystem.WebUI
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(options => options.ListenAnyIP(4321));
+                    webBuilder.ConfigureKestrel(options => options.ListenAnyIP(80));
                     webBuilder.UseStartup<Startup>();
                 });
     }
