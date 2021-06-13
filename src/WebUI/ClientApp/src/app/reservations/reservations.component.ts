@@ -9,7 +9,7 @@ import {GetClientToken} from "../login/login.component";
   styleUrls: ['./reservations.component.scss']
 })
 export class ClientReservationsComponent implements AfterViewInit {
-  columnsToDisplay = ['Hotel', 'From', 'To', 'AdultNo', 'ChildrenNo', 'DeleteButton'];
+  columnsToDisplay = ['Hotel', 'Offer', 'From', 'To', 'AdultNo', 'ChildrenNo', 'DeleteButton'];
   dataSource = new MatTableDataSource<ClientReservationResult>();
   constructor(private clientReservationsClient : ClientReservationsClient) {
   }
