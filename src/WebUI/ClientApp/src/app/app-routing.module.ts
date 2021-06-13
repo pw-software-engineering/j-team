@@ -6,6 +6,7 @@ import {MakeReservationComponent} from "./hotels/hotels-list/hotel-offers-list/m
 import { ReviewsListComponent } from './reviews/reviews-list.component';
 import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
 import { LoginComponent } from './login/login.component';
+import {ClientReservationsComponent} from "./reservations/reservations.component";
 import { OfferDetailsComponent } from './hotels/hotels-list/hotel-offers-list/offer-details/offer-details.component';
 
 const routes: Routes = [
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'hotels/:id/offers/:offerID/reviews', component: ReviewsListComponent},
   { path: 'hotels/:id/offers/:offerID/reviews/add', component: ReviewsAddEditComponent},
   { path: 'hotels/:id/offers/:offerID/reviews/:reviewID', component: ReviewsAddEditComponent},
-  { path: 'hotels/:hotelID/offers/:offerID/reservations', component: MakeReservationComponent}
+  { path: 'hotels/:hotelID/offers/:offerID/reservations', component: MakeReservationComponent},
+  { path: 'reservations', component: ClientReservationsComponent}
 ];
 
 @NgModule({

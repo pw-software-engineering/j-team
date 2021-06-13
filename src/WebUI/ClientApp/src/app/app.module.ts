@@ -19,6 +19,7 @@ import { environment } from './../environments/environment';
 import { ReviewsListComponent } from './reviews/reviews-list.component';
 import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
 import {LoginComponent} from "./login/login.component";
+import {ClientReservationsComponent} from "./reservations/reservations.component";
 import { OfferDetailsComponent } from './hotels/hotels-list/hotel-offers-list/offer-details/offer-details.component';
 
 export const providers = [
@@ -34,6 +35,7 @@ export const providers = [
     ReviewsListComponent,
     ReviewsAddEditComponent,
     LoginComponent,
+    ClientReservationsComponent,
     OfferDetailsComponent
   ],
   imports: [

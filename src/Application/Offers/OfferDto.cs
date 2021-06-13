@@ -9,8 +9,6 @@ namespace Application.Offers
         public int OfferID { get; set; }
         public string OfferTitle { get; set; }
         public string Description { get; set; }
-        // public byte[] OfferPreviewPicture { get; set; }
-        // public List<byte[]> Pictures { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public double CostPerChild { get; set; }
