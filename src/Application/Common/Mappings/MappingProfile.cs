@@ -50,6 +50,22 @@ namespace HotelReservationSystem.Application.Common.Mappings
                 .ForMember(dest => dest.reservationInfo, o => o.MapFrom(s => s))
                 .ForMember(dest => dest.hotelInfoPreview, o => o.MapFrom(s => s.Offer.Hotel))
                 .ForMember(dest => dest.offerInfoPreview, o => o.MapFrom(s => s.Offer));
+            CreateMap<Reservation, ReservationInfo>()
+                .ForMember(dest => dest.reservationID, opt => opt.MapFrom(o => o.ReservationId))
+                .ForMember(dest => dest.from, opt => opt.MapFrom(o => o.FromTime))
+                .ForMember(dest => dest.to, opt => opt.MapFrom(o => o.ToTime))
+                .ForMember(dest => dest.numberOfAdults, opt => opt.MapFrom(o => o.AdultsCount))
+                .ForMember(dest => dest.numberOfChildren, opt => opt.MapFrom(o => o.ChildrenCount))
+                .ForMember(dest => dest.reviewID,opt => opt.MapFrom(o => 0));
+            CreateMap<Hotel, HotelInfoPreview>()
+                .ForMember(dest => dest.city, o => o.MapFrom(s => s.City))
+                .ForMember(dest => dest.country, o => o.MapFrom(s => s.Country))
+                .ForMember(dest => dest.hotelName, o => o.MapFrom(s => s.Name))
+                .ForMember(dest => dest.hotelID, o => o.MapFrom(s => s.HotelId));
+            CreateMap<Offer, OfferInfoPreview>()
+                .ForMember(dest => dest.offerTitle, o => o.MapFrom(s => s.Title))
+                .ForMember(dest => dest.offerID, o => o.MapFrom(s => s.OfferId))
+                .ForMember(dest => dest.offerPreviewPicture, o => o.MapFrom(s => s.OfferPreviewPicture.Data));
         }
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {

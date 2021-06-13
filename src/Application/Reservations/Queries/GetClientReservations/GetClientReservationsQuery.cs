@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -47,9 +48,9 @@ namespace HotelReservationSystem.Application.Reservations.Queries.GetReservation
 
 public class ClientReservationResult
 {
-    public HotelDto hotelInfoPreview { get; set; }
-    public ReservationDto reservationInfo { get; set; }
-    public OfferDto offerInfoPreview { get; set; }
+    public HotelInfoPreview hotelInfoPreview { get; set; }
+    public ReservationInfo reservationInfo { get; set; }
+    public OfferInfoPreview offerInfoPreview { get; set; }
 }
 
 public class HotelInfoPreview
@@ -58,4 +59,21 @@ public class HotelInfoPreview
     public string hotelName { get; set; }
     public string country { get; set; }
     public string city { get; set; }
+}
+
+public class ReservationInfo  
+{
+    public int reservationID { get; set; }
+    public DateTime from { get; set; }
+    public DateTime to { get; set; }
+    public int numberOfChildren { get; set; }
+    public int numberOfAdults { get; set; }
+    public int? reviewID { get; set; }
+}
+
+public class OfferInfoPreview
+{
+    public int offerID { get; set; }
+    public string offerTitle { get; set; }
+    public byte[] offerPreviewPicture { get; set; }
 }

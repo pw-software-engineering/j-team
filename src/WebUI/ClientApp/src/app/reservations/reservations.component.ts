@@ -9,7 +9,7 @@ import {GetClientToken} from "../login/login.component";
   styleUrls: ['./reservations.component.scss']
 })
 export class ClientReservationsComponent implements AfterViewInit {
-  columnsToDisplay = ['Hotel', 'Rooom number', 'From', 'To', 'AdultNo', 'ChildrenNo', 'DeleteButton'];
+  columnsToDisplay = ['Hotel', 'From', 'To', 'AdultNo', 'ChildrenNo', 'DeleteButton'];
   dataSource = new MatTableDataSource<ClientReservationResult>();
   constructor(private clientReservationsClient : ClientReservationsClient) {
   }
@@ -26,6 +26,7 @@ export class ClientReservationsComponent implements AfterViewInit {
         this.setData(value);
       },
       error: (error) => {
+        alert(error.response);
         console.log(error);
         this.setData([]);
       }
@@ -34,11 +35,12 @@ export class ClientReservationsComponent implements AfterViewInit {
   setData = (items: Array<ClientReservationResult> | undefined) => {
     this.dataSource.data = items ? items : [];
   }
-  deleteReservation = (reservationId : number, hotelId : number, offerId : number) => {
-    const reservationsRequest = this.clientReservationsClient.delete(reservationId, hotelId.toString(), offerId.toString(), GetClientToken());
+  deleteReservation = (reservationId : number) => {
+    const reservationsRequest = this.clientReservationsClient.delete(reservationId, GetClientToken());
     reservationsRequest.subscribe({
       next: (value) => {
         console.log(value);
+        alert("Reservation has been cancelled");
       },
       error: (error) => {
         console.log(error);

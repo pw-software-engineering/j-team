@@ -38,12 +38,13 @@ namespace HotelReservationSystem.WebUI.Controllers
                 return BadRequest(validationException.Errors);
             }
         }
-        [HttpDelete("hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}")]
+        [HttpDelete("reservations/{reservationID}")]
         public async Task<ActionResult<int>> Delete(int reservationID)
         {
             DeleteReservationCmd command = new DeleteReservationCmd
             {
                 ReservationId = reservationID,
+                
                 ClientId = await GetClientIdFromToken()
             };
             try
