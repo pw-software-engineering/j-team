@@ -37,11 +37,45 @@ namespace HotelReservationSystem.Application.Reservations.Queries.GetReservation
         public async Task<List<ClientReservationResult>> Handle(GetClientReservationsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             var now = System.DateTime.Now;
-            return _context.Reservations
+            var reservations = _context.Reservations
                 .OrderBy(x => x.ReservationId)
                 .Where(x => x.ClientId == request.ClientId)
-                .ProjectTo<ClientReservationResult>(_mapper.ConfigurationProvider)
                 .ToList();
+            var result = new List<ClientReservationResult>();
+            foreach (var reservation in reservations)
+            {
+                var clientReservationResult = new ClientReservationResult();
+                clientReservationResult.reservationInfo = new ReservationInfo
+                {
+                    reservationID = reservation.ReservationId,
+                    from = reservation.FromTime,
+                    to = reservation.ToTime,
+                    numberOfAdults = reservation.AdultsCount,
+                    numberOfChildren = reservation.ChildrenCount,
+                    reviewID = _context.Reviews
+                        .Where(r => r.ClientId == request.ClientId && r.OfferId == reservation.OfferId)
+                        .Select(r => r.ReviewId)
+                        .FirstOrDefault()
+                };
+                var offer = await _context.Offers.FindAsync(reservation.OfferId);
+                var picture = await _context.Files.FindAsync(offer.OfferPreviewPicture);
+                clientReservationResult.offerInfoPreview = new OfferInfoPreview
+                {
+                    offerID = offer.OfferId,
+                    offerPreviewPicture = picture != null ? picture.Data : null,
+                    offerTitle = offer.Title
+                };
+                var hotel = await _context.Hotels.FindAsync(offer.HotelId);
+                clientReservationResult.hotelInfoPreview = new HotelInfoPreview
+                {
+                    city = hotel.City,
+                    country = hotel.Country,
+                    hotelID = hotel.HotelId,
+                    hotelName = hotel.Name
+                };
+                result.Add(clientReservationResult);
+            }
+            return result;
         }
     }
 }
