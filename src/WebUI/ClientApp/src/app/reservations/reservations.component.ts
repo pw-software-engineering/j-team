@@ -36,7 +36,8 @@ export class ClientReservationsComponent implements AfterViewInit {
     this.dataSource.data = items ? items : [];
   }
   deleteReservation = (reservationId : number) => {
-    const reservationsRequest = this.clientReservationsClient.delete(reservationId, GetClientToken());
+    //TODO: prawdziwe wartości offer id i hotel id
+    const reservationsRequest = this.clientReservationsClient.delete(reservationId, "","", GetClientToken());
     reservationsRequest.subscribe({
       next: (value) => {
         console.log(value);

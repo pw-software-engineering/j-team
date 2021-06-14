@@ -36,7 +36,7 @@ namespace Application.Auth
                     createdAt = DateTime.UtcNow
                 };
                 client.AccessToken = token.id.ToString();
-                context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return token;
             }
             throw new ForbiddenAccessException();
