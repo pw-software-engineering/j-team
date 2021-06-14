@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GetClientToken } from 'src/app/login/login.component';
 
 import { CreateOfferCmd, CreateReviewCmd, OfferClient, ReviewsClient, RoomClient, UpdateReviewCmd } from 'src/app/web-api-client';
 
@@ -40,7 +41,7 @@ export class ReviewsAddEditComponent implements OnInit {
 
         if (this.isEdit()) {
           console.log("fetching review " + this.reviewId);
-          this.reviewsClient.getReview(this.hotelId, this.offerId, this.reviewId, " ")
+          this.reviewsClient.getReview(this.hotelId, this.offerId, this.reviewId, GetClientToken())
             .subscribe(x => {
               console.log(x)
               this.form.patchValue(x);
@@ -60,7 +61,7 @@ export class ReviewsAddEditComponent implements OnInit {
         const cmd = new CreateReviewCmd();
         cmd.content = this.form.value.content;
         cmd.rating = this.form.value.rating;
-        const addRequest = this.reviewsClient.createReview(this.hotelId,this.offerId, "", cmd);
+        const addRequest = this.reviewsClient.createReview(this.hotelId,this.offerId, GetClientToken(), cmd);
         addRequest.subscribe({
           next: (value) => {
             console.log(value);
@@ -77,7 +78,7 @@ export class ReviewsAddEditComponent implements OnInit {
         const cmd = new UpdateReviewCmd();
         cmd.content = this.form.value.content;
         cmd.rating = this.form.value.rating;
-        const addRequest = this.reviewsClient.updateReview(this.hotelId,this.offerId,this.reviewId, "", cmd);
+        const addRequest = this.reviewsClient.updateReview(this.hotelId,this.offerId,this.reviewId, GetClientToken(), cmd);
         addRequest.subscribe({
           next: (value) => {
             console.log(value);

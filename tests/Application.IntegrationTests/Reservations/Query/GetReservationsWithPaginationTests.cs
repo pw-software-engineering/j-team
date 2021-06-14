@@ -64,7 +64,8 @@ namespace HotelReservationSystem.Application.IntegrationTests.Hotels.Query
                 Name = "John",
                 Surname = "Kowalski",
                 Username = "johnkowalski",
-                Email = "john@kowalski.com"
+                Email = "john@kowalski.com",
+                Password = "pass"
             });
 
             var reservation = await SendAsync(new CreateReservationCmd

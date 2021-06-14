@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Application.Auth;
 using HotelReservationSystem.Application.Clients.Commands.CreateClient;
+using HotelReservationSystem.Application.Clients.Commands.GetClientToken;
 using HotelReservationSystem.Application.Common.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +30,16 @@ namespace HotelReservationSystem.WebUI.Controllers
             var hotelId = await Mediator.Send(new GetHotelIdFromTokenQuery() { Token = GetHotelToken() });
             return hotelId.Value;
         }
+        protected string GetClientToken()
+        {
+            var rawString = Request.Headers["x-client-token"];
+            var token = JsonConvert.DeserializeObject<ClientToken>(rawString);
+            return token.id.ToString();
+        }
         protected async Task<int> GetClientIdFromToken()
         {
-            var clientId = await Mediator.Send(new GetClientIdFromTokenQuery() { Token = "" });
-            return clientId;
+            var clientId = await Mediator.Send(new GetClientIdFromTokenQuery() { Token = GetClientToken() });
+            return clientId.Value;
         }
     }
 

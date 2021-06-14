@@ -6,6 +6,7 @@ namespace Application.Hotels
 {
     public class HotelDto
     {
+        public int HotelId { get; set; }
         public string HotelName { get; set; }
         public string HotelDesc { get; set; }
         public string City { get; set; }
