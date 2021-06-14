@@ -389,9 +389,9 @@
     "/api-client/hotels/{hotelID}/offers/{offerID}/reservations": {
       "post": {
         "tags": [
-          "ClientReserevations"
+          "ClientReservations"
         ],
-        "operationId": "ClientReserevations_Create",
+        "operationId": "ClientReservations_Create",
         "parameters": [
           {
             "name": "hotelID",
@@ -451,9 +451,9 @@
     "/api-client/hotels/{hotelID}/offers/{offerID}/reservations/{reservationID}": {
       "delete": {
         "tags": [
-          "ClientReserevations"
+          "ClientReservations"
         ],
-        "operationId": "ClientReserevations_Delete",
+        "operationId": "ClientReservations_Delete",
         "parameters": [
           {
             "name": "reservationID",
@@ -499,6 +499,38 @@
                 "schema": {
                   "type": "integer",
                   "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api-client/client/reservations": {
+      "get": {
+        "tags": [
+          "ClientReservations"
+        ],
+        "operationId": "ClientReservations_GetClientReservations",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "x-client-token",
+            "in": "header",
+            "description": "client authorization token",
+            "default": "{{\"field1\": \"value1\", \"field2\": \"value2\"}}"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClientReservationResult"
+                  }
                 }
               }
             }
@@ -1904,6 +1936,108 @@
           }
         }
       },
+      "ClientReservationResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "hotelInfoPreview": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HotelInfoPreview"
+              }
+            ]
+          },
+          "reservationInfo": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ReservationInfo"
+              }
+            ]
+          },
+          "offerInfoPreview": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OfferInfoPreview"
+              }
+            ]
+          }
+        }
+      },
+      "HotelInfoPreview": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "hotelID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hotelName": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ReservationInfo": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "reservationID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "numberOfChildren": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfAdults": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reviewID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "OfferInfoPreview": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "offerID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "offerTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "offerPreviewPicture": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          }
+        }
+      },
       "CreateHotelCmd": {
         "type": "object",
         "additionalProperties": false,
@@ -1947,6 +2081,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "hotelId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "hotelName": {
             "type": "string",
             "nullable": true
@@ -2157,6 +2295,10 @@
           "reservationId": {
             "type": "integer",
             "format": "int32"
+          },
+          "hotelRoomNumber": {
+            "type": "string",
+            "nullable": true
           },
           "fromTime": {
             "type": "string",

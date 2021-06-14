@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
-    [Route("api-client")]
+    [Route("api-client/client")]
     public class ClientController : ApiControllerBase
     {
         [HttpGet]
