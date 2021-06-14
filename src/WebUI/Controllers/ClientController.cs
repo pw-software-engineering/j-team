@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Auth;
 using Application.Clients;
@@ -6,6 +7,7 @@ using HotelReservationSystem.Application.Clients;
 using HotelReservationSystem.Application.Clients.Commands.CreateClient;
 using HotelReservationSystem.Application.Common.Exceptions;
 using HotelReservationSystem.Application.Common.Security;
+using HotelReservationSystem.Application.Reservations.Queries.GetReservationsWithPagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservationSystem.WebUI.Controllers

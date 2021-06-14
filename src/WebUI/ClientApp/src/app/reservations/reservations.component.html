@@ -1,0 +1,46 @@
+<h2>My reservations</h2>
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="Hotel">
+      <th mat-header-cell *matHeaderCellDef>Hotel</th>
+      <td mat-cell *matCellDef="let clientReservationResult">{{ clientReservationResult.hotelInfoPreview.hotelName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Offer">
+      <th mat-header-cell *matHeaderCellDef>Offer</th>
+      <td mat-cell *matCellDef="let clientReservationResult">{{ clientReservationResult.offerInfoPreview.offerTitle }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="From">
+      <th mat-header-cell *matHeaderCellDef>Check in date</th>
+      <td mat-cell *matCellDef="let clientReservationResult">{{ clientReservationResult.reservationInfo.from}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="To">
+      <th mat-header-cell *matHeaderCellDef> Check out date </th>
+      <td mat-cell *matCellDef="let clientReservationResult">{{ clientReservationResult.reservationInfo.to}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="AdultNo">
+      <th mat-header-cell *matHeaderCellDef> Number of adults </th>
+      <td mat-cell *matCellDef="let clientReservationResult">{{ clientReservationResult.reservationInfo.numberOfAdults}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="ChildrenNo">
+      <th mat-header-cell *matHeaderCellDef> Number of children </th>
+      <td mat-cell *matCellDef="let clientReservationResult">{{ clientReservationResult.reservationInfo.numberOfChildren}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="DeleteButton">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let clientReservationResult">
+        <a (click)="deleteReservation(clientReservationResult.reservationInfo.reservationID)"
+        class="btn btn-sm btn-success mb-2">Delete</a></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+
+  </table>
+</div>

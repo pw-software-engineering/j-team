@@ -20,6 +20,7 @@ import { ReviewsListComponent } from './reviews/reviews-list.component';
 import { ReviewsAddEditComponent } from './reviews/review-add-edit/reviews-add-edit.component';
 import { HotelInfoComponent } from './hotels/hotels-list/hotel-info/hotel-info.component';
 import {LoginComponent} from "./login/login.component";
+import {ClientReservationsComponent} from "./reservations/reservations.component";
 import { OfferDetailsComponent } from './hotels/hotels-list/hotel-offers-list/offer-details/offer-details.component';
 
 
@@ -38,6 +39,7 @@ export const providers = [
     HotelInfoComponent,
 
     LoginComponent,
+    ClientReservationsComponent,
     OfferDetailsComponent
 
   ],
