@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'hotels/:id/offers/:offerID/reviews', component: ReviewsListComponent},
   { path: 'hotels/:id/offers/:offerID/reviews/add', component: ReviewsAddEditComponent},
   { path: 'hotels/:id/offers/:offerID/reviews/:reviewID', component: ReviewsAddEditComponent},
-  { path: 'hotels/:hotelID', component: HotelInfoComponent },
+  { path: 'hotels/:id', component: HotelInfoComponent },
   { path: 'hotels/:hotelID/offers/:offerID/reservations', component: MakeReservationComponent},
   { path: 'reservations', component: ClientReservationsComponent}
 ];
