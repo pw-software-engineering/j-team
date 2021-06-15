@@ -9,10 +9,13 @@ using HotelReservationSystem.Application.Hotels.Queries.GetHotelsWithPagination;
 using HotelReservationSystem.Application.Hotels.Queries.GetOfferInfo;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Annotations;
+using HotelReservationSystem.Application.Hotels.Queries.GetHotelInfo;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using ValidationException = HotelReservationSystem.Application.Common.Exceptions.ValidationException;
+using HotelReservationSystem.Application.Common.Exceptions;
+using System;
 
 namespace HotelReservationSystem.WebUI.Controllers
 {
@@ -40,6 +43,10 @@ namespace HotelReservationSystem.WebUI.Controllers
                 return new StatusCodeResult(404);
             }
         }
+
+
+
+       
 
         [HttpGet("hotels/{id}/offers")]
         public async Task<ActionResult<List<OfferDto>>> GetFilteredHotelOffersWithPagination(int id, [FromQuery] GetFilteredHotelOffersQuery query)
