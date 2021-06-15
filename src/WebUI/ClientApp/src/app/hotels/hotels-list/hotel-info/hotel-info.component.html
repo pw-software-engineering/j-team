@@ -1,0 +1,13 @@
+<section>
+  <h2>Offers</h2>
+  <button class="btn btn-sm btn-success mb-2" (click)="backToList()">Go back</button>
+</section>
+
+<p>Hotel Name: {{Hotel.hotelName}}</p>
+<p>Description: {{Hotel.hotelDesc}}</p>
+<p>City: {{Hotel.city}}</p>
+<p>Country: {{Hotel.country}}</p>
+
+<p>{{Hotel.hotelPreviewPicture}}</p>
+<img [src]="Hotel.hotelPreviewPicture" />
+
